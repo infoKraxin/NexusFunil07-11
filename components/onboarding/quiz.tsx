@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { Check, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NexusButton } from '@/components/nexus/nexus-button'
 import { NexusLogo } from '@/components/nexus/nexus-logo'
 import { type FunnelAnswers, type QuestionStep, STEPS, writeFunnel } from '@/lib/funnel'
@@ -14,14 +14,12 @@ import { InsertionPattern, InsertionPhoneDays, InsertionProjection, InsertionWhy
 
 const ANALYZING_ROUTE = '/onboarding/analyzing'
 const TOTAL_QUESTIONS = 12
-const AUTO_ADVANCE_MS = 320
 
 export function Quiz() {
   const router = useRouter()
   const f = useFunnel()
   const [stepIndex, setStepIndex] = useState(0)
   const [selected, setSelected] = useState<string[]>([])
-  const advancing = useRef(false)
 
   const step = STEPS[stepIndex]
   const lastQuestionNumber = STEPS.slice(0, stepIndex + 1).reduce(
@@ -49,7 +47,6 @@ export function Quiz() {
   }
 
   const goTo = (index: number) => {
-    advancing.current = false
     setStepIndex(index)
     restoreSelection(index)
   }
@@ -69,13 +66,7 @@ export function Quiz() {
     track('question_answer', { question: q.number, answer: value })
   }
 
-  const pickSingle = (q: QuestionStep, value: string) => {
-    if (advancing.current) return
-    advancing.current = true
-    setSelected([value])
-    save(q, [value])
-    setTimeout(next, AUTO_ADVANCE_MS)
-  }
+  const pickSingle = (value: string) => setSelected([value])
 
   const toggleMultiple = (q: QuestionStep, value: string) => {
     setSelected((prev) => {
@@ -85,12 +76,11 @@ export function Quiz() {
     })
   }
 
-  const continueMultiple = (q: QuestionStep) => {
+  const continueQuestion = (q: QuestionStep) => {
     save(q, selected)
     next()
   }
 
-  const showButton = step.kind === 'insertion' || step.multiple
 
   return (
     <div className="min-h-[100dvh] bg-background flex flex-col relative">
@@ -134,7 +124,7 @@ export function Quiz() {
         </div>
       </div>
 
-      <main id="main-content" className={cn('flex-1 px-5 flex flex-col', showButton ? 'pb-36' : 'pb-8')}>
+      <main id="main-content" className="flex-1 px-5 flex flex-col pb-36">
         <AnimatePresence mode="wait">
           <motion.div
             key={stepIndex}
@@ -148,7 +138,7 @@ export function Quiz() {
               <QuestionView
                 q={step}
                 selected={selected}
-                onPick={(v) => (step.multiple ? toggleMultiple(step, v) : pickSingle(step, v))}
+                onPick={(v) => (step.multiple ? toggleMultiple(step, v) : pickSingle(v))}
               />
             ) : step.id === 1 ? (
               <InsertionPhoneDays f={f} />
@@ -163,11 +153,10 @@ export function Quiz() {
         </AnimatePresence>
       </main>
 
-      {showButton && (
         <div className="fixed bottom-0 inset-x-0 px-5 pt-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-background via-background to-transparent z-30">
           <div className="max-w-md mx-auto">
             <NexusButton
-              onClick={() => (step.kind === 'question' ? continueMultiple(step) : next())}
+              onClick={() => (step.kind === 'question' ? continueQuestion(step) : next())}
               disabled={step.kind === 'question' && selected.length === 0}
               className="w-full h-13 py-3.5 text-base font-semibold bg-primary hover:bg-primary/90 gap-2 disabled:opacity-50 shadow-[0_8px_30px_-12px_var(--primary)]"
             >
@@ -176,7 +165,6 @@ export function Quiz() {
             </NexusButton>
           </div>
         </div>
-      )}
     </div>
   )
 }
