@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import { ArrowDown, Lock } from 'lucide-react'
 import { CountUp, Highlight, HandUnderline } from '@/components/funnel/fx'
-import { TurnChart } from '@/components/funnel/turn-chart'
+import { AToB } from '@/components/funnel/a-to-b'
 import { type Derived, QUESTIONS } from '@/lib/funnel'
 
 const fade = (delay: number) => ({
@@ -108,14 +108,14 @@ export function InsertionProjection({ f }: { f: Derived }) {
   return (
     <div className="flex-1 flex flex-col justify-center gap-6">
       <motion.div {...fade(0)} className="rounded-2xl bg-gradient-to-br from-secondary/30 to-secondary/10 border border-border/40 p-4">
-        <TurnChart balloon={f.mirror} delay={0.2} />
+        <AToB fromSub={`Começando por ${f.areaLower}`} toSub={f.mirror} />
       </motion.div>
       <motion.p {...fade(0.6)} className="text-xl font-semibold leading-snug text-center text-balance">
         Começando por <span className="text-primary font-bold">{f.areaLower}</span>, em 90 dias você pode ser{' '}
         <span className="font-bold">{f.mirrorLower}</span>.
       </motion.p>
-      <motion.p {...fade(2.6)} className="text-center text-muted-foreground text-[15px] text-balance">
-        Não precisa mudar tudo de uma vez. Só começar pelo <Highlight delay={3}>lugar certo</Highlight>.
+      <motion.p {...fade(1.9)} className="text-center text-muted-foreground text-[15px] text-balance">
+        Não precisa mudar tudo de uma vez. Só começar pelo <Highlight delay={2.3}>lugar certo</Highlight>.
       </motion.p>
     </div>
   )
