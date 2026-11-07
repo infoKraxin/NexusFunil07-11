@@ -189,4 +189,4 @@ export const PURCHASE_PLANS = [
   'Focuz + Comunidade',
 ]
 
-export const PURCHASE_TIMES = ['agora', 'ha 1 min', 'ha 2 min', 'ha 3 min', 'ha 5 min']
+export const PURCHASE_TIMES = ['agora', 'há 1 min', 'há 2 min', 'há 3 min', 'há 5 min']

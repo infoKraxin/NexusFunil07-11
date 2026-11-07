@@ -1,15 +1,16 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { Check, Sparkles } from 'lucide-react'
+import { motion, useInView } from 'framer-motion'
+import { ChevronDown, Sparkles, X } from 'lucide-react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { CountUp, HandUnderline, Highlight, StickyCta, useTrackOnce } from '@/components/funnel/fx'
 import { NexusLogo } from '@/components/nexus/nexus-logo'
+import { averageOf, projectRadar } from '@/lib/diagnosis'
 import type { Derived } from '@/lib/funnel'
 import { track } from '@/lib/track'
 import { useFunnel } from '@/lib/use-funnel'
-import { averageOf, projectRadar } from '@/lib/diagnosis'
 import { cn } from '@/lib/utils'
 import { DiagnosisRadar } from './diagnosis-radar'
 
@@ -19,7 +20,6 @@ export function Results() {
   return <ResultsView f={f} />
 }
 
-const CARD = 'rounded-2xl bg-gradient-to-br from-secondary/30 to-secondary/10 border border-border/40'
 const LABEL = 'font-mono text-[11px] uppercase tracking-[0.18em] text-primary'
 
 function ResultsView({ f }: { f: Derived }) {
@@ -28,54 +28,75 @@ function ResultsView({ f }: { f: Derived }) {
   const BlockIcon = block.icon
   useTrackOnce('diagnosis_view', { block: f.code })
 
+  // O botão fixo guia a leitura: primeiro "rola", no fim "avança".
+  const endRef = useRef<HTMLDivElement>(null)
+  const reachedEnd = useInView(endRef, { amount: 0.15 })
   const [causeBefore, causeAfter] = block.cause.split(block.causeUnderline)
+
+  const scrollNext = () => {
+    window.scrollBy({ top: window.innerHeight * 0.75, behavior: 'smooth' })
+  }
 
   return (
     <div className="min-h-[100dvh] bg-background relative overflow-x-hidden">
       <div
-        className="absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-primary/10 via-primary/[0.03] to-transparent pointer-events-none"
+        className="absolute inset-x-0 top-0 h-[520px] bg-gradient-to-b from-primary/10 via-primary/[0.03] to-transparent pointer-events-none"
         aria-hidden="true"
       />
-      <header className="p-4 flex justify-center relative">
+      <header className="pt-4 flex justify-center relative">
         <NexusLogo size="sm" />
       </header>
 
-      <main id="main-content" className="max-w-md mx-auto px-5 pb-36 relative flex flex-col gap-8">
-        {/* 1. Bloqueio revelado */}
-        <section className="text-center">
+      <main id="main-content" className="max-w-md mx-auto px-5 pb-40 relative">
+        {/* 1. Hero — cabe na primeira tela e deixa a próxima seção "espiando" */}
+        <section className="relative text-center pt-3">
           <motion.div
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs text-primary"
           >
             <Sparkles className="w-3 h-3" />
-            Análise completa
+            Seu diagnóstico está pronto
           </motion.div>
 
-          {/* "carimbo": o ícone cai e assenta */}
-          <motion.div
-            initial={{ scale: 2.4, opacity: 0, rotate: -14 }}
-            animate={{ scale: 1, opacity: 1, rotate: 0 }}
-            transition={{ delay: 0.3, type: 'spring', stiffness: 380, damping: 16 }}
-            className="relative mx-auto mt-6 w-20 h-20"
-          >
-            <div className="absolute inset-0 rounded-2xl bg-primary blur-xl opacity-40" aria-hidden="true" />
+          <div className="relative mx-auto mt-3 h-[230px] w-[200px]">
+            <div
+              className="absolute inset-x-6 bottom-6 top-10 rounded-full bg-primary/20 blur-3xl"
+              aria-hidden="true"
+            />
             <motion.div
-              animate={{ y: [0, -4, 0] }}
-              transition={{ duration: 2.6, repeat: Infinity, delay: 1.2 }}
-              className="relative w-20 h-20 rounded-2xl bg-primary flex items-center justify-center shadow-[0_8px_32px_-8px_var(--primary)]"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15, duration: 0.6 }}
+              className="absolute inset-0 overflow-hidden [mask-image:linear-gradient(to_bottom,black_65%,transparent)]"
             >
-              <BlockIcon className="w-10 h-10 text-primary-foreground" strokeWidth={2.2} />
+              <Image
+                src="/images/personagem-fraco.png"
+                alt=""
+                width={453}
+                height={1536}
+                priority
+                className="w-[150px] mx-auto h-auto"
+              />
             </motion.div>
-          </motion.div>
+            {/* selo do bloqueio "carimbado" sobre o personagem */}
+            <motion.div
+              initial={{ scale: 2.4, opacity: 0, rotate: -14 }}
+              animate={{ scale: 1, opacity: 1, rotate: 0 }}
+              transition={{ delay: 0.6, type: 'spring', stiffness: 380, damping: 16 }}
+              className="absolute right-0 top-8 w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shadow-[0_8px_28px_-6px_var(--primary)]"
+            >
+              <BlockIcon className="w-7 h-7 text-primary-foreground" strokeWidth={2.4} />
+            </motion.div>
+          </div>
 
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }} className={`${LABEL} mt-5`}>
-            Seu bloqueio
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} className={`${LABEL} -mt-2`}>
+            Seu bloqueio é
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
+            transition={{ delay: 0.9 }}
             className="mt-1.5 text-[32px] font-bold leading-none tracking-tight"
           >
             {block.name}
@@ -83,37 +104,52 @@ function ResultsView({ f }: { f: Derived }) {
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1 }}
-            className="mt-3 text-[17px] text-muted-foreground text-balance"
+            transition={{ delay: 1.1 }}
+            className="mt-2.5 text-[17px] text-muted-foreground text-balance leading-snug"
           >
             {block.impact}
           </motion.p>
+
+          <motion.button
+            type="button"
+            onClick={scrollNext}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.6 }}
+            className="mt-5 mx-auto flex flex-col items-center gap-0.5 text-xs text-muted-foreground"
+          >
+            Role pra ver o que isso significa
+            <motion.span animate={{ y: [0, 5, 0] }} transition={{ duration: 1.3, repeat: Infinity }}>
+              <ChevronDown className="w-5 h-5 text-primary" />
+            </motion.span>
+          </motion.button>
         </section>
 
         {/* 2. Isso explica por que… */}
-        <section>
-          <motion.h2 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }} className={`${LABEL} mb-3`}>
-            Isso explica por que…
-          </motion.h2>
-          <ul className="flex flex-col gap-2.5">
+        <section className="mt-8">
+          <h2 className="text-xl font-bold leading-tight">
+            Isso explica <span className="text-primary">muita coisa</span>
+          </h2>
+          <ul className="mt-4 flex flex-col gap-3.5">
             {block.checks.map((c, i) => {
               const parts = c.split('{feeling}')
               return (
                 <motion.li
                   key={c}
                   initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 1.5 + i * 0.45 }}
-                  className={`${CARD} flex items-center gap-3 p-3`}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ delay: i * 0.25 }}
+                  className="flex items-start gap-3"
                 >
-                  <span className="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
-                    <Check className="w-4 h-4 text-primary" />
+                  <span className="mt-0.5 w-6 h-6 rounded-full bg-primary/15 border border-primary/30 text-primary text-[11px] font-bold flex items-center justify-center shrink-0">
+                    {i + 1}
                   </span>
-                  <span className="text-sm leading-snug">
+                  <span className="text-[15px] leading-snug">
                     {parts.length > 1 ? (
                       <>
                         {parts[0]}
-                        <Highlight delay={1.5 + i * 0.45 + 0.4}>{f.feeling}</Highlight>
+                        <Highlight delay={0.5}>{f.feeling}</Highlight>
                         {parts[1]}
                       </>
                     ) : (
@@ -127,57 +163,59 @@ function ResultsView({ f }: { f: Derived }) {
         </section>
 
         {/* 3. O custo */}
-        <section className={`${CARD} p-5 text-center`}>
-          <p className={LABEL}>O custo</p>
-          <div className="mt-3">
+        <section className="mt-10 text-center">
+          <p className={LABEL}>O preço que você paga hoje</p>
+          <div className="mt-3 flex items-baseline justify-center gap-1.5">
             <CountUp to={f.daysPerYear} duration={1.8} className="text-6xl font-bold text-destructive leading-none" />
-            <span className="text-xl font-bold text-destructive"> dias</span>
+            <span className="text-xl font-bold text-destructive">dias por ano</span>
           </div>
-          <p className="text-sm text-muted-foreground mt-1.5">inteiros no celular, por ano</p>
-
+          <p className="text-sm text-muted-foreground mt-1.5">inteiros no celular. E ainda tem o que ficou pra trás:</p>
           {f.lost.length > 0 && (
-            <div className="mt-5 pt-4 border-t border-border/40">
-              <p className="text-xs text-muted-foreground mb-2.5">E o que isso já te custou</p>
-              <div className="flex flex-wrap justify-center gap-2">
-                {f.lost.map((l, i) => (
-                  <span key={l} className="relative px-3 py-1.5 rounded-full bg-secondary/60 border border-border text-xs">
-                    {l}
-                    <motion.span
-                      className="absolute left-2 right-2 top-1/2 h-[2px] bg-destructive origin-left"
-                      initial={{ scaleX: 0 }}
-                      whileInView={{ scaleX: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.8 + i * 0.35, duration: 0.3 }}
-                    />
-                  </span>
-                ))}
-              </div>
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
+              {f.lost.map((l, i) => (
+                <motion.span
+                  key={l}
+                  initial={{ opacity: 0, y: 6 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 + i * 0.2 }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/25 text-xs text-foreground/90"
+                >
+                  <X className="w-3 h-3 text-destructive" />
+                  {l}
+                </motion.span>
+              ))}
             </div>
           )}
         </section>
 
         {/* 4. A causa */}
-        <section className="text-center px-2">
-          <p className="text-[22px] font-bold leading-snug text-balance">
+        <section className="mt-10 rounded-2xl bg-gradient-to-br from-secondary/40 to-secondary/10 border border-border/40 px-5 py-6 text-center">
+          <p className="text-sm text-muted-foreground">A boa notícia:</p>
+          <p className="mt-2 text-[21px] font-bold leading-snug text-balance">
             {causeBefore}
             <span className="text-primary">
               <HandUnderline>{block.causeUnderline}</HandUnderline>
             </span>
             {causeAfter}
           </p>
+          <p className="mt-3 text-sm text-muted-foreground text-balance">E isso tem conserto: dá pra treinar, um dia de cada vez.</p>
         </section>
 
         {/* 5. A virada — gráficos aranha */}
-        <RadarTurn f={f} />
+        <div ref={endRef} className="mt-10">
+          <RadarTurn f={f} />
+        </div>
       </main>
 
       <StickyCta
         onClick={() => {
+          if (!reachedEnd) return scrollNext()
           track('diagnosis_cta', { block: f.code })
           router.push('/onboarding/solution')
         }}
       >
-        Ver como sair disso →
+        {reachedEnd ? 'Ver como sair disso →' : 'Continuar lendo ↓'}
       </StickyCta>
     </div>
   )
@@ -191,10 +229,9 @@ function RadarTurn({ f }: { f: Derived }) {
   const projected = projectRadar(current, period)
   return (
     <section className="flex flex-col gap-4">
-      <div className="text-center">
-        <p className={LABEL}>A virada</p>
-        <p className="mt-1.5 text-sm text-muted-foreground">Onde você está hoje e onde pode chegar</p>
-      </div>
+      <h2 className="text-xl font-bold leading-tight text-center text-balance">
+        Onde você está e onde <span className="text-primary">pode chegar</span>
+      </h2>
 
       <div className="flex gap-2 p-1 bg-secondary/20 rounded-xl" role="tablist" aria-label="Período">
         {PERIODS.map((p) => (
@@ -221,7 +258,7 @@ function RadarTurn({ f }: { f: Derived }) {
         ))}
       </div>
 
-      <div className={`${CARD} p-5`}>
+      <div className="rounded-2xl p-5 bg-gradient-to-br from-secondary/30 to-secondary/10 border border-border/40">
         <div className="flex items-center justify-center gap-2 mb-2">
           <span className="w-2.5 h-2.5 rounded-full bg-primary/50 animate-pulse" />
           <span className="text-sm font-semibold text-muted-foreground">Você hoje</span>
@@ -238,7 +275,7 @@ function RadarTurn({ f }: { f: Derived }) {
         key={period}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl p-5 bg-gradient-to-br from-primary/15 to-primary/5 border border-primary/30"
+        className="relative overflow-hidden rounded-2xl p-5 bg-gradient-to-br from-primary/15 to-primary/5 border border-primary/30"
       >
         <div className="flex items-center justify-center gap-2 mb-2">
           <Sparkles className="w-4 h-4 text-primary animate-pulse" />

@@ -98,7 +98,7 @@ export const QUESTIONS: QuestionStep[] = [
     key: 'q1',
     number: 1,
     title: 'Quantos anos você tem?',
-    subtitle: 'Seu plano começa pelo seu momento de vida.',
+    subtitle: 'Cada fase da vida pede um plano diferente. Vamos começar pela sua.',
     options: [
       { value: '16-20', label: '16 a 20 anos', icon: Sprout, desc: 'Construindo a base' },
       { value: '21-25', label: '21 a 25 anos', icon: Rocket, desc: 'Decidindo o rumo' },
@@ -111,7 +111,7 @@ export const QUESTIONS: QuestionStep[] = [
     key: 'q2',
     number: 2,
     title: 'Como é o seu dia hoje?',
-    subtitle: 'É assim que o NEXUS encaixa o plano na sua rotina.',
+    subtitle: 'Seu plano precisa caber no seu dia real, não num dia perfeito.',
     options: [
       { value: 'estudo', label: 'Estudo', icon: BookOpen, desc: 'Escola, faculdade ou concurso' },
       { value: 'trabalho', label: 'Trabalho', icon: Briefcase, desc: 'O trabalho ocupa o dia' },
@@ -124,7 +124,7 @@ export const QUESTIONS: QuestionStep[] = [
     key: 'q3',
     number: 3,
     title: 'Fora do trabalho, quanto tempo você passa no celular por dia?',
-    subtitle: 'Seja sincero. Ninguém vai ver.',
+    subtitle: 'Seja sincero. Só você vai ver o resultado.',
     options: [
       { value: 'lt2', label: 'Menos de 2h', icon: Clock2, desc: 'Uso no controle' },
       { value: '2-4', label: '2 a 4h', icon: Clock4, desc: 'Uso moderado' },
@@ -163,7 +163,7 @@ export const QUESTIONS: QuestionStep[] = [
     key: 'q6',
     number: 6,
     title: 'Como você se sente quando deita pra dormir?',
-    subtitle: 'A resposta mais honesta é a que mais te ajuda.',
+    subtitle: 'Aquele momento em que o dia acaba e sobra só você e seus pensamentos.',
     options: [
       { value: 'culpado', label: 'Culpado', icon: Frown, desc: 'O dia escorreu no celular', block: 'D' },
       { value: 'frustrado', label: 'Frustrado', icon: Angry, desc: 'Prometi e não cumpri de novo', block: 'R' },
@@ -176,7 +176,7 @@ export const QUESTIONS: QuestionStep[] = [
     key: 'q7',
     number: 7,
     title: 'O que você já perdeu por falta de disciplina?',
-    subtitle: 'Pode marcar várias. Ver isso escrito dói, mas é o primeiro passo.',
+    subtitle: 'Pode marcar várias. Dói ver escrito, mas é aqui que a mudança começa.',
     multiple: true,
     options: [
       { value: 'corpo', label: 'O corpo que eu queria ter', icon: Dumbbell },
@@ -191,7 +191,7 @@ export const QUESTIONS: QuestionStep[] = [
     key: 'q8',
     number: 8,
     title: 'Daqui a 90 dias, quem você quer ver no espelho?',
-    subtitle: 'É essa pessoa que o seu plano vai construir.',
+    subtitle: 'Fecha o olho e imagina. É essa pessoa que o seu plano vai construir.',
     options: [
       { value: 'corpo', label: 'Alguém com o corpo que sempre quis', icon: Dumbbell },
       { value: 'focado', label: 'Alguém focado, que termina o que começa', icon: Target },
@@ -217,7 +217,7 @@ export const QUESTIONS: QuestionStep[] = [
     key: 'q10',
     number: 10,
     title: 'O que você já tentou pra mudar?',
-    subtitle: 'Pode marcar várias.',
+    subtitle: 'Pode marcar várias. Nenhuma tentativa foi perdida: ela mostra o que faltou.',
     multiple: true,
     exclusive: 'nada',
     options: [
@@ -249,7 +249,7 @@ export const QUESTIONS: QuestionStep[] = [
     subtitle: 'Sem exagero. Constância vale mais que intensidade.',
     options: [
       { value: '10', label: '10 minutos', icon: Zap, desc: 'Pra começar leve' },
-      { value: '20', label: '20 minutos', icon: Timer, desc: 'O ponto ideal pra maioria' },
+      { value: '20', label: '20 minutos', icon: Timer, desc: 'Cabe em qualquer rotina' },
       { value: '30', label: '30 minutos', icon: Clock, desc: 'Ritmo de quem quer acelerar' },
       { value: '60', label: '1 hora ou mais', icon: Flame, desc: 'Modo intenso' },
     ],
@@ -486,6 +486,7 @@ export function derive(state: FunnelState) {
     areaLower: lowerFirst(area),
     areaKey: a.q9,
     feeling,
+    giveUp: lowerFirst(labelOf('q5', a.q5)),
     mechanism,
     lost,
     triedText,

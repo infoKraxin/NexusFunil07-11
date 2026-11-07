@@ -4,9 +4,9 @@ import { motion } from 'framer-motion'
 import { Sparkles, TrendingUp } from 'lucide-react'
 
 const SYSTEM_STATS = [
-  { value: '12', label: 'Missoes', sublabel: 'personalizadas' },
-  { value: '8', label: 'Habitos', sublabel: 'configurados' },
-  { value: '3', label: 'Protocolos', sublabel: 'de evolucao' },
+  { value: '12', label: 'Missões', sublabel: 'personalizadas' },
+  { value: '8', label: 'Hábitos', sublabel: 'configurados' },
+  { value: '3', label: 'Protocolos', sublabel: 'de evolução' },
 ]
 
 const CURVE = 'M 0 85 C 30 82 60 75 90 68 C 120 61 150 50 180 38 C 210 26 240 18 270 12 L 300 8'
@@ -56,8 +56,8 @@ export function EvolutionProjection({ avgCurrent, avgPotential, improvement }: E
       <div className="p-5 rounded-2xl bg-gradient-to-b from-white/[0.04] to-transparent border border-white/[0.06]">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <p className="text-sm font-semibold text-white">Sua Evolucao</p>
-            <p className="text-[11px] text-white/40">Projecao para 30 dias</p>
+            <p className="text-sm font-semibold text-white">Sua Evolução</p>
+            <p className="text-[11px] text-white/40">Projeção para 30 dias</p>
           </div>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">

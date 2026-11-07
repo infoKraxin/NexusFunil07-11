@@ -23,6 +23,7 @@ export function InsertionPhoneDays({ f }: { f: Derived }) {
       <motion.div {...fade(0.1)}>
         <CountUp to={f.daysPerYear} duration={2} delay={0.3} className="text-[84px] font-bold leading-none text-destructive" />
         <p className="text-lg font-bold mt-1">dias inteiros por ano</p>
+        <p className="text-sm text-muted-foreground mt-1">{monthsText(f.daysPerYear)}</p>
       </motion.div>
 
       {/* 1 ano = 365 quadradinhos; os dias perdidos acendem em vermelho */}
@@ -184,3 +185,9 @@ function ChipLabel({ value }: { value: string }) {
   )
 }
 const capitalize = (s: string) => s[0].toUpperCase() + s.slice(1)
+
+function monthsText(days: number) {
+  const m = Math.floor(days / 30)
+  if (m < 1) return 'Quase um mês do seu ano olhando pra uma tela.'
+  return `Mais de ${m} ${m === 1 ? 'mês' : 'meses'} do seu ano olhando pra uma tela.`
+}

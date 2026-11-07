@@ -19,7 +19,7 @@ import { useCheckoutRedirect } from './use-checkout-redirect'
 import { useCountdown, useExitIntent, useLiveViewers, usePurchaseToasts } from './use-plans-urgency'
 
 export function Plans() {
-  const { radar } = useFunnel()
+  const { radar, block, ready } = useFunnel()
   const [selectedPlan, setSelectedPlan] = useState<Plan>(PLANS[1])
   const [communityOpen, setCommunityOpen] = useState(false)
   const { redirecting, startRedirect } = useCheckoutRedirect()
@@ -87,7 +87,7 @@ export function Plans() {
           animate={{ opacity: 1, y: 0 }}
           className="text-2xl font-bold mb-2 text-balance"
         >
-          Seu plano está pronto. Só falta você.
+          {ready ? `Seu ${block.protocol} está pronto.` : 'Seu plano está pronto.'} Só falta você.
         </motion.h1>
         <motion.p
           initial={{ opacity: 0 }}
@@ -131,7 +131,7 @@ export function Plans() {
             ))}
           </div>
           <FiveStars />
-          <span className="text-[11px] text-white/50">20.000+ usuarios</span>
+          <span className="text-[11px] text-white/50">20.000+ usuários</span>
         </motion.div>
       </div>
 

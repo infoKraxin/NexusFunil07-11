@@ -2,6 +2,7 @@
 
 import { motion, useAnimationControls } from 'framer-motion'
 import { Check, Flame, Sparkles, Target, Timer } from 'lucide-react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { Confetti, FutureYou, MiniPhone, ProtocolEmblem } from '@/components/funnel/art'
@@ -173,7 +174,16 @@ function SolutionView({ f }: { f: Derived }) {
                         viewport={{ once: true }}
                         transition={{ delay: 1.8, type: 'spring', stiffness: 260 }}
                       >
-                        <FutureYou area={f.areaKey} />
+                        <div className="relative">
+                          <Image
+                            src="/images/personagem-forte.png"
+                            alt=""
+                            width={590}
+                            height={1536}
+                            className="h-[96px] w-auto mx-auto [mask-image:linear-gradient(to_bottom,black_75%,transparent)]"
+                          />
+                          <FutureYou area={f.areaKey} className="absolute -right-3 bottom-1 w-8 h-8 rounded-lg [&_svg]:w-4 [&_svg]:h-4" />
+                        </div>
                       </motion.div>
                       <InViewConfetti />
                     </div>
