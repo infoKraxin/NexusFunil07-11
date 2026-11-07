@@ -193,10 +193,10 @@ function QuestionView({
   const grid = q.layout === 'grid'
   return (
     <>
-      <h2 className="text-xl font-bold leading-tight text-balance text-center mt-1">{q.title}</h2>
+      <h2 className="text-xl font-bold leading-tight text-balance text-center mt-4">{q.title}</h2>
       <p className="text-sm text-muted-foreground mt-1 text-center text-pretty leading-snug">{q.subtitle}</p>
 
-      <div className="flex-1 flex flex-col justify-center py-4" role={q.multiple ? 'group' : 'radiogroup'}>
+      <div className="mt-6 pb-4" role={q.multiple ? 'group' : 'radiogroup'}>
         <div className={cn(grid ? 'grid grid-cols-2 gap-2.5' : 'flex flex-col gap-2.5')}>
           {q.options.map((o) => {
             const isSel = selected.includes(o.value)
