@@ -21,7 +21,7 @@ export function Analyzing() {
   // As respostas da própria pessoa sendo "lidas" uma a uma
   const items = [
     `${f.hoursLabel} de celular por dia`,
-    `Desiste ${f.giveUp}`,
+    f.giveUp,
     `Deita ${f.feeling} à noite`,
     `Quer começar por ${f.areaLower}`,
     `Tem ${f.time} por dia pra evoluir`,

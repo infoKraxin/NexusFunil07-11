@@ -137,7 +137,7 @@ export const QUESTIONS: QuestionStep[] = [
     key: 'q4',
     number: 4,
     title: 'Quantas vezes você já começou algo novo e largou no meio?',
-    subtitle: 'Academia, dieta, estudo… Aqui ninguém julga, só o seu eu de ontem.',
+    subtitle: 'Agora vem a parte honesta: é ela que mostra o que te trava. Academia, dieta, estudo…',
     options: [
       { value: 'nunca', label: 'Nunca larguei', icon: Trophy, desc: 'O que começo, eu mantenho' },
       { value: '1-2', label: '1 ou 2 vezes', icon: Flame, desc: 'Já desisti, mas foi pouco' },
@@ -149,13 +149,13 @@ export const QUESTIONS: QuestionStep[] = [
     kind: 'question',
     key: 'q5',
     number: 5,
-    title: 'Quando você costuma desistir das suas metas?',
-    subtitle: 'Tem um momento que se repete. Você já sabe qual é.',
+    title: 'Quando uma meta começa a escorregar, o que costuma acontecer?',
+    subtitle: 'Todo mundo tem um ponto em que trava. Qual é o seu?',
     options: [
-      { value: 'empolgacao', label: 'Quando a empolgação passa', icon: TrendingDown, desc: 'O começo é forte, depois some', block: 'R' },
-      { value: 'distracao', label: 'Quando aparece algo mais legal', icon: Bell, desc: 'Qualquer coisa me tira do foco', block: 'D' },
-      { value: 'antes', label: 'Antes de começar', icon: Hourglass, desc: 'Nunca parece o momento certo', block: 'P' },
-      { value: 'cansaco', label: 'Quando o cansaço vence', icon: BatteryLow, desc: 'No fim do dia não sobra nada', block: 'A' },
+      { value: 'empolgacao', label: 'A empolgação do começo passa', icon: TrendingDown, desc: 'O começo é forte, depois some', block: 'R' },
+      { value: 'distracao', label: 'Aparece algo mais interessante', icon: Bell, desc: 'Qualquer coisa me tira do foco', block: 'D' },
+      { value: 'antes', label: 'Fico esperando o momento certo', icon: Hourglass, desc: 'E ele nunca chega', block: 'P' },
+      { value: 'cansaco', label: 'O cansaço do dia vence', icon: BatteryLow, desc: 'No fim do dia não sobra nada', block: 'A' },
     ],
   },
   {
@@ -440,6 +440,13 @@ function joinPt(items: string[]) {
   return `${items.slice(0, -1).join(', ')} e ${items[items.length - 1]}`
 }
 
+const GIVE_UP: Record<string, string> = {
+  empolgacao: 'Perde o gás quando a empolgação passa',
+  distracao: 'Se distrai com qualquer coisa',
+  antes: 'Espera o momento certo pra começar',
+  cansaco: 'Perde pro cansaço no fim do dia',
+}
+
 export const DEFAULT_ANSWERS: Required<FunnelAnswers> = {
   q1: '21-25',
   q2: 'trabalho',
@@ -486,7 +493,7 @@ export function derive(state: FunnelState) {
     areaLower: lowerFirst(area),
     areaKey: a.q9,
     feeling,
-    giveUp: lowerFirst(labelOf('q5', a.q5)),
+    giveUp: GIVE_UP[a.q5] ?? GIVE_UP.empolgacao,
     mechanism,
     lost,
     triedText,
