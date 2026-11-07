@@ -25,7 +25,6 @@ const LABEL = 'font-mono text-[11px] uppercase tracking-[0.18em] text-primary'
 function ResultsView({ f }: { f: Derived }) {
   const router = useRouter()
   const { block } = f
-  const BlockIcon = block.icon
   useTrackOnce('diagnosis_view', { block: f.code })
 
   // O botão fixo guia a leitura: primeiro "rola", no fim "avança".
@@ -39,10 +38,6 @@ function ResultsView({ f }: { f: Derived }) {
 
   return (
     <div className="min-h-[100dvh] bg-background relative overflow-x-hidden">
-      <div
-        className="absolute inset-x-0 top-0 h-[520px] bg-gradient-to-b from-primary/10 via-primary/[0.03] to-transparent pointer-events-none"
-        aria-hidden="true"
-      />
       <header className="pt-4 flex justify-center relative">
         <NexusLogo size="sm" />
       </header>
@@ -59,37 +54,41 @@ function ResultsView({ f }: { f: Derived }) {
             Seu diagnóstico está pronto
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.6 }}
-            className="relative mt-4 h-[250px] w-full overflow-hidden rounded-3xl border border-primary/15"
-          >
-            <div
-              className="absolute inset-0"
-              style={{ background: 'radial-gradient(ellipse at 50% 35%, rgb(54 245 85 / 0.22), transparent 65%), #050607' }}
-            />
-            <Image
-              src="/images/personagem-fraco-busto.webp"
-              alt=""
-              width={341}
-              height={594}
-              priority
-              className="absolute left-1/2 top-0 h-[300px] w-auto max-w-none -translate-x-1/2"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-transparent" />
-            {/* selo do bloqueio "carimbado" */}
+          <div className="relative mx-auto mt-4 h-[250px] w-full max-w-[320px]">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15, duration: 0.6 }}
+              className="absolute inset-0 flex justify-center overflow-hidden [mask-image:linear-gradient(to_bottom,black_70%,transparent)]"
+            >
+              <Image
+                src="/images/personagem-fraco-busto.webp"
+                alt=""
+                width={341}
+                height={594}
+                priority
+                className="h-[300px] w-auto max-w-none"
+              />
+            </motion.div>
+            {/* ícone do bloqueio "carimbado" */}
             <motion.div
               initial={{ scale: 2.4, opacity: 0, rotate: -14 }}
               animate={{ scale: 1, opacity: 1, rotate: 0 }}
               transition={{ delay: 0.6, type: 'spring', stiffness: 380, damping: 16 }}
-              className="absolute right-3 top-3 w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-[0_8px_28px_-6px_var(--primary)]"
+              className="absolute right-0 top-0 w-24 h-24"
             >
-              <BlockIcon className="w-6 h-6 text-primary-foreground" strokeWidth={2.4} />
+              <Image
+                src={`/images/icon-${f.code}.webp`}
+                alt=""
+                width={160}
+                height={160}
+                priority
+                className="w-full h-full object-contain mix-blend-screen"
+              />
             </motion.div>
-          </motion.div>
+          </div>
 
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} className={`${LABEL} -mt-6 relative`}>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} className={`${LABEL} -mt-3 relative`}>
             Seu bloqueio é
           </motion.p>
           <motion.h1
