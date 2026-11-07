@@ -56,7 +56,7 @@ const round1 = (value: number) => Math.round(10 * value) / 10
 const DISCIPLINE_BASE: Record<number, number> = { 1: 2, 2: 3.2, 3: 4.4, 4: 6, 5: 7.4 }
 const PERIOD_TARGET: Record<number, number> = { 30: 5.1, 60: 6.8, 90: 8.7 }
 
-function normalizeToAverage(points: RadarPoint[], target: number): RadarPoint[] {
+export function normalizeToAverage(points: RadarPoint[], target: number): RadarPoint[] {
   const count = points.length
   if (count === 0) return points
   const mean = points.reduce((sum, p) => sum + p.value, 0) / count

@@ -47,6 +47,7 @@ import {
   Wallet,
   Zap,
 } from 'lucide-react'
+import { normalizeToAverage, type RadarPoint } from './diagnosis'
 
 export const FUNNEL_STORAGE_KEY = 'nexus_funnel_v2'
 
@@ -490,6 +491,7 @@ export function derive(state: FunnelState) {
     triedText,
     triedPlural: tried.length > 1,
     triedNothing,
+    radar: computeRadar(a, code),
     pactAt: state.pactAt ? new Date(state.pactAt) : null,
     fill: (s: string) => s.replace('{time}', time).replace('{hours}', hoursLabel).replace('{feeling}', feeling),
   }
@@ -542,4 +544,52 @@ export function formatPactDate(d: Date) {
   const date = d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
   const time = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
   return { date, time, short: d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }) }
+}
+
+/* ---------------- Radar (gráfico aranha) a partir das respostas novas ---------------- */
+
+
+const clampR = (v: number) => Math.max(1.2, Math.min(9.2, v))
+const r1 = (v: number) => Math.round(v * 10) / 10
+
+export function computeRadar(a: Required<FunnelAnswers>, code: BlockCode): RadarPoint[] {
+  const base = 4.4
+  let disciplina = base
+  let saude = base + 0.4
+  let foco = base + 0.3
+  let energia = base + 0.5
+  let produtividade = base + 0.2
+  let bemestar = base + 0.4
+
+  disciplina += { nunca: 1.2, '1-2': 0.3, 'perdi-a-conta': -1, 'nem-comeco': -0.8 }[a.q4] ?? 0
+  if (code === 'R') disciplina -= 1
+  if (code === 'D') (foco -= 1.8), (produtividade -= 0.8)
+  if (code === 'P') (produtividade -= 1.5), (disciplina -= 0.5)
+  if (code === 'A') (energia -= 1.8), (bemestar -= 0.6)
+
+  foco -= Math.max(0, (HOURS[a.q3] ?? 3) - 2) * 0.3
+  if (a.q6 === 'culpado') foco -= 0.4
+  if (a.q6 === 'frustrado') bemestar -= 0.8
+  if (a.q6 === 'travado') produtividade -= 0.5
+  if (a.q6 === 'esgotado') energia -= 0.8
+
+  if (a.q7.includes('corpo')) saude -= 1
+  if (a.q7.includes('confianca')) bemestar -= 1
+  if (a.q7.includes('pessoas')) bemestar -= 0.5
+  if (a.q7.includes('dinheiro')) produtividade -= 0.4
+  if (a.q7.includes('oportunidades')) produtividade -= 0.4
+  if (a.q9 === 'corpo') saude -= 0.6
+  if (a.q9 === 'mente') foco -= 0.5
+
+  return normalizeToAverage(
+    [
+      { key: 'disciplina', label: 'Disciplina', value: r1(clampR(disciplina)) },
+      { key: 'saude', label: 'Saúde', value: r1(clampR(saude)) },
+      { key: 'foco', label: 'Foco', value: r1(clampR(foco)) },
+      { key: 'energia', label: 'Energia', value: r1(clampR(energia)) },
+      { key: 'produtividade', label: 'Produtividade', value: r1(clampR(produtividade)) },
+      { key: 'bemestar', label: 'Bem-estar', value: r1(clampR(bemestar)) },
+    ],
+    3.4,
+  )
 }

@@ -5,14 +5,8 @@ import { Check, Clock, Eye } from 'lucide-react'
 import Image from 'next/image'
 import { useCallback, useMemo, useState } from 'react'
 import { CAKTO_URLS, getCheckoutUrl } from '@/lib/checkout'
-import {
-  averageOf,
-  computeDiagnosis,
-  DEFAULT_QUIZ_DATA,
-  improvementPercent,
-  projectRadar,
-} from '@/lib/diagnosis'
-import { useQuizData } from '@/lib/use-quiz-data'
+import { averageOf, improvementPercent, projectRadar } from '@/lib/diagnosis'
+import { useFunnel } from '@/lib/use-funnel'
 import { withUtms } from '@/lib/utm'
 import { useTrackOnce } from '@/components/funnel/fx'
 import { CommunityModal } from './community-modal'
@@ -25,7 +19,7 @@ import { useCheckoutRedirect } from './use-checkout-redirect'
 import { useCountdown, useExitIntent, useLiveViewers, usePurchaseToasts } from './use-plans-urgency'
 
 export function Plans() {
-  const quiz = useQuizData() ?? DEFAULT_QUIZ_DATA
+  const { radar } = useFunnel()
   const [selectedPlan, setSelectedPlan] = useState<Plan>(PLANS[1])
   const [communityOpen, setCommunityOpen] = useState(false)
   const { redirecting, startRedirect } = useCheckoutRedirect()
@@ -38,14 +32,13 @@ export function Plans() {
   const toast = usePurchaseToasts()
 
   const projection = useMemo(() => {
-    const diagnosis = computeDiagnosis(quiz)
-    const projected = projectRadar(diagnosis.radar, 30)
+    const projected = projectRadar(radar, 30)
     return {
-      avgCurrent: diagnosis.avgCurrent,
+      avgCurrent: averageOf(radar),
       avgPotential: averageOf(projected),
-      improvement: improvementPercent(diagnosis.radar, projected),
+      improvement: improvementPercent(radar, projected),
     }
-  }, [quiz])
+  }, [radar])
 
   const showExitOffer = useCallback(() => {
     setExitOfferOpen(true)

@@ -51,7 +51,10 @@ export function Marked({ text, color = 'neon', delay = 0 }: { text: string; colo
   )
 }
 
-/* Sublinhado desenhado à mão */
+/* Sublinhado desenhado à mão — quebra linha junto com o texto */
+const SQUIGGLE =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 8' preserveAspectRatio='none'%3E%3Cpath d='M0 5 Q 10 1 20 4.5 T 40 4' fill='none' stroke='%2336f555' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E\")"
+
 export function HandUnderline({
   children,
   delay = 0.2,
@@ -64,26 +67,16 @@ export function HandUnderline({
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true, margin: '-40px' })
   return (
-    <span ref={ref} className={cn('relative inline-block whitespace-nowrap', className)}>
+    <motion.span
+      ref={ref}
+      className={cn('box-decoration-clone pb-1.5 bg-no-repeat', className)}
+      style={{ backgroundImage: SQUIGGLE, backgroundPosition: '0 100%' }}
+      initial={{ backgroundSize: '0% 8px' }}
+      animate={inView ? { backgroundSize: '100% 8px' } : {}}
+      transition={{ duration: 0.8, delay, ease: 'easeInOut' }}
+    >
       {children}
-      <svg
-        className="absolute left-0 -bottom-2 w-full h-3 overflow-visible"
-        viewBox="0 0 200 12"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <motion.path
-          d="M2 8 C 40 3, 80 11, 120 6 S 180 3, 198 7"
-          fill="none"
-          stroke="var(--primary)"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={inView ? { pathLength: 1 } : {}}
-          transition={{ duration: 0.8, delay, ease: 'easeInOut' }}
-        />
-      </svg>
-    </span>
+    </motion.span>
   )
 }
 
