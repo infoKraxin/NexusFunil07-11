@@ -59,38 +59,33 @@ function ResultsView({ f }: { f: Derived }) {
             Seu diagnóstico está pronto
           </motion.div>
 
-          <div className="relative mx-auto mt-3 h-[230px] w-[200px]">
-            <div
-              className="absolute inset-x-6 bottom-6 top-10 rounded-full bg-primary/20 blur-3xl"
-              aria-hidden="true"
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.6 }}
+            className="relative mt-4 h-[250px] w-full overflow-hidden rounded-3xl border border-primary/15"
+          >
+            <Image
+              src={`/images/bloqueio-${f.code}.webp`}
+              alt=""
+              fill
+              priority
+              sizes="(max-width: 448px) 100vw, 448px"
+              className="object-cover object-[50%_18%]"
             />
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15, duration: 0.6 }}
-              className="absolute inset-0 overflow-hidden [mask-image:linear-gradient(to_bottom,black_65%,transparent)]"
-            >
-              <Image
-                src="/images/personagem-fraco.png"
-                alt=""
-                width={453}
-                height={1536}
-                priority
-                className="w-[150px] mx-auto h-auto"
-              />
-            </motion.div>
-            {/* selo do bloqueio "carimbado" sobre o personagem */}
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-transparent" />
+            {/* selo do bloqueio "carimbado" */}
             <motion.div
               initial={{ scale: 2.4, opacity: 0, rotate: -14 }}
               animate={{ scale: 1, opacity: 1, rotate: 0 }}
               transition={{ delay: 0.6, type: 'spring', stiffness: 380, damping: 16 }}
-              className="absolute right-0 top-8 w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shadow-[0_8px_28px_-6px_var(--primary)]"
+              className="absolute right-3 top-3 w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-[0_8px_28px_-6px_var(--primary)]"
             >
-              <BlockIcon className="w-7 h-7 text-primary-foreground" strokeWidth={2.4} />
+              <BlockIcon className="w-6 h-6 text-primary-foreground" strokeWidth={2.4} />
             </motion.div>
-          </div>
+          </motion.div>
 
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} className={`${LABEL} -mt-2`}>
+          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} className={`${LABEL} -mt-6 relative`}>
             Seu bloqueio é
           </motion.p>
           <motion.h1

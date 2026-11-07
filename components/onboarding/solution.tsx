@@ -142,7 +142,14 @@ function SolutionView({ f }: { f: Derived }) {
 
         {/* 3. Linha do tempo */}
         <section className="rounded-2xl bg-gradient-to-br from-secondary/30 to-secondary/10 border border-border/40 p-4 pb-5">
-          <h2 className="font-semibold text-sm mb-4">Seus próximos 90 dias</h2>
+          <div className="relative -mx-4 -mt-4 mb-4 h-48 overflow-hidden rounded-t-2xl">
+            <Image src="/images/dia-90.webp" alt="" fill sizes="448px" className="object-cover object-[50%_12%]" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c0d] via-[#0a0c0d]/20 to-transparent" />
+            <div className="absolute left-4 bottom-3">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary">Você no dia 90</p>
+              <p className="font-bold text-lg leading-tight">Seus próximos 90 dias</p>
+            </div>
+          </div>
           <div className="relative">
             <div className="absolute left-[16%] right-[16%] top-[7px] h-[2px] bg-secondary" />
             <motion.div
@@ -174,16 +181,7 @@ function SolutionView({ f }: { f: Derived }) {
                         viewport={{ once: true }}
                         transition={{ delay: 1.8, type: 'spring', stiffness: 260 }}
                       >
-                        <div className="relative">
-                          <Image
-                            src="/images/personagem-forte.png"
-                            alt=""
-                            width={590}
-                            height={1536}
-                            className="h-[96px] w-auto mx-auto [mask-image:linear-gradient(to_bottom,black_75%,transparent)]"
-                          />
-                          <FutureYou area={f.areaKey} className="absolute -right-3 bottom-1 w-8 h-8 rounded-lg [&_svg]:w-4 [&_svg]:h-4" />
-                        </div>
+                        <FutureYou area={f.areaKey} />
                       </motion.div>
                       <InViewConfetti />
                     </div>
