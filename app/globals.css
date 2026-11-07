@@ -306,7 +306,7 @@
 
 /* ===== Funil v2 ===== */
 .marker-yellow {
-  background-image: linear-gradient(100deg, #ffe14d00 0%, #ffe14d 4%, #ffd60a 96%, #ffd60a00 100%);
+  background-image: linear-gradient(100deg, #36f55500 0%, #36f555 4%, #2fe04c 96%, #36f55500 100%);
 }
 .marker-neon {
   background-image: linear-gradient(100deg, #36f55500 0%, #36f555 4%, #2fe04c 96%, #36f55500 100%);

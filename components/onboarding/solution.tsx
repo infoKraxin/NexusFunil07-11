@@ -1,10 +1,11 @@
 'use client'
 
 import { motion, useAnimationControls } from 'framer-motion'
+import { Check, Flame, Sparkles, Target, Timer } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { Confetti, FutureYou, MiniPhone, ProtocolEmblem } from '@/components/funnel/art'
-import { Marked, StickyCta, Tag, useTrackOnce } from '@/components/funnel/fx'
+import { Marked, StickyCta, useTrackOnce } from '@/components/funnel/fx'
 import { NexusLogo } from '@/components/nexus/nexus-logo'
 import type { Derived } from '@/lib/funnel'
 import { track } from '@/lib/track'
@@ -41,9 +42,9 @@ function SolutionView({ f }: { f: Derived }) {
 
   const [headBefore, headAfter] = block.headline.split('{time} por dia')
   const chips = [
-    { icon: '🎯', label: f.area },
-    { icon: '⏱', label: f.time },
-    { icon: '🔥', label: f.mechanism.chip },
+    { icon: Target, label: f.area },
+    { icon: Timer, label: f.time },
+    { icon: Flame, label: f.mechanism.chip },
   ]
   const lines = [...block.lines, f.mechanism.card]
   const timeline = [
@@ -62,9 +63,12 @@ function SolutionView({ f }: { f: Derived }) {
         {/* 1. Card do protocolo */}
         <motion.section
           animate={pulse}
-          className="relative rounded-3xl border border-primary/40 bg-gradient-to-b from-primary/15 via-card to-card p-5 pt-6 text-center"
+          className="relative rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/15 to-primary/5 p-5 pt-6 text-center"
         >
-          <Tag>Seu plano está pronto</Tag>
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs text-primary">
+            <Sparkles className="w-3 h-3" />
+            Seu plano está pronto
+          </span>
           <motion.div
             initial={{ opacity: 0, scale: 0.4, rotate: -30 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -77,7 +81,7 @@ function SolutionView({ f }: { f: Derived }) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="mt-4 text-[28px] font-black leading-none"
+            className="mt-4 text-[26px] font-bold leading-none tracking-tight"
           >
             {block.protocol}
           </motion.h1>
@@ -95,13 +99,14 @@ function SolutionView({ f }: { f: Derived }) {
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             {chips.map((c, i) => (
               <motion.span
-                key={c.icon}
+                key={c.label}
                 initial={{ opacity: 0, y: 70, x: (i - 1) * 60, scale: 0.6 }}
                 animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
                 transition={{ delay: CHIP_DELAY + i * 0.12, type: 'spring', stiffness: 300, damping: 20 }}
-                className="px-3 py-1.5 rounded-full bg-background/80 border border-primary/30 text-[13px] font-semibold"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-background/80 border border-primary/30 text-xs font-semibold"
               >
-                {c.icon} {c.label}
+                <c.icon className="w-3.5 h-3.5 text-primary" />
+                {c.label}
               </motion.span>
             ))}
           </div>
@@ -109,7 +114,7 @@ function SolutionView({ f }: { f: Derived }) {
 
         {/* 2. Como funciona */}
         <section>
-          <h2 className="text-sm font-bold uppercase tracking-[0.14em] text-muted-foreground mb-3">Como funciona</h2>
+          <h2 className="font-mono text-[11px] uppercase tracking-[0.18em] text-primary mb-3">Como funciona</h2>
           <div className="flex items-center gap-4">
             <ul className="flex-1 flex flex-col gap-3.5">
               {lines.map((l, i) => (
@@ -119,9 +124,11 @@ function SolutionView({ f }: { f: Derived }) {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.15 * i }}
-                  className="flex gap-2 text-[15px] leading-snug"
+                  className="flex gap-2.5 text-sm leading-snug"
                 >
-                  <span aria-hidden="true">✅</span>
+                  <span className="w-5 h-5 mt-px rounded-md bg-primary flex items-center justify-center shrink-0">
+                    <Check className="w-3.5 h-3.5 text-primary-foreground" strokeWidth={3} />
+                  </span>
                   <span>
                     <Marked text={l} delay={0.4 + 0.2 * i} />
                   </span>
@@ -133,8 +140,8 @@ function SolutionView({ f }: { f: Derived }) {
         </section>
 
         {/* 3. Linha do tempo */}
-        <section className="rounded-2xl border border-border bg-card p-4 pb-5">
-          <h2 className="text-sm font-bold mb-4">Seus próximos 90 dias</h2>
+        <section className="rounded-2xl bg-gradient-to-br from-secondary/30 to-secondary/10 border border-border/40 p-4 pb-5">
+          <h2 className="font-semibold text-sm mb-4">Seus próximos 90 dias</h2>
           <div className="relative">
             <div className="absolute left-[16%] right-[16%] top-[7px] h-[2px] bg-secondary" />
             <motion.div

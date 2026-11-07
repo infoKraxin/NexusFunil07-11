@@ -113,7 +113,7 @@ export function MiniPhone({ area, time }: { area: string; time: string }) {
       <div className="rounded-xl bg-card px-2 py-2.5">
         <div className="flex items-center justify-between">
           <span className="text-[8px] font-bold text-primary">DIA 1</span>
-          <span className="text-[8px] text-muted-foreground">🔥 1</span>
+          <span className="flex items-center gap-0.5 text-[8px] text-orange-400"><Flame className="w-2 h-2 fill-orange-400" />1</span>
         </div>
         <div className="mt-1.5 h-1 rounded-full bg-secondary overflow-hidden">
           <motion.div

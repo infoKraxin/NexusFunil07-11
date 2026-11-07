@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { ArrowDown, Lock } from 'lucide-react'
 import { CountUp, Highlight, HandUnderline } from '@/components/funnel/fx'
 import { TurnChart } from '@/components/funnel/turn-chart'
-import type { Derived } from '@/lib/funnel'
+import { type Derived, QUESTIONS } from '@/lib/funnel'
 
 const fade = (delay: number) => ({
   initial: { opacity: 0, y: 14 },
@@ -21,7 +21,7 @@ export function InsertionPhoneDays({ f }: { f: Derived }) {
         <span className="font-bold text-foreground">{f.hoursLabel} por dia</span> no celular dá…
       </motion.p>
       <motion.div {...fade(0.1)}>
-        <CountUp to={f.daysPerYear} duration={2} delay={0.3} className="text-[84px] font-black leading-none text-destructive" />
+        <CountUp to={f.daysPerYear} duration={2} delay={0.3} className="text-[84px] font-bold leading-none text-destructive" />
         <p className="text-lg font-bold mt-1">dias inteiros por ano</p>
       </motion.div>
 
@@ -50,7 +50,7 @@ export function InsertionPhoneDays({ f }: { f: Derived }) {
 export function InsertionPattern({ f }: { f: Derived }) {
   return (
     <div className="flex-1 flex flex-col justify-center text-center gap-6">
-      <motion.h2 {...fade(0)} className="text-3xl font-black leading-tight">
+      <motion.h2 {...fade(0)} className="text-3xl font-bold leading-tight">
         Isso não é preguiça…
       </motion.h2>
 
@@ -106,7 +106,7 @@ export function InsertionPattern({ f }: { f: Derived }) {
 export function InsertionProjection({ f }: { f: Derived }) {
   return (
     <div className="flex-1 flex flex-col justify-center gap-6">
-      <motion.div {...fade(0)} className="rounded-2xl border border-border bg-card p-4">
+      <motion.div {...fade(0)} className="rounded-2xl bg-gradient-to-br from-secondary/30 to-secondary/10 border border-border/40 p-4">
         <TurnChart balloon={f.mirror} delay={0.2} />
       </motion.div>
       <motion.p {...fade(0.6)} className="text-xl font-semibold leading-snug text-center text-balance">
@@ -138,7 +138,7 @@ export function InsertionWhyBefore({ f }: { f: Derived }) {
                 {...fade(0.1 * i)}
                 className="relative px-3 py-1.5 rounded-full border border-border bg-secondary text-sm text-muted-foreground"
               >
-                {labelChip(v)}
+                <ChipLabel value={v} />
                 <motion.span
                   className="absolute left-2 right-2 top-1/2 h-[2px] bg-destructive origin-left"
                   initial={{ scaleX: 0 }}
@@ -172,11 +172,15 @@ export function InsertionWhyBefore({ f }: { f: Derived }) {
   )
 }
 
-const CHIP_LABELS: Record<string, string> = {
-  planilha: '🗓️ Planilha ou agenda',
-  app: '📲 App de hábitos',
-  video: '▶️ Vídeo de motivação',
-  curso: '🎤 Curso ou coach',
+function ChipLabel({ value }: { value: string }) {
+  const o = QUESTIONS.find((q) => q.key === 'q10')?.options.find((x) => x.value === value)
+  if (!o) return null
+  const Icon = o.icon
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <Icon className="w-3.5 h-3.5" />
+      {o.label}
+    </span>
+  )
 }
-const labelChip = (v: string) => CHIP_LABELS[v] ?? v
 const capitalize = (s: string) => s[0].toUpperCase() + s.slice(1)

@@ -1,6 +1,53 @@
 // Fonte única do estado do funil novo: respostas 1–12, bloqueio, protocolo e pacto.
 // Tudo que é derivado (dias no celular, mecanismo, textos personalizados) sai daqui.
 
+import {
+  Angry,
+  Annoyed,
+  BarChart3,
+  BatteryLow,
+  Bell,
+  BookOpen,
+  Brain,
+  Briefcase,
+  CalendarDays,
+  CalendarX,
+  CirclePlay,
+  Clock,
+  Clock2,
+  Clock4,
+  Clock6,
+  DoorClosed,
+  Dumbbell,
+  Flame,
+  Frown,
+  Gift,
+  GraduationCap,
+  Heart,
+  HeartCrack,
+  Hourglass,
+  Layers,
+  Leaf,
+  type LucideIcon,
+  Megaphone,
+  Meh,
+  Mountain,
+  Presentation,
+  Rocket,
+  RotateCcw,
+  ShieldOff,
+  Shuffle,
+  Smartphone,
+  Sprout,
+  Target,
+  Timer,
+  TrendingDown,
+  TrendingUp,
+  Trophy,
+  Wallet,
+  Zap,
+} from 'lucide-react'
+
 export const FUNNEL_STORAGE_KEY = 'nexus_funnel_v2'
 
 export type BlockCode = 'R' | 'D' | 'P' | 'A'
@@ -27,14 +74,14 @@ export type FunnelState = {
 
 /* ---------------- Perguntas ---------------- */
 
-export type Option = { value: string; label: string; block?: BlockCode; emoji?: string; hint?: string }
+export type Option = { value: string; label: string; icon: LucideIcon; desc?: string; block?: BlockCode }
 
 export type QuestionStep = {
   kind: 'question'
   key: keyof FunnelAnswers
   number: number
   title: string
-  subtitle?: string
+  subtitle: string
   multiple?: boolean
   exclusive?: string // valor que limpa os outros (ex.: "Nada ainda")
   layout?: 'list' | 'grid'
@@ -51,12 +98,11 @@ export const QUESTIONS: QuestionStep[] = [
     number: 1,
     title: 'Quantos anos você tem?',
     subtitle: 'Seu plano começa pelo seu momento de vida.',
-    layout: 'grid',
     options: [
-      { value: '16-20', label: '16–20' },
-      { value: '21-25', label: '21–25' },
-      { value: '26-34', label: '26–34' },
-      { value: '35+', label: '35+' },
+      { value: '16-20', label: '16 a 20 anos', icon: Sprout, desc: 'Construindo a base' },
+      { value: '21-25', label: '21 a 25 anos', icon: Rocket, desc: 'Decidindo o rumo' },
+      { value: '26-34', label: '26 a 34 anos', icon: Briefcase, desc: 'Hora de consolidar' },
+      { value: '35+', label: '35 anos ou mais', icon: Mountain, desc: 'Hora de colher' },
     ],
   },
   {
@@ -64,11 +110,12 @@ export const QUESTIONS: QuestionStep[] = [
     key: 'q2',
     number: 2,
     title: 'Como é o seu dia hoje?',
+    subtitle: 'É assim que o NEXUS encaixa o plano na sua rotina.',
     options: [
-      { value: 'estudo', label: 'Estudo', emoji: '📚' },
-      { value: 'trabalho', label: 'Trabalho', emoji: '💼' },
-      { value: 'estudo-trabalho', label: 'Estudo e trabalho', emoji: '⚡' },
-      { value: 'sem-rotina', label: 'Não tenho rotina definida', emoji: '🌀' },
+      { value: 'estudo', label: 'Estudo', icon: BookOpen, desc: 'Escola, faculdade ou concurso' },
+      { value: 'trabalho', label: 'Trabalho', icon: Briefcase, desc: 'O trabalho ocupa o dia' },
+      { value: 'estudo-trabalho', label: 'Estudo e trabalho', icon: Layers, desc: 'Correria dos dois lados' },
+      { value: 'sem-rotina', label: 'Não tenho rotina definida', icon: Shuffle, desc: 'Cada dia é de um jeito' },
     ],
   },
   {
@@ -78,22 +125,23 @@ export const QUESTIONS: QuestionStep[] = [
     title: 'Fora do trabalho, quanto tempo você passa no celular por dia?',
     subtitle: 'Seja sincero. Ninguém vai ver.',
     options: [
-      { value: 'lt2', label: 'Menos de 2h' },
-      { value: '2-4', label: '2 a 4h' },
-      { value: '4-6', label: '4 a 6h' },
-      { value: '6+', label: 'Mais de 6h' },
+      { value: 'lt2', label: 'Menos de 2h', icon: Clock2, desc: 'Uso no controle' },
+      { value: '2-4', label: '2 a 4h', icon: Clock4, desc: 'Uso moderado' },
+      { value: '4-6', label: '4 a 6h', icon: Clock6, desc: 'Já virou rotina' },
+      { value: '6+', label: 'Mais de 6h', icon: Smartphone, desc: 'O celular manda no dia' },
     ],
   },
   {
     kind: 'question',
     key: 'q4',
     number: 4,
-    title: 'Quantas vezes você já começou algo novo (academia, dieta, estudo) e largou no meio?',
+    title: 'Quantas vezes você já começou algo novo e largou no meio?',
+    subtitle: 'Academia, dieta, estudo… Aqui ninguém julga, só o seu eu de ontem.',
     options: [
-      { value: 'nunca', label: 'Nunca larguei' },
-      { value: '1-2', label: '1 ou 2 vezes' },
-      { value: 'perdi-a-conta', label: 'Já perdi a conta', block: 'R' },
-      { value: 'nem-comeco', label: 'Nem chego a começar, fico esperando a hora certa', block: 'P' },
+      { value: 'nunca', label: 'Nunca larguei', icon: Trophy, desc: 'O que começo, eu mantenho' },
+      { value: '1-2', label: '1 ou 2 vezes', icon: Flame, desc: 'Já desisti, mas foi pouco' },
+      { value: 'perdi-a-conta', label: 'Já perdi a conta', icon: RotateCcw, desc: 'Virou um ciclo sem fim', block: 'R' },
+      { value: 'nem-comeco', label: 'Nem chego a começar', icon: CalendarX, desc: 'Fico esperando a hora certa', block: 'P' },
     ],
   },
   {
@@ -101,11 +149,12 @@ export const QUESTIONS: QuestionStep[] = [
     key: 'q5',
     number: 5,
     title: 'Quando você costuma desistir das suas metas?',
+    subtitle: 'Tem um momento que se repete. Você já sabe qual é.',
     options: [
-      { value: 'empolgacao', label: 'Quando a empolgação do começo passa', block: 'R' },
-      { value: 'distracao', label: 'Quando aparece algo mais interessante pra fazer', block: 'D' },
-      { value: 'antes', label: 'Antes de começar, porque nunca parece o momento certo', block: 'P' },
-      { value: 'cansaco', label: 'Quando o cansaço do dia vence', block: 'A' },
+      { value: 'empolgacao', label: 'Quando a empolgação passa', icon: TrendingDown, desc: 'O começo é forte, depois some', block: 'R' },
+      { value: 'distracao', label: 'Quando aparece algo mais legal', icon: Bell, desc: 'Qualquer coisa me tira do foco', block: 'D' },
+      { value: 'antes', label: 'Antes de começar', icon: Hourglass, desc: 'Nunca parece o momento certo', block: 'P' },
+      { value: 'cansaco', label: 'Quando o cansaço vence', icon: BatteryLow, desc: 'No fim do dia não sobra nada', block: 'A' },
     ],
   },
   {
@@ -113,11 +162,12 @@ export const QUESTIONS: QuestionStep[] = [
     key: 'q6',
     number: 6,
     title: 'Como você se sente quando deita pra dormir?',
+    subtitle: 'A resposta mais honesta é a que mais te ajuda.',
     options: [
-      { value: 'culpado', label: 'Culpado', hint: 'o dia escorreu no celular', emoji: '😔', block: 'D' },
-      { value: 'frustrado', label: 'Frustrado', hint: 'prometi e não cumpri de novo', emoji: '😤', block: 'R' },
-      { value: 'travado', label: 'Travado', hint: 'muito plano e pouca ação', emoji: '😶', block: 'P' },
-      { value: 'esgotado', label: 'Esgotado', hint: 'o dia me consumiu e não fiz nada meu', emoji: '🫠', block: 'A' },
+      { value: 'culpado', label: 'Culpado', icon: Frown, desc: 'O dia escorreu no celular', block: 'D' },
+      { value: 'frustrado', label: 'Frustrado', icon: Angry, desc: 'Prometi e não cumpri de novo', block: 'R' },
+      { value: 'travado', label: 'Travado', icon: Meh, desc: 'Muito plano e pouca ação', block: 'P' },
+      { value: 'esgotado', label: 'Esgotado', icon: Annoyed, desc: 'O dia me consumiu e não fiz nada meu', block: 'A' },
     ],
   },
   {
@@ -125,14 +175,14 @@ export const QUESTIONS: QuestionStep[] = [
     key: 'q7',
     number: 7,
     title: 'O que você já perdeu por falta de disciplina?',
-    subtitle: 'Pode marcar várias.',
+    subtitle: 'Pode marcar várias. Ver isso escrito dói, mas é o primeiro passo.',
     multiple: true,
     options: [
-      { value: 'corpo', label: 'O corpo que eu queria ter', emoji: '💪' },
-      { value: 'dinheiro', label: 'Dinheiro', emoji: '💸' },
-      { value: 'oportunidades', label: 'Oportunidades de estudo ou trabalho', emoji: '🚪' },
-      { value: 'confianca', label: 'A confiança em mim mesmo', emoji: '🪞' },
-      { value: 'pessoas', label: 'Pessoas importantes', emoji: '🫂' },
+      { value: 'corpo', label: 'O corpo que eu queria ter', icon: Dumbbell },
+      { value: 'dinheiro', label: 'Dinheiro', icon: Wallet },
+      { value: 'oportunidades', label: 'Oportunidades de estudo ou trabalho', icon: DoorClosed },
+      { value: 'confianca', label: 'A confiança em mim mesmo', icon: ShieldOff },
+      { value: 'pessoas', label: 'Pessoas importantes', icon: HeartCrack },
     ],
   },
   {
@@ -140,11 +190,12 @@ export const QUESTIONS: QuestionStep[] = [
     key: 'q8',
     number: 8,
     title: 'Daqui a 90 dias, quem você quer ver no espelho?',
+    subtitle: 'É essa pessoa que o seu plano vai construir.',
     options: [
-      { value: 'corpo', label: 'Alguém com o corpo que sempre quis', emoji: '💪' },
-      { value: 'focado', label: 'Alguém focado, que termina o que começa', emoji: '🎯' },
-      { value: 'organizado', label: 'Alguém com a vida e o dinheiro organizados', emoji: '📈' },
-      { value: 'paz', label: 'Alguém em paz com a própria rotina', emoji: '🧘' },
+      { value: 'corpo', label: 'Alguém com o corpo que sempre quis', icon: Dumbbell },
+      { value: 'focado', label: 'Alguém focado, que termina o que começa', icon: Target },
+      { value: 'organizado', label: 'Alguém com a vida e o dinheiro organizados', icon: TrendingUp },
+      { value: 'paz', label: 'Alguém em paz com a própria rotina', icon: Leaf },
     ],
   },
   {
@@ -152,12 +203,13 @@ export const QUESTIONS: QuestionStep[] = [
     key: 'q9',
     number: 9,
     title: 'Se desse pra arrumar UMA área primeiro, qual seria?',
+    subtitle: 'É por aqui que o NEXUS vai começar a virar o jogo.',
     layout: 'grid',
     options: [
-      { value: 'corpo', label: 'Corpo e saúde', emoji: '💪' },
-      { value: 'estudos', label: 'Estudos e carreira', emoji: '🎓' },
-      { value: 'dinheiro', label: 'Dinheiro', emoji: '💰' },
-      { value: 'mente', label: 'Mente e foco', emoji: '🧠' },
+      { value: 'corpo', label: 'Corpo e saúde', icon: Heart, desc: 'Voltar a cuidar de mim' },
+      { value: 'estudos', label: 'Estudos e carreira', icon: GraduationCap, desc: 'Aprender pra valer' },
+      { value: 'dinheiro', label: 'Dinheiro', icon: Wallet, desc: 'Parar de me afogar' },
+      { value: 'mente', label: 'Mente e foco', icon: Brain, desc: 'Sair do caos' },
     ],
   },
   {
@@ -169,11 +221,11 @@ export const QUESTIONS: QuestionStep[] = [
     multiple: true,
     exclusive: 'nada',
     options: [
-      { value: 'planilha', label: 'Planilha ou agenda', emoji: '🗓️' },
-      { value: 'app', label: 'App de hábitos', emoji: '📲' },
-      { value: 'video', label: 'Vídeo de motivação', emoji: '▶️' },
-      { value: 'curso', label: 'Curso ou coach', emoji: '🎤' },
-      { value: 'nada', label: 'Nada ainda', emoji: '🌱' },
+      { value: 'planilha', label: 'Planilha ou agenda', icon: CalendarDays },
+      { value: 'app', label: 'App de hábitos', icon: Smartphone },
+      { value: 'video', label: 'Vídeo de motivação', icon: CirclePlay },
+      { value: 'curso', label: 'Curso ou coach', icon: Presentation },
+      { value: 'nada', label: 'Nada ainda', icon: Sprout },
     ],
   },
   {
@@ -181,11 +233,12 @@ export const QUESTIONS: QuestionStep[] = [
     key: 'q11',
     number: 11,
     title: 'O que te faz ir até o fim?',
+    subtitle: 'Isso define como o NEXUS vai te cobrar todo dia.',
     options: [
-      { value: 'superar', label: 'Ter alguém pra superar', emoji: '🏆' },
-      { value: 'progresso', label: 'Ver meu progresso crescer', emoji: '📊' },
-      { value: 'recompensa', label: 'Uma recompensa no final', emoji: '🎁' },
-      { value: 'cobranca', label: 'Alguém me cobrando', emoji: '📣' },
+      { value: 'superar', label: 'Ter alguém pra superar', icon: Trophy, desc: 'Eu ligo quando tem competição' },
+      { value: 'progresso', label: 'Ver meu progresso crescer', icon: BarChart3, desc: 'Número subindo me motiva' },
+      { value: 'recompensa', label: 'Uma recompensa no final', icon: Gift, desc: 'Preciso de algo pra conquistar' },
+      { value: 'cobranca', label: 'Alguém me cobrando', icon: Megaphone, desc: 'Sozinho eu deixo pra depois' },
     ],
   },
   {
@@ -193,12 +246,12 @@ export const QUESTIONS: QuestionStep[] = [
     key: 'q12',
     number: 12,
     title: 'Quanto tempo por dia você consegue separar pra sua evolução?',
-    layout: 'grid',
+    subtitle: 'Sem exagero. Constância vale mais que intensidade.',
     options: [
-      { value: '10', label: '10 minutos' },
-      { value: '20', label: '20 minutos' },
-      { value: '30', label: '30 minutos' },
-      { value: '60', label: '1 hora ou mais' },
+      { value: '10', label: '10 minutos', icon: Zap, desc: 'Pra começar leve' },
+      { value: '20', label: '20 minutos', icon: Timer, desc: 'O ponto ideal pra maioria' },
+      { value: '30', label: '30 minutos', icon: Clock, desc: 'Ritmo de quem quer acelerar' },
+      { value: '60', label: '1 hora ou mais', icon: Flame, desc: 'Modo intenso' },
     ],
   },
 ]
@@ -233,7 +286,7 @@ export type Block = {
   code: BlockCode
   name: string
   withArticle: string // "o Ciclo do Recomeço"
-  emoji: string
+  icon: LucideIcon
   protocol: string
   impact: string
   checks: [string, string, string] // o 3º tem {feeling}
@@ -251,7 +304,7 @@ export const BLOCKS: Record<BlockCode, Block> = {
     code: 'R',
     name: 'Ciclo do Recomeço',
     withArticle: 'o Ciclo do Recomeço',
-    emoji: '🔁',
+    icon: RotateCcw,
     protocol: 'Protocolo Sem Zerar',
     impact: 'Começar você sabe. O problema é o dia 8.',
     checks: [
@@ -271,7 +324,7 @@ export const BLOCKS: Record<BlockCode, Block> = {
     code: 'D',
     name: 'Mente Dispersa',
     withArticle: 'a Mente Dispersa',
-    emoji: '📱',
+    icon: Smartphone,
     protocol: 'Protocolo Foco Blindado',
     impact: 'Você não é preguiçoso. Sua atenção foi sequestrada.',
     checks: [
@@ -291,7 +344,7 @@ export const BLOCKS: Record<BlockCode, Block> = {
     code: 'P',
     name: 'Paralisia do Perfeito',
     withArticle: 'a Paralisia do Perfeito',
-    emoji: '⏳',
+    icon: Hourglass,
     protocol: 'Protocolo Primeiro Passo',
     impact: 'Seu plano é ótimo. Ele só nunca começa.',
     checks: [
@@ -311,7 +364,7 @@ export const BLOCKS: Record<BlockCode, Block> = {
     code: 'A',
     name: 'Piloto Automático',
     withArticle: 'o Piloto Automático',
-    emoji: '🔋',
+    icon: BatteryLow,
     protocol: 'Protocolo Rumo Certo',
     impact: 'Seu dia acontece. Você só assiste.',
     checks: [

@@ -1,274 +1,183 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowRight, Check, ChevronDown, Flame, Headphones, ShieldCheck } from 'lucide-react'
+import { Check, Clock, Eye } from 'lucide-react'
 import Image from 'next/image'
-import { useCallback, useEffect, useState } from 'react'
-import { useTrackOnce } from '@/components/funnel/fx'
+import { useCallback, useMemo, useState } from 'react'
 import { CAKTO_URLS, getCheckoutUrl } from '@/lib/checkout'
-import { type Derived, formatPactDate } from '@/lib/funnel'
-import { track } from '@/lib/track'
-import { useFunnel } from '@/lib/use-funnel'
+import {
+  averageOf,
+  computeDiagnosis,
+  DEFAULT_QUIZ_DATA,
+  improvementPercent,
+  projectRadar,
+} from '@/lib/diagnosis'
+import { useQuizData } from '@/lib/use-quiz-data'
 import { withUtms } from '@/lib/utm'
-import { cn } from '@/lib/utils'
+import { useTrackOnce } from '@/components/funnel/fx'
+import { CommunityModal } from './community-modal'
+import { EvolutionProjection } from './evolution-projection'
 import { ExitOfferModal } from './exit-offer-modal'
-import { FAQ, formatPrice, type Plan, PLANS, TESTIMONIALS } from './plans-data'
+import { PlanCarousel, PlanTabs } from './plan-carousel'
+import { type Plan, PLAN_TESTIMONIALS, PLANS } from './plans-data'
+import { FiveStars, GuaranteeSeal, PlansFaq, PlansTestimonials } from './plans-social-proof'
 import { useCheckoutRedirect } from './use-checkout-redirect'
+import { useCountdown, useExitIntent, useLiveViewers, usePurchaseToasts } from './use-plans-urgency'
 
 export function Plans() {
-  const f = useFunnel()
-  if (!f.ready) return <div className="min-h-[100dvh] bg-background" />
-  return <PlansView f={f} />
-}
-
-function useExitIntent(onExitIntent: () => void, disabled: boolean) {
-  useEffect(() => {
-    if (disabled) return
-    const handlePopState = () => {
-      onExitIntent()
-      window.history.pushState(null, '', window.location.href)
-    }
-    window.history.pushState(null, '', window.location.href)
-    window.addEventListener('popstate', handlePopState)
-    return () => window.removeEventListener('popstate', handlePopState)
-  }, [onExitIntent, disabled])
-}
-
-function PlansView({ f }: { f: Derived }) {
-  const [selected, setSelected] = useState<Plan>(PLANS[1])
-  const [exitOpen, setExitOpen] = useState(false)
-  const [exitShown, setExitShown] = useState(false)
-  const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const quiz = useQuizData() ?? DEFAULT_QUIZ_DATA
+  const [selectedPlan, setSelectedPlan] = useState<Plan>(PLANS[1])
+  const [communityOpen, setCommunityOpen] = useState(false)
   const { redirecting, startRedirect } = useCheckoutRedirect()
-  useTrackOnce('plans_view', { block: f.code })
+  const [exitOfferOpen, setExitOfferOpen] = useState(false)
+  const [exitOfferShown, setExitOfferShown] = useState(false)
 
-  const showExit = useCallback(() => {
-    setExitOpen(true)
-    setExitShown(true)
-    track('exit_offer_view')
+  useTrackOnce('plans_view')
+  const countdown = useCountdown(900)
+  const viewers = useLiveViewers()
+  const toast = usePurchaseToasts()
+
+  const projection = useMemo(() => {
+    const diagnosis = computeDiagnosis(quiz)
+    const projected = projectRadar(diagnosis.radar, 30)
+    return {
+      avgCurrent: diagnosis.avgCurrent,
+      avgPotential: averageOf(projected),
+      improvement: improvementPercent(diagnosis.radar, projected),
+    }
+  }, [quiz])
+
+  const showExitOffer = useCallback(() => {
+    setExitOfferOpen(true)
+    setExitOfferShown(true)
   }, [])
-  useExitIntent(showExit, exitShown)
+  useExitIntent(showExitOffer, exitOfferShown)
 
-  const pact = f.pactAt ? formatPactDate(f.pactAt) : null
-  const checkoutHref = withUtms(getCheckoutUrl(selected.id, false))
+  const checkoutHref = (withCommunity: boolean) => withUtms(getCheckoutUrl(selectedPlan.id, withCommunity))
 
-  const choose = (p: Plan) => {
-    setSelected(p)
-    track('plan_select', { plan: p.id })
+  const handleUnlock = (plan: Plan) => {
+    setSelectedPlan(plan)
+    setCommunityOpen(true)
   }
 
   return (
-    <main id="main-content" className="min-h-[100dvh] bg-background text-foreground overflow-x-hidden pb-36">
+    <main id="main-content" className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <ExitOfferModal
-        open={exitOpen}
+        open={exitOfferOpen}
         redirecting={redirecting}
-        onClose={() => setExitOpen(false)}
+        onClose={() => setExitOfferOpen(false)}
         acceptHref={withUtms(CAKTO_URLS.backredirect)}
-        onAccept={(e) => {
-          track('exit_offer_checkout')
-          startRedirect(e)
-        }}
-        blockName={f.block.withArticle}
+        onAccept={startRedirect}
       />
 
-      <div className="max-w-md mx-auto px-5">
-        {/* 1. Topo */}
-        <section className="pt-5 text-center">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/25 text-[11px] font-bold text-primary">
-            <Check className="w-3 h-3" /> Pacto selado{pact ? ` · ${pact.short}` : ''}
-          </span>
-          <h1 className="mt-3 text-[26px] font-black leading-tight text-balance">
-            Escolha como você vai cumprir seu pacto.
-          </h1>
-          <div className="mt-4 flex items-stretch gap-2 text-left">
-            <div className="flex-1 rounded-xl border border-border bg-card px-3 py-2.5">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Hoje</p>
-              <p className="text-[13px] font-semibold leading-snug">
-                {f.block.emoji} {f.block.name}
-              </p>
-            </div>
-            <div className="flex items-center">
-              <motion.span
-                animate={{ x: [0, 4, 0] }}
-                transition={{ duration: 1.2, repeat: Infinity }}
-                className="text-primary neon-glow"
-              >
-                <ArrowRight className="w-5 h-5" />
-              </motion.span>
-            </div>
-            <div className="flex-1 rounded-xl border border-primary/40 bg-primary/10 px-3 py-2.5">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-primary">Dia 90</p>
-              <p className="text-[13px] font-semibold leading-snug">{f.mirror}</p>
-            </div>
-          </div>
-        </section>
-
-        {/* 2. Planos */}
-        <section className="mt-6 flex flex-col gap-3" role="radiogroup" aria-label="Planos">
-          {PLANS.map((p) => {
-            const isSel = p.id === selected.id
-            return (
-              <button
-                key={p.id}
-                type="button"
-                role="radio"
-                aria-checked={isSel}
-                onClick={() => choose(p)}
-                className={cn(
-                  'relative w-full text-left rounded-2xl border p-4 transition-colors',
-                  isSel
-                    ? 'border-primary bg-primary/[0.07] ring-1 ring-primary/50 shadow-[0_10px_40px_-18px_var(--primary)]'
-                    : 'border-border bg-card',
-                )}
-              >
-                {p.badge && (
-                  <span
-                    className={cn(
-                      'absolute -top-2.5 right-4 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide',
-                      p.id === 'focuz' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-foreground border border-border',
-                    )}
-                  >
-                    {p.badge}
-                  </span>
-                )}
-                <div className="flex items-center gap-3">
-                  <span
-                    className={cn(
-                      'w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0',
-                      isSel ? 'border-primary' : 'border-muted-foreground/40',
-                    )}
-                  >
-                    {isSel && <span className="w-2.5 h-2.5 rounded-full bg-primary" />}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-[17px] leading-tight">{p.name}</p>
-                    <p className="text-[13px] text-muted-foreground leading-snug">
-                      {p.phrase.replace('{block}', f.block.withArticle)}
-                    </p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <p className="text-[11px] text-muted-foreground leading-none">R$</p>
-                    <p className={cn('text-2xl font-black leading-none', isSel && 'text-primary')}>{formatPrice(p.price)}</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">pagamento único</p>
-                  </div>
-                </div>
-                <AnimatePresence initial={false}>
-                  {isSel && (
-                    <motion.ul
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden pl-8"
-                    >
-                      {p.benefits.map((b) => (
-                        <li key={b} className="flex items-center gap-2 text-[14px] pt-2">
-                          <Check className="w-4 h-4 text-primary shrink-0" />
-                          {b}
-                        </li>
-                      ))}
-                    </motion.ul>
-                  )}
-                </AnimatePresence>
-              </button>
-            )
-          })}
-        </section>
-
-        {/* 3. Garantia */}
-        <section className="mt-6 flex items-center gap-4 rounded-2xl border border-primary/25 bg-gradient-to-br from-primary/10 to-transparent p-4">
-          <ShieldCheck className="w-14 h-14 text-primary shrink-0 neon-glow" strokeWidth={1.6} />
-          <p className="text-[15px] font-semibold leading-snug">
-            7 dias pra testar. <span className="text-muted-foreground font-normal">Não gostou, devolvemos tudo.</span>
-          </p>
-        </section>
-
-        {/* 4. Prova social */}
-        <section className="mt-6 flex flex-col gap-2.5">
-          {TESTIMONIALS.map((t) => (
-            <figure key={t.name} className="flex gap-3 rounded-2xl border border-border bg-card p-3.5">
-              <Image src={t.image} alt={t.name} width={40} height={40} className="w-10 h-10 rounded-full object-cover shrink-0" />
-              <div className="min-w-0">
-                <blockquote className="text-[14px] leading-snug">“{t.text}”</blockquote>
-                <figcaption className="mt-1 flex items-center gap-2 text-[12px] text-muted-foreground">
-                  {t.name}
-                  <span className="inline-flex items-center gap-0.5 text-orange-400 font-bold">
-                    <Flame className="w-3 h-3 fill-orange-400" /> {t.streak} dias
-                  </span>
-                </figcaption>
-              </div>
-            </figure>
-          ))}
-        </section>
-
-        {/* 5. FAQ */}
-        <section className="mt-6 flex flex-col gap-2">
-          {FAQ.map((item, i) => {
-            const open = openFaq === i
-            return (
-              <div key={item.question} className="rounded-xl border border-border overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => setOpenFaq(open ? null : i)}
-                  aria-expanded={open}
-                  className="w-full flex items-center justify-between px-4 py-3.5 text-left"
-                >
-                  <span className="font-semibold text-[14px]">{item.question}</span>
-                  <ChevronDown className={cn('w-4 h-4 text-muted-foreground transition-transform', open && 'rotate-180')} />
-                </button>
-                <AnimatePresence initial={false}>
-                  {open && (
-                    <motion.p
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden px-4 pb-3.5 text-[14px] text-muted-foreground"
-                    >
-                      {item.answer}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </div>
-            )
-          })}
-          <a
-            href="https://wa.me/5521965450784?text=Ol%C3%A1!%20Tenho%20Duvidas%20sobre%20o%20NexusApp"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-1 py-3 text-sm text-primary font-medium flex items-center justify-center gap-2"
-          >
-            <Headphones className="w-4 h-4" /> Tem dúvida? Fala com a gente
-          </a>
-        </section>
-      </div>
-
-      {/* 6. Botão fixo */}
-      <div className="fixed bottom-0 inset-x-0 z-40 px-5 pt-6 pb-[max(1rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-background via-background/95 to-transparent">
-        <div className="max-w-md mx-auto">
-          {/* onClickCapture (não onClick): o pixel da UTMify chama element.onclick em vez de navegar após o InitiateCheckout. */}
-          <a
-            href={checkoutHref}
-            onClickCapture={(e) => {
-              track('checkout', { plan: selected.id, price: selected.price })
-              startRedirect(e)
-            }}
-            aria-disabled={redirecting}
-            aria-busy={redirecting}
-            className={cn(
-              'relative overflow-hidden w-full h-14 rounded-xl bg-primary text-primary-foreground font-bold text-[17px] flex items-center justify-center gap-2 shadow-[0_10px_36px_-10px_var(--primary)]',
-              redirecting && 'pointer-events-none opacity-60',
-            )}
-          >
-            {redirecting && (
-              <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" aria-hidden="true" />
-            )}
-            <span className="relative z-10">Cumprir meu pacto com o {selected.name} →</span>
-            <span className="cta-shine" aria-hidden="true" />
-          </a>
-          <p className="text-center text-[11px] text-muted-foreground mt-2">
-            R$ {formatPrice(selected.price)} · pagamento único · acesso vitalício
-          </p>
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center justify-center gap-4 py-2 px-4 bg-destructive/10 border-b border-destructive/30"
+      >
+        <div className="flex items-center gap-1.5">
+          <Clock className="w-3.5 h-3.5 text-destructive" />
+          <span className="text-xs font-bold text-destructive tabular-nums">{countdown}</span>
         </div>
+        <div className="w-px h-3 bg-border/50" aria-hidden="true" />
+        <div className="flex items-center gap-1.5">
+          <Eye className="w-3.5 h-3.5 text-primary" />
+          <span className="text-xs text-white/70">
+            <span className="text-primary font-bold">{viewers}</span> vendo agora
+          </span>
+        </div>
+      </motion.div>
+
+      <div className="px-4 pt-5 pb-4 text-center">
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-2xl font-bold mb-2 text-balance"
+        >
+          Seu plano está pronto. Só falta você.
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          className="text-white/60 text-sm"
+        >
+          Pague <span className="text-primary font-bold">uma vez</span>. Evolua{' '}
+          <span className="text-primary font-bold">todos os dias</span>.
+        </motion.p>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.15 }}
+          className="text-white/40 text-xs mt-1.5 italic"
+        >
+          Você já sabe o que está te travando. Agora falta corrigir isso.
+        </motion.p>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          className="mt-3 inline-flex items-center gap-2 rounded-full border border-destructive/40 bg-destructive/10 px-3.5 py-1.5"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-destructive animate-pulse" aria-hidden="true" />
+          <span className="text-xs font-semibold text-destructive">
+            Preço de lançamento acaba em <span className="tabular-nums">{countdown}</span>
+          </span>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.25 }}
+          className="mt-3 flex items-center justify-center gap-2"
+        >
+          <div className="flex -space-x-2">
+            {PLAN_TESTIMONIALS.map((t) => (
+              <div key={t.name} className="w-7 h-7 rounded-full overflow-hidden border-2 border-background">
+                <Image src={t.image} alt={t.name} width={28} height={28} className="w-full h-full object-cover" />
+              </div>
+            ))}
+          </div>
+          <FiveStars />
+          <span className="text-[11px] text-white/50">20.000+ usuarios</span>
+        </motion.div>
       </div>
+
+      <PlanTabs selected={selectedPlan} onSelect={setSelectedPlan} />
+      <PlanCarousel selected={selectedPlan} onSelect={setSelectedPlan} onUnlock={handleUnlock} />
+
+      <EvolutionProjection {...projection} />
+      <PlansTestimonials />
+      <PlansFaq />
+      <GuaranteeSeal />
+
+      <CommunityModal
+        plan={selectedPlan}
+        open={communityOpen}
+        processing={redirecting}
+        onClose={() => setCommunityOpen(false)}
+        checkoutHref={checkoutHref}
+        onCheckoutStart={startRedirect}
+      />
+
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bottom-20 left-4 right-4 md:left-auto md:right-6 md:max-w-xs z-50 pointer-events-none"
+            role="status"
+          >
+            <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-full bg-white/10 border border-white/10">
+              <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                <Check className="w-3 h-3 text-primary" />
+              </div>
+              <span className="text-xs text-white/80 truncate">{toast}</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   )
 }

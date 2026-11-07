@@ -193,56 +193,58 @@ function QuestionView({
   const grid = q.layout === 'grid'
   return (
     <>
-      <h2 className="text-[22px] font-bold leading-tight text-balance text-center mt-2">{q.title}</h2>
-      {q.subtitle && <p className="text-sm text-muted-foreground mt-1.5 text-center text-pretty">{q.subtitle}</p>}
+      <h2 className="text-xl font-bold leading-tight text-balance text-center mt-1">{q.title}</h2>
+      <p className="text-sm text-muted-foreground mt-1 text-center text-pretty leading-snug">{q.subtitle}</p>
 
-      <div
-        className="flex-1 flex flex-col justify-center py-5"
-        role={q.multiple ? 'group' : 'radiogroup'}
-      >
-        <div className={cn(grid ? 'grid grid-cols-2 gap-3' : 'flex flex-col gap-2.5')}>
-          {q.options.map((o, i) => {
+      <div className="flex-1 flex flex-col justify-center py-4" role={q.multiple ? 'group' : 'radiogroup'}>
+        <div className={cn(grid ? 'grid grid-cols-2 gap-2.5' : 'flex flex-col gap-2.5')}>
+          {q.options.map((o) => {
             const isSel = selected.includes(o.value)
+            const Icon = o.icon
             return (
-              <motion.button
+              <button
                 key={o.value}
                 type="button"
                 role={q.multiple ? 'checkbox' : 'radio'}
                 aria-checked={isSel}
                 onClick={() => onPick(o.value)}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.04 * i }}
-                whileTap={{ scale: 0.98 }}
                 className={cn(
-                  'w-full rounded-2xl border text-left transition-colors flex items-center gap-3',
-                  grid ? 'flex-col justify-center text-center py-6 px-3' : 'px-4 py-3.5 min-h-[58px]',
-                  isSel
-                    ? 'border-primary bg-primary/10 ring-1 ring-primary/40 shadow-[0_6px_24px_-12px_var(--primary)]'
-                    : 'border-border bg-card hover:border-primary/50',
+                  'w-full rounded-2xl border transition-all text-left',
+                  grid ? 'p-3 flex flex-col gap-1.5' : 'p-3 flex items-center gap-3',
+                  isSel ? SELECTED : IDLE,
                 )}
               >
-                {o.emoji && <span className={cn('leading-none', grid ? 'text-3xl' : 'text-2xl')}>{o.emoji}</span>}
-                <span className="flex-1 min-w-0">
-                  <span className={cn('block font-semibold leading-snug', grid ? 'text-base' : 'text-[15px]')}>
-                    {o.label}
-                  </span>
-                  {o.hint && <span className="block text-[13px] text-muted-foreground leading-snug mt-0.5">porque {o.hint}</span>}
-                </span>
+                <div
+                  className={cn(
+                    'rounded-xl flex items-center justify-center shrink-0 transition-colors',
+                    grid ? 'w-9 h-9 rounded-lg' : 'w-10 h-10',
+                    isSel ? 'bg-primary text-primary-foreground' : 'bg-secondary',
+                  )}
+                >
+                  <Icon className={grid ? 'w-4 h-4' : 'w-5 h-5'} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm leading-tight">{o.label}</p>
+                  {o.desc && (
+                    <p className={cn('text-xs text-muted-foreground leading-tight mt-0.5', grid && 'text-[11px]')}>{o.desc}</p>
+                  )}
+                </div>
                 {!grid &&
                   (q.multiple ? (
-                    <span
+                    <div
                       className={cn(
-                        'w-5 h-5 rounded-md border flex items-center justify-center shrink-0',
+                        'w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition-colors',
                         isSel ? 'bg-primary border-primary' : 'border-muted-foreground/40',
                       )}
                     >
                       {isSel && <Check className="w-3.5 h-3.5 text-primary-foreground" />}
-                    </span>
+                    </div>
                   ) : (
-                    <ChevronRight className={cn('w-4 h-4 shrink-0', isSel ? 'text-primary' : 'text-muted-foreground/40')} />
+                    <ChevronRight
+                      className={cn('w-4 h-4 shrink-0 transition-colors', isSel ? 'text-primary' : 'text-muted-foreground/40')}
+                    />
                   ))}
-              </motion.button>
+              </button>
             )
           })}
         </div>
@@ -250,3 +252,6 @@ function QuestionView({
     </>
   )
 }
+
+const SELECTED = 'border-primary bg-primary/10 ring-1 ring-primary/40 shadow-[0_6px_24px_-12px_var(--primary)]'
+const IDLE = 'border-border hover:border-primary/50'
