@@ -54,7 +54,11 @@ function ResultsView({ f }: { f: Derived }) {
             Seu diagnóstico está pronto
           </motion.div>
 
-          <div className="relative mx-auto mt-4 h-[250px] w-full max-w-[320px]">
+          <div className="relative mx-auto mt-2 h-[250px] w-full max-w-[320px]">
+            <div
+              className="absolute left-1/2 top-6 h-44 w-44 -translate-x-1/2 rounded-full bg-primary/25 blur-3xl"
+              aria-hidden="true"
+            />
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -68,22 +72,6 @@ function ResultsView({ f }: { f: Derived }) {
                 height={594}
                 priority
                 className="h-[300px] w-auto max-w-none"
-              />
-            </motion.div>
-            {/* ícone do bloqueio "carimbado" */}
-            <motion.div
-              initial={{ scale: 2.4, opacity: 0, rotate: -14 }}
-              animate={{ scale: 1, opacity: 1, rotate: 0 }}
-              transition={{ delay: 0.6, type: 'spring', stiffness: 380, damping: 16 }}
-              className="absolute right-0 top-0 w-24 h-24"
-            >
-              <Image
-                src={`/images/icon-${f.code}.webp`}
-                alt=""
-                width={160}
-                height={160}
-                priority
-                className="w-full h-full object-contain mix-blend-screen"
               />
             </motion.div>
           </div>

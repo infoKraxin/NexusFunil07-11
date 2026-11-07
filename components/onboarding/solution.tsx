@@ -141,7 +141,11 @@ function SolutionView({ f }: { f: Derived }) {
         </section>
 
         {/* 3. Linha do tempo */}
-        <div className="flex flex-col items-center -mb-4">
+        <div className="relative flex flex-col items-center -mt-4 -mb-4">
+          <div
+            className="absolute left-1/2 top-4 h-44 w-44 -translate-x-[60%] rounded-full bg-primary/25 blur-3xl"
+            aria-hidden="true"
+          />
           <div className="relative h-[220px] w-full flex justify-center overflow-hidden [mask-image:linear-gradient(to_bottom,black_70%,transparent)]">
             <Image
               src="/images/personagem-forte-busto.webp"
