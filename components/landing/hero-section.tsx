@@ -49,7 +49,7 @@ export function HeroSection() {
                   'w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 gap-2 text-base px-8',
                 )}
               >
-                Descobrir Meu Potencial <ArrowRight className="w-5 h-5" />
+                Descobrir o que me trava <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
             <div className="flex items-center gap-4 mt-10 justify-center lg:justify-start">
