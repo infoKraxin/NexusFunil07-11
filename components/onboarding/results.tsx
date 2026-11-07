@@ -65,13 +65,17 @@ function ResultsView({ f }: { f: Derived }) {
             transition={{ delay: 0.15, duration: 0.6 }}
             className="relative mt-4 h-[250px] w-full overflow-hidden rounded-3xl border border-primary/15"
           >
+            <div
+              className="absolute inset-0"
+              style={{ background: 'radial-gradient(ellipse at 50% 35%, rgb(54 245 85 / 0.22), transparent 65%), #050607' }}
+            />
             <Image
-              src={`/images/bloqueio-${f.code}.webp`}
+              src="/images/personagem-fraco-busto.webp"
               alt=""
-              fill
+              width={341}
+              height={594}
               priority
-              sizes="(max-width: 448px) 100vw, 448px"
-              className="object-cover object-[50%_18%]"
+              className="absolute left-1/2 top-0 h-[300px] w-auto max-w-none -translate-x-1/2"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-transparent" />
             {/* selo do bloqueio "carimbado" */}

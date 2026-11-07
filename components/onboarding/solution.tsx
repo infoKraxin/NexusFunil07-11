@@ -143,7 +143,17 @@ function SolutionView({ f }: { f: Derived }) {
         {/* 3. Linha do tempo */}
         <section className="rounded-2xl bg-gradient-to-br from-secondary/30 to-secondary/10 border border-border/40 p-4 pb-5">
           <div className="relative -mx-4 -mt-4 mb-4 h-48 overflow-hidden rounded-t-2xl">
-            <Image src="/images/dia-90.webp" alt="" fill sizes="448px" className="object-cover object-[50%_12%]" />
+            <div
+              className="absolute inset-0"
+              style={{ background: 'radial-gradient(ellipse at 50% 30%, rgb(54 245 85 / 0.28), transparent 65%), #050607' }}
+            />
+            <Image
+              src="/images/personagem-forte-busto.webp"
+              alt=""
+              width={542}
+              height={642}
+              className="absolute left-1/2 top-0 h-[230px] w-auto max-w-none -translate-x-[62%]"
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c0d] via-[#0a0c0d]/20 to-transparent" />
             <div className="absolute left-4 bottom-3">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary">Você no dia 90</p>
