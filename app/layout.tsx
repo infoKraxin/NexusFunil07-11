@@ -1,6 +1,6 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Inter, JetBrains_Mono } from 'next/font/google'
+import { Caveat, Inter, JetBrains_Mono } from 'next/font/google'
 import { BackgroundMusicProvider } from '@/components/nexus/background-music-provider'
 import { GlobalClickSound } from '@/components/nexus/global-click-sound'
 import { UtmCapture } from '@/components/nexus/utm-capture'
@@ -9,6 +9,7 @@ import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains-mono' })
+const caveat = Caveat({ subsets: ['latin'], variable: '--font-caveat', weight: ['500', '700'] })
 
 const description =
   'The futuristic habit tracking app that transforms your daily routine into a competitive journey of self-improvement.'
@@ -46,7 +47,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-BR" className={`dark bg-background ${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="pt-BR" className={`dark bg-background ${inter.variable} ${jetbrainsMono.variable} ${caveat.variable}`}>
       <head>
         <UtmifyPixel />
       </head>

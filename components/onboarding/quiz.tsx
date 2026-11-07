@@ -1,90 +1,104 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
+import { Check, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { NexusButton } from '@/components/nexus/nexus-button'
 import { NexusLogo } from '@/components/nexus/nexus-logo'
-import { BODY_METRICS_STORAGE_KEY, QUIZ_STORAGE_KEY, type QuizAnswer } from '@/lib/diagnosis'
-import { BodyMetricsStep } from './body-metrics-step'
-import { FocusOptions, MultipleOptions, ScaleOptions, SingleOptions } from './quiz-options'
-import { QUIZ_QUESTIONS } from './quiz-questions'
+import { type FunnelAnswers, type QuestionStep, STEPS, writeFunnel } from '@/lib/funnel'
+import { track } from '@/lib/track'
+import { useFunnel } from '@/lib/use-funnel'
+import { cn } from '@/lib/utils'
+import { InsertionPattern, InsertionPhoneDays, InsertionProjection, InsertionWhyBefore } from './insertions'
 
 const ANALYZING_ROUTE = '/onboarding/analyzing'
+const TOTAL_QUESTIONS = 12
+const AUTO_ADVANCE_MS = 320
 
 export function Quiz() {
   const router = useRouter()
-  const [step, setStep] = useState(0)
-  const [answers, setAnswers] = useState<QuizAnswer[]>([])
+  const f = useFunnel()
+  const [stepIndex, setStepIndex] = useState(0)
   const [selected, setSelected] = useState<string[]>([])
-  const [height, setHeight] = useState(170)
-  const [weight, setWeight] = useState(70)
+  const advancing = useRef(false)
 
-  const question = QUIZ_QUESTIONS[step]
-  const progress = ((step + 1) / QUIZ_QUESTIONS.length) * 100
-  const bmi = height <= 0 || weight <= 0 ? 0 : weight / (height / 100) ** 2
-  const canContinue = question.type === 'body' || selected.length > 0
-  const isLast = step === QUIZ_QUESTIONS.length - 1
+  const step = STEPS[stepIndex]
+  const lastQuestionNumber = STEPS.slice(0, stepIndex + 1).reduce(
+    (n, s) => (s.kind === 'question' ? s.number : n),
+    0,
+  )
+  const progress = (lastQuestionNumber / TOTAL_QUESTIONS) * 100
+  const isLastStep = stepIndex === STEPS.length - 1
 
-  const saveAnswers = (next: QuizAnswer[]) => {
-    setAnswers(next)
-    localStorage.setItem(QUIZ_STORAGE_KEY, JSON.stringify(next))
+  useEffect(() => {
+    writeFunnel(() => ({ answers: {} }))
+    track('quiz_start')
+  }, [])
+
+  useEffect(() => {
+    if (step.kind === 'insertion') track('insertion_view', { insertion: step.id })
+    window.scrollTo(0, 0)
+  }, [step])
+
+  const restoreSelection = (index: number) => {
+    const s = STEPS[index]
+    if (s.kind !== 'question') return setSelected([])
+    const prev = f.state.answers[s.key]
+    setSelected(prev ? (Array.isArray(prev) ? prev : [prev]) : [])
   }
 
-  const selectSingle = (value: string) => setSelected([value])
-
-  const toggleMultiple = (value: string) =>
-    setSelected((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
-
-  const goBack = () => {
-    if (step === 0) return
-    const previous = answers.find((a) => a.questionId === QUIZ_QUESTIONS[step - 1].id)
-    setStep((s) => s - 1)
-    if (previous) {
-      setSelected(previous.answer.includes(',') ? previous.answer.split(',') : [String(previous.answer)])
-    }
+  const goTo = (index: number) => {
+    advancing.current = false
+    setStepIndex(index)
+    restoreSelection(index)
   }
 
-  const skipBodyMetrics = () => {
-    localStorage.setItem(BODY_METRICS_STORAGE_KEY, JSON.stringify({ skipped: true }))
-    saveAnswers([...answers.filter((a) => a.questionId !== 8), { questionId: 8, answer: 'skipped' }])
-    router.push(ANALYZING_ROUTE)
-  }
-
-  const handleNext = () => {
-    if (question.type === 'body') {
-      const roundedBmi = parseFloat(bmi.toFixed(1))
-      localStorage.setItem(BODY_METRICS_STORAGE_KEY, JSON.stringify({ height, weight, bmi: roundedBmi }))
-      saveAnswers([
-        ...answers.filter((a) => a.questionId !== question.id),
-        { questionId: question.id, answer: `${height}cm,${weight}kg,${bmi.toFixed(1)}` },
-      ])
+  const next = () => {
+    if (isLastStep) {
+      track('quiz_complete')
       router.push(ANALYZING_ROUTE)
       return
     }
-
-    const answer: QuizAnswer = {
-      questionId: question.id,
-      answer: question.type === 'multiple' ? selected.join(',') : selected[0],
-    }
-    saveAnswers([...answers.filter((a) => a.questionId !== question.id), answer])
-
-    if (!isLast) {
-      setStep((s) => s + 1)
-      setSelected([])
-    } else {
-      router.push(ANALYZING_ROUTE)
-    }
+    goTo(stepIndex + 1)
   }
 
+  const save = (q: QuestionStep, values: string[]) => {
+    const value = q.multiple ? values : values[0]
+    writeFunnel((s) => ({ ...s, answers: { ...s.answers, [q.key]: value } as FunnelAnswers }))
+    track('question_answer', { question: q.number, answer: value })
+  }
+
+  const pickSingle = (q: QuestionStep, value: string) => {
+    if (advancing.current) return
+    advancing.current = true
+    setSelected([value])
+    save(q, [value])
+    setTimeout(next, AUTO_ADVANCE_MS)
+  }
+
+  const toggleMultiple = (q: QuestionStep, value: string) => {
+    setSelected((prev) => {
+      if (q.exclusive && value === q.exclusive) return prev.includes(value) ? [] : [value]
+      const base = prev.filter((v) => v !== q.exclusive)
+      return base.includes(value) ? base.filter((v) => v !== value) : [...base, value]
+    })
+  }
+
+  const continueMultiple = (q: QuestionStep) => {
+    save(q, selected)
+    next()
+  }
+
+  const showButton = step.kind === 'insertion' || step.multiple
+
   return (
-    <div className="h-[100dvh] bg-background flex flex-col overflow-hidden relative">
-      <header className="flex items-center justify-between px-4 pt-3 pb-1 shrink-0 relative z-10">
+    <div className="min-h-[100dvh] bg-background flex flex-col relative">
+      <header className="flex items-center justify-between px-4 pt-3 pb-1 shrink-0">
         <button
           type="button"
-          onClick={goBack}
-          disabled={step === 0}
+          onClick={() => stepIndex > 0 && goTo(stepIndex - 1)}
+          disabled={stepIndex === 0}
           className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-secondary disabled:opacity-30 transition-colors"
           aria-label="Voltar"
         >
@@ -102,9 +116,7 @@ export function Quiz() {
 
       <div className="px-5 pt-2 pb-3 shrink-0">
         <div className="flex items-center justify-between text-xs text-muted-foreground mb-1.5">
-          <span>
-            Pergunta {step + 1} de {QUIZ_QUESTIONS.length}
-          </span>
+          <span>{step.kind === 'question' ? `Pergunta ${step.number} de ${TOTAL_QUESTIONS}` : 'Seu resultado parcial'}</span>
           <span className="font-semibold text-primary">{Math.round(progress)}%</span>
         </div>
         <div
@@ -116,67 +128,125 @@ export function Quiz() {
         >
           <motion.div
             className="h-full bg-primary rounded-full"
-            initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.35 }}
           />
         </div>
       </div>
 
-      <main id="main-content" className="flex-1 min-h-0 px-5 flex flex-col">
+      <main id="main-content" className={cn('flex-1 px-5 flex flex-col', showButton ? 'pb-36' : 'pb-8')}>
         <AnimatePresence mode="wait">
           <motion.div
-            key={step}
+            key={stepIndex}
             initial={{ opacity: 0, x: 16 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -16 }}
-            transition={{ duration: 0.25 }}
-            className="flex-1 min-h-0 flex flex-col"
+            transition={{ duration: 0.22 }}
+            className="flex-1 flex flex-col max-w-md w-full mx-auto"
           >
-            <h2 className="text-xl font-bold leading-tight text-balance text-center">{question.question}</h2>
-            {question.subtitle && (
-              <p className="text-sm text-muted-foreground mt-1 mb-3 leading-snug text-pretty text-center">
-                {question.subtitle}
-              </p>
-            )}
-
-            {question.type === 'single' && question.options && (
-              <SingleOptions options={question.options} selected={selected} onSelect={selectSingle} />
-            )}
-            {question.type === 'multiple' && question.options && (
-              <MultipleOptions options={question.options} selected={selected} onSelect={toggleMultiple} />
-            )}
-            {question.type === 'focus' && question.options && (
-              <FocusOptions options={question.options} selected={selected} onSelect={selectSingle} />
-            )}
-            {question.type === 'scale' && question.options && (
-              <ScaleOptions options={question.options} selected={selected} onSelect={selectSingle} />
-            )}
-            {question.type === 'body' && (
-              <BodyMetricsStep
-                height={height}
-                weight={weight}
-                bmi={bmi}
-                onHeightChange={setHeight}
-                onWeightChange={setWeight}
-                onSkip={skipBodyMetrics}
+            {step.kind === 'question' ? (
+              <QuestionView
+                q={step}
+                selected={selected}
+                onPick={(v) => (step.multiple ? toggleMultiple(step, v) : pickSingle(step, v))}
               />
+            ) : step.id === 1 ? (
+              <InsertionPhoneDays f={f} />
+            ) : step.id === 2 ? (
+              <InsertionPattern f={f} />
+            ) : step.id === 3 ? (
+              <InsertionProjection f={f} />
+            ) : (
+              <InsertionWhyBefore f={f} />
             )}
           </motion.div>
         </AnimatePresence>
       </main>
 
-      <div className="px-5 pt-3 pb-5 shrink-0">
-        <NexusButton
-          onClick={handleNext}
-          disabled={!canContinue}
-          className="w-full h-12 text-base font-semibold bg-primary hover:bg-primary/90 gap-2 disabled:opacity-50 shadow-[0_8px_30px_-12px_var(--primary)]"
-        >
-          {/* NBSP: UTMify's pixel treats any button containing "proximo passo" as a checkout and would fire InitiateCheckout on every quiz step. */}
-          {isLast ? 'Analisar meu perfil' : 'Proximo\u00A0passo'}
-          <ChevronRight className="w-5 h-5" />
-        </NexusButton>
-      </div>
+      {showButton && (
+        <div className="fixed bottom-0 inset-x-0 px-5 pt-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] bg-gradient-to-t from-background via-background to-transparent z-30">
+          <div className="max-w-md mx-auto">
+            <NexusButton
+              onClick={() => (step.kind === 'question' ? continueMultiple(step) : next())}
+              disabled={step.kind === 'question' && selected.length === 0}
+              className="w-full h-13 py-3.5 text-base font-semibold bg-primary hover:bg-primary/90 gap-2 disabled:opacity-50 shadow-[0_8px_30px_-12px_var(--primary)]"
+            >
+              {isLastStep ? 'Ver meu diagnóstico' : 'Continuar'}
+              <ChevronRight className="w-5 h-5" />
+            </NexusButton>
+          </div>
+        </div>
+      )}
     </div>
+  )
+}
+
+function QuestionView({
+  q,
+  selected,
+  onPick,
+}: {
+  q: QuestionStep
+  selected: string[]
+  onPick: (value: string) => void
+}) {
+  const grid = q.layout === 'grid'
+  return (
+    <>
+      <h2 className="text-[22px] font-bold leading-tight text-balance text-center mt-2">{q.title}</h2>
+      {q.subtitle && <p className="text-sm text-muted-foreground mt-1.5 text-center text-pretty">{q.subtitle}</p>}
+
+      <div
+        className="flex-1 flex flex-col justify-center py-5"
+        role={q.multiple ? 'group' : 'radiogroup'}
+      >
+        <div className={cn(grid ? 'grid grid-cols-2 gap-3' : 'flex flex-col gap-2.5')}>
+          {q.options.map((o, i) => {
+            const isSel = selected.includes(o.value)
+            return (
+              <motion.button
+                key={o.value}
+                type="button"
+                role={q.multiple ? 'checkbox' : 'radio'}
+                aria-checked={isSel}
+                onClick={() => onPick(o.value)}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.04 * i }}
+                whileTap={{ scale: 0.98 }}
+                className={cn(
+                  'w-full rounded-2xl border text-left transition-colors flex items-center gap-3',
+                  grid ? 'flex-col justify-center text-center py-6 px-3' : 'px-4 py-3.5 min-h-[58px]',
+                  isSel
+                    ? 'border-primary bg-primary/10 ring-1 ring-primary/40 shadow-[0_6px_24px_-12px_var(--primary)]'
+                    : 'border-border bg-card hover:border-primary/50',
+                )}
+              >
+                {o.emoji && <span className={cn('leading-none', grid ? 'text-3xl' : 'text-2xl')}>{o.emoji}</span>}
+                <span className="flex-1 min-w-0">
+                  <span className={cn('block font-semibold leading-snug', grid ? 'text-base' : 'text-[15px]')}>
+                    {o.label}
+                  </span>
+                  {o.hint && <span className="block text-[13px] text-muted-foreground leading-snug mt-0.5">porque {o.hint}</span>}
+                </span>
+                {!grid &&
+                  (q.multiple ? (
+                    <span
+                      className={cn(
+                        'w-5 h-5 rounded-md border flex items-center justify-center shrink-0',
+                        isSel ? 'bg-primary border-primary' : 'border-muted-foreground/40',
+                      )}
+                    >
+                      {isSel && <Check className="w-3.5 h-3.5 text-primary-foreground" />}
+                    </span>
+                  ) : (
+                    <ChevronRight className={cn('w-4 h-4 shrink-0', isSel ? 'text-primary' : 'text-muted-foreground/40')} />
+                  ))}
+              </motion.button>
+            )
+          })}
+        </div>
+      </div>
+    </>
   )
 }

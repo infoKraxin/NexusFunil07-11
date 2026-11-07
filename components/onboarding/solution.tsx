@@ -1,96 +1,214 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { ChevronRight } from 'lucide-react'
-import Image from 'next/image'
+import { motion, useAnimationControls } from 'framer-motion'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { Confetti, FutureYou, MiniPhone, ProtocolEmblem } from '@/components/funnel/art'
+import { Marked, StickyCta, Tag, useTrackOnce } from '@/components/funnel/fx'
 import { NexusLogo } from '@/components/nexus/nexus-logo'
+import type { Derived } from '@/lib/funnel'
+import { track } from '@/lib/track'
+import { useFunnel } from '@/lib/use-funnel'
 
 export function Solution() {
+  const f = useFunnel()
+  if (!f.ready) return <div className="min-h-[100dvh] bg-background" />
+  return <SolutionView f={f} />
+}
+
+const CHIP_DELAY = 0.9
+
+function SolutionView({ f }: { f: Derived }) {
   const router = useRouter()
+  const { block } = f
+  const pulse = useAnimationControls()
+  useTrackOnce('solution_view', { block: f.code })
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      pulse.start({
+        scale: [1, 1.03, 1],
+        boxShadow: [
+          '0 0 0 0 rgba(54,245,85,0)',
+          '0 0 0 6px rgba(54,245,85,0.25)',
+          '0 0 0 0 rgba(54,245,85,0)',
+        ],
+        transition: { duration: 0.6 },
+      })
+    }, (CHIP_DELAY + 0.75) * 1000)
+    return () => clearTimeout(t)
+  }, [pulse])
+
+  const [headBefore, headAfter] = block.headline.split('{time} por dia')
+  const chips = [
+    { icon: '🎯', label: f.area },
+    { icon: '⏱', label: f.time },
+    { icon: '🔥', label: f.mechanism.chip },
+  ]
+  const lines = [...block.lines, f.mechanism.card]
+  const timeline = [
+    { when: 'Semana 1', text: f.fill(block.timeline[0]) },
+    { when: 'Mês 1', text: f.fill(block.timeline[1]) },
+    { when: 'Dia 90', text: f.mirror },
+  ]
 
   return (
-    <div className="min-h-screen bg-background flex flex-col relative">
-      <header className="p-4 flex items-center justify-center">
+    <div className="min-h-[100dvh] bg-background relative overflow-x-hidden">
+      <header className="p-4 flex justify-center">
         <NexusLogo size="sm" />
       </header>
 
-      <main id="main-content" className="flex-1 overflow-y-auto pb-32">
-        <div className="max-w-md mx-auto px-5 text-center">
-          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <h1 className="font-bold tracking-tight leading-[1] text-[clamp(2.25rem,10vw,2.75rem)]">A verdade?</h1>
-            <p className="mt-3 font-semibold tracking-tight whitespace-nowrap text-[clamp(1.05rem,5.5vw,1.6rem)]">
-              Você é viciado em <span className="text-primary">dopamina</span>.
-            </p>
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.12 }}
-            className="mt-5 text-[15px] leading-relaxed text-muted-foreground text-pretty"
+      <main id="main-content" className="max-w-md mx-auto px-5 pb-40 flex flex-col gap-8">
+        {/* 1. Card do protocolo */}
+        <motion.section
+          animate={pulse}
+          className="relative rounded-3xl border border-primary/40 bg-gradient-to-b from-primary/15 via-card to-card p-5 pt-6 text-center"
+        >
+          <Tag>Seu plano está pronto</Tag>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.4, rotate: -30 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ type: 'spring', stiffness: 220, damping: 14, delay: 0.15 }}
+            className="mt-4"
           >
-            O mesmo <span className="text-primary font-medium">mecanismo</span> que as redes sociais usam para te{' '}
-            <span className="text-primary font-medium">prender</span>, nós colocamos dentro do{' '}
-            <span className="text-primary font-medium">NEXUS</span> para te dar{' '}
-            <span className="text-primary font-medium">liberdade</span>. Você vai ficar{' '}
-            <span className="text-foreground font-medium">viciado em melhorar</span>.
+            <ProtocolEmblem code={f.code} size={104} />
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="mt-4 text-[28px] font-black leading-none"
+          >
+            {block.protocol}
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55 }}
+            className="mt-2.5 text-[17px] leading-snug text-balance"
+          >
+            {headBefore}
+            <span className="font-bold text-primary">{f.time} por dia</span>
+            {headAfter}
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.22 }}
-            className="mt-7"
-          >
-            <Image
-              src="/images/dopamine-solution.png"
-              alt="Ícones de redes sociais e jogos riscados ao redor de uma pessoa focada, ao lado de um painel com disciplina, foco, evolução e resultados"
-              width={960}
-              height={1056}
-              priority
-              className="w-full h-auto"
-            />
-          </motion.div>
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
+            {chips.map((c, i) => (
+              <motion.span
+                key={c.icon}
+                initial={{ opacity: 0, y: 70, x: (i - 1) * 60, scale: 0.6 }}
+                animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
+                transition={{ delay: CHIP_DELAY + i * 0.12, type: 'spring', stiffness: 300, damping: 20 }}
+                className="px-3 py-1.5 rounded-full bg-background/80 border border-primary/30 text-[13px] font-semibold"
+              >
+                {c.icon} {c.label}
+              </motion.span>
+            ))}
+          </div>
+        </motion.section>
 
-          <motion.section
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.34 }}
-            className="mt-7 rounded-xl border border-border/50 bg-secondary/45 p-5 flex flex-col gap-3"
+        {/* 2. Como funciona */}
+        <section>
+          <h2 className="text-sm font-bold uppercase tracking-[0.14em] text-muted-foreground mb-3">Como funciona</h2>
+          <div className="flex items-center gap-4">
+            <ul className="flex-1 flex flex-col gap-3.5">
+              {lines.map((l, i) => (
+                <motion.li
+                  key={l}
+                  initial={{ opacity: 0, x: -10 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.15 * i }}
+                  className="flex gap-2 text-[15px] leading-snug"
+                >
+                  <span aria-hidden="true">✅</span>
+                  <span>
+                    <Marked text={l} delay={0.4 + 0.2 * i} />
+                  </span>
+                </motion.li>
+              ))}
+            </ul>
+            <MiniPhone area={f.areaKey} time={f.time} />
+          </div>
+        </section>
+
+        {/* 3. Linha do tempo */}
+        <section className="rounded-2xl border border-border bg-card p-4 pb-5">
+          <h2 className="text-sm font-bold mb-4">Seus próximos 90 dias</h2>
+          <div className="relative">
+            <div className="absolute left-[16%] right-[16%] top-[7px] h-[2px] bg-secondary" />
+            <motion.div
+              className="absolute left-[16%] top-[7px] h-[2px] bg-primary origin-left"
+              style={{ right: '16%' }}
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.6, delay: 0.2, ease: 'easeInOut' }}
+            />
+            <ol className="relative grid grid-cols-3 gap-2">
+              {timeline.map((t, i) => (
+                <li key={t.when} className="flex flex-col items-center text-center">
+                  <motion.span
+                    className="w-4 h-4 rounded-full border-2 border-primary bg-background"
+                    initial={{ backgroundColor: '#020202' }}
+                    whileInView={{ backgroundColor: '#36f555', boxShadow: '0 0 14px #36f555' }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.2 + i * 0.75 }}
+                  />
+                  <span className="mt-2 text-[11px] font-bold uppercase tracking-wide text-primary">{t.when}</span>
+                  {i < 2 ? (
+                    <span className="mt-1 text-[12px] leading-snug text-muted-foreground">{t.text}</span>
+                  ) : (
+                    <div className="relative mt-2 flex flex-col items-center">
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 1.8, type: 'spring', stiffness: 260 }}
+                      >
+                        <FutureYou area={f.areaKey} />
+                      </motion.div>
+                      <InViewConfetti />
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </div>
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 2.1 }}
+            className="mt-4 mx-auto w-fit max-w-full rounded-xl bg-primary text-primary-foreground text-[13px] font-bold px-3 py-2 text-center"
           >
-            <h2 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary">Como fazemos isso</h2>
-            <p className="text-[15px] leading-relaxed">
-              Cada missão concluída te dá o que o feed acostumou você a buscar:{' '}
-              <span className="font-medium">recompensa rápida</span>. XP, streak, ranking e evolução visível.
-            </p>
-            <p className="text-[15px] leading-relaxed">
-              Isso usa um princípio conhecido como{' '}
-              <span className="text-primary font-medium">aprendizado por reforço</span>: quando uma ação recebe
-              feedback claro logo depois, fica mais fácil associar aquela ação à recompensa.
-            </p>
-            <p className="text-[15px] leading-relaxed">
-              Só que aqui a recompensa vem <span className="text-primary font-medium">depois do esforço</span> — e te
-              puxa para a próxima missão, não para o próximo vídeo.
-            </p>
-          </motion.section>
-        </div>
+            Dia 90: {f.mirrorLower}
+          </motion.p>
+        </section>
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-background via-background to-transparent">
-        <div className="max-w-md mx-auto">
-          <motion.button
-            type="button"
-            onClick={() => router.push('/onboarding/plans')}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full h-14 bg-primary text-primary-foreground text-lg font-semibold rounded-xl shadow-xl shadow-primary/30 flex items-center justify-center gap-2"
-          >
-            Quero trocar de vício
-            <ChevronRight className="w-5 h-5" />
-          </motion.button>
-        </div>
-      </div>
+      <StickyCta
+        onClick={() => {
+          track('solution_cta', { block: f.code })
+          router.push('/onboarding/pact')
+        }}
+        note="Seu primeiro dia já está montado. Começa hoje."
+      >
+        {block.cta} →
+      </StickyCta>
     </div>
+  )
+}
+
+function InViewConfetti() {
+  return (
+    <motion.div
+      className="absolute inset-0"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+    >
+      <Confetti delay={1.9} />
+    </motion.div>
   )
 }

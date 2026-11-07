@@ -1,167 +1,173 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { ChevronRight, Flame, Sparkles, Target, TrendingUp } from 'lucide-react'
+import { motion, useInView } from 'framer-motion'
+import { CheckCircle2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useMemo, useState } from 'react'
+import { useRef } from 'react'
+import { CountUp, HandUnderline, Highlight, Stamp, StickyCta, useTrackOnce } from '@/components/funnel/fx'
+import { TurnChart } from '@/components/funnel/turn-chart'
 import { NexusLogo } from '@/components/nexus/nexus-logo'
-import {
-  averageOf,
-  challengeLabels,
-  computeDiagnosis,
-  DEFAULT_QUIZ_DATA,
-  focusLabels,
-  improvementPercent,
-  projectRadar,
-} from '@/lib/diagnosis'
-import { useQuizData } from '@/lib/use-quiz-data'
-import { cn } from '@/lib/utils'
-import { DiagnosisRadar } from './diagnosis-radar'
-
-const PERIODS = [30, 60, 90] as const
+import type { Derived } from '@/lib/funnel'
+import { track } from '@/lib/track'
+import { useFunnel } from '@/lib/use-funnel'
 
 export function Results() {
+  const f = useFunnel()
+  if (!f.ready) return <div className="min-h-[100dvh] bg-background" />
+  return <ResultsView f={f} />
+}
+
+function ResultsView({ f }: { f: Derived }) {
   const router = useRouter()
-  const quiz = useQuizData() ?? DEFAULT_QUIZ_DATA
-  const [period, setPeriod] = useState<(typeof PERIODS)[number]>(30)
+  const { block } = f
+  useTrackOnce('diagnosis_view', { block: f.code })
 
-  const diagnosis = useMemo(() => computeDiagnosis(quiz), [quiz])
-  const current = diagnosis.radar
-  const projected = projectRadar(current, period)
-  const projectedAverage = averageOf(projected)
-  const improvement = improvementPercent(current, projected)
-  const challenge = challengeLabels[quiz.challenge] || quiz.challenge
-  const focus = focusLabels[quiz.focus] || quiz.focus
+  const chartRef = useRef<HTMLDivElement>(null)
+  const chartInView = useInView(chartRef, { once: true, margin: '-60px' })
 
-  const summary = [
-    { icon: TrendingUp, label: 'Melhoria', value: `+${improvement}%`, color: 'text-primary' },
-    { icon: Target, label: 'Áreas', value: `${Math.max(quiz.goals.length, 1)}/6`, color: 'text-blue-400' },
-    { icon: Flame, label: 'Plano', value: `${period}d`, color: 'text-orange-400' },
-  ]
+  const [causeBefore, causeAfter] = block.cause.split(block.causeUnderline)
 
   return (
-    <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
-      <div
-        className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none"
-        aria-hidden="true"
-      />
-      <header className="p-4 flex items-center justify-center relative z-10">
+    <div className="min-h-[100dvh] bg-background relative overflow-x-hidden">
+      <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-destructive/10 to-transparent pointer-events-none" />
+      <header className="p-4 flex justify-center relative">
         <NexusLogo size="sm" />
       </header>
 
-      <main id="main-content" className="flex-1 px-5 py-2 overflow-y-auto pb-32 relative z-10">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs text-primary mb-3">
-            <Sparkles className="w-3 h-3" />
-            Análise Completa
-          </div>
-          <h1 className="text-2xl font-bold mb-1 text-balance">Sua Transformação</h1>
-          <p className="text-muted-foreground text-sm text-pretty">
-            Seu maior desafio é <span className="text-primary font-medium">{challenge}</span> e seu foco principal é{' '}
-            <span className="text-primary font-medium">{focus}</span>. Veja o que o NEXUS pode fazer por você:
-          </p>
-        </motion.div>
-
-        <div className="flex gap-2 mb-6 p-1 bg-secondary/20 rounded-xl" role="tablist" aria-label="Período do plano">
-          {PERIODS.map((p) => (
-            <button
-              key={p}
-              type="button"
-              role="tab"
-              aria-selected={period === p}
-              onClick={() => setPeriod(p)}
-              className={cn(
-                'flex-1 py-2.5 rounded-lg font-medium text-sm transition-all relative',
-                period === p ? 'text-primary-foreground' : 'text-muted-foreground hover:text-foreground',
-              )}
+      <main id="main-content" className="max-w-md mx-auto px-5 pb-36 relative flex flex-col gap-10">
+        {/* 1. Carimbo */}
+        <section className="text-center pt-2">
+          <Stamp tone="red" delay={0.15}>
+            Seu bloqueio
+          </Stamp>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.6, type: 'spring', stiffness: 260, damping: 14 }}
+            className="mt-6 text-6xl"
+            aria-hidden="true"
+          >
+            <motion.span
+              className="inline-block"
+              animate={{ y: [0, -6, 0], rotate: [0, -4, 4, 0] }}
+              transition={{ duration: 2.4, repeat: Infinity, delay: 1.2 }}
             >
-              {period === p && (
-                <motion.div
-                  layoutId="periodBg"
-                  className="absolute inset-0 bg-primary rounded-lg shadow-lg shadow-primary/25"
-                  transition={{ type: 'spring', bounce: 0.2, duration: 0.4 }}
-                />
-              )}
-              <span className="relative z-10">{p} dias</span>
-            </button>
-          ))}
-        </div>
+              {block.emoji}
+            </motion.span>
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.75 }}
+            className="mt-3 text-[34px] font-black leading-none tracking-tight"
+          >
+            {block.name}
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1 }}
+            className="mt-3 text-lg text-muted-foreground text-balance"
+          >
+            {block.impact}
+          </motion.p>
+        </section>
 
-        <motion.div
-          key={`current-${period}`}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl p-5 mb-4 bg-gradient-to-br from-secondary/30 to-secondary/10 border border-border/30"
-        >
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <div className="w-3 h-3 rounded-full bg-primary/50 animate-pulse" />
-            <span className="text-sm font-semibold text-muted-foreground">Você Hoje</span>
-          </div>
-          <DiagnosisRadar data={current} type="current" />
-          <div className="text-center mt-3 pt-3 border-t border-border/30">
-            <p className="text-[11px] uppercase tracking-wider text-muted-foreground/60 mb-0.5">Score total</p>
-            <span className="text-3xl font-bold text-muted-foreground">{diagnosis.avgCurrent.toFixed(1)}</span>
-            <span className="text-sm text-muted-foreground/60 ml-1">/ 10</span>
-          </div>
-        </motion.div>
+        {/* 2. Isso explica por que… */}
+        <section>
+          <motion.h2
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.3 }}
+            className="text-sm font-bold uppercase tracking-[0.14em] text-muted-foreground mb-3"
+          >
+            Isso explica por que…
+          </motion.h2>
+          <ul className="flex flex-col gap-2.5">
+            {block.checks.map((c, i) => {
+              const parts = c.split('{feeling}')
+              return (
+                <motion.li
+                  key={c}
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 1.5 + i * 0.45 }}
+                  className="flex items-start gap-3 rounded-xl bg-card border border-border px-4 py-3"
+                >
+                  <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                  <span className="text-[15px] leading-snug">
+                    {parts.length > 1 ? (
+                      <>
+                        {parts[0]}
+                        <Highlight color="yellow" delay={1.5 + i * 0.45 + 0.4}>
+                          {f.feeling}
+                        </Highlight>
+                        {parts[1]}
+                      </>
+                    ) : (
+                      c
+                    )}
+                  </span>
+                </motion.li>
+              )
+            })}
+          </ul>
+        </section>
 
-        <motion.div
-          key={`potential-${period}`}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="rounded-2xl p-5 mb-4 bg-gradient-to-br from-primary/15 to-primary/5 border border-primary/30"
-        >
-          <div className="flex items-center justify-center gap-2 mb-2 relative">
-            <Sparkles className="w-4 h-4 text-primary animate-pulse" />
-            <span className="text-sm font-semibold text-primary">Você em {period} dias</span>
+        {/* 3. O custo */}
+        <section className="rounded-2xl border border-destructive/30 bg-destructive/5 p-5 text-center">
+          <p className="text-sm font-bold uppercase tracking-[0.14em] text-destructive">O custo</p>
+          <div className="mt-2">
+            <CountUp to={f.daysPerYear} duration={1.8} className="text-7xl font-black text-destructive leading-none" />
+            <span className="text-2xl font-black text-destructive"> dias</span>
           </div>
-          <DiagnosisRadar data={projected} type="potential" />
-          <div className="text-center mt-3 pt-3 border-t border-primary/20 relative">
-            <p className="text-[11px] uppercase tracking-wider text-primary/70 mb-0.5">Score total</p>
-            <span className="text-4xl font-bold text-primary">{projectedAverage.toFixed(1)}</span>
-            <span className="text-sm text-primary/60 ml-1">/ 10</span>
-          </div>
-        </motion.div>
+          <p className="text-muted-foreground mt-1">inteiros no celular, por ano</p>
 
-        <p className="text-center text-sm font-semibold mb-3 text-balance">A maior evolução, é agora</p>
+          {f.lost.length > 0 && (
+            <>
+              <p className="text-sm mt-5 mb-2.5">E o que isso já te custou:</p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {f.lost.map((l, i) => (
+                  <span key={l} className="relative px-3 py-1.5 rounded-full bg-secondary border border-border text-sm">
+                    {l}
+                    <motion.span
+                      className="absolute left-2 right-2 top-1/2 h-[2px] bg-destructive origin-left"
+                      initial={{ scaleX: 0 }}
+                      whileInView={{ scaleX: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.8 + i * 0.35, duration: 0.3 }}
+                    />
+                  </span>
+                ))}
+              </div>
+            </>
+          )}
+        </section>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
-          className="grid grid-cols-3 gap-3"
-        >
-          {summary.map((item) => (
-            <div key={item.label} className="rounded-xl p-4 text-center bg-secondary/20 border border-border/30">
-              <item.icon className={cn('w-5 h-5 mx-auto mb-2', item.color)} />
-              <p className={cn('text-xl font-bold', item.color)}>{item.value}</p>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{item.label}</p>
-            </div>
-          ))}
-        </motion.div>
+        {/* 4. A causa */}
+        <section className="text-center">
+          <p className="text-2xl font-bold leading-snug text-balance">
+            {causeBefore}
+            <HandUnderline>{block.causeUnderline}</HandUnderline>
+            {causeAfter}
+          </p>
+        </section>
+
+        {/* 5. A virada */}
+        <section ref={chartRef} className="rounded-2xl border border-border bg-card p-4 min-h-[260px]">
+          <p className="text-sm font-bold mb-1">Onde você está × onde pode chegar</p>
+          {chartInView && <TurnChart code={f.code} balloon={f.mirror} delay={0.1} />}
+        </section>
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-background via-background to-transparent z-50">
-        <motion.button
-          type="button"
-          onClick={() => router.push('/onboarding/solution')}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="group w-full h-14 text-base sm:text-lg whitespace-nowrap bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl shadow-xl shadow-primary/30 relative overflow-hidden flex items-center justify-center gap-2"
-        >
-          <span className="relative z-10 flex items-center gap-2">
-            Me comprometo com minha evolução
-            <ChevronRight className="w-5 h-5" />
-          </span>
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-            initial={{ x: '-100%' }}
-            whileHover={{ x: '100%' }}
-            transition={{ duration: 0.7 }}
-          />
-        </motion.button>
-      </div>
+      <StickyCta
+        onClick={() => {
+          track('diagnosis_cta', { block: f.code })
+          router.push('/onboarding/solution')
+        }}
+      >
+        Ver como sair disso →
+      </StickyCta>
     </div>
   )
 }

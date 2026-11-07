@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Check, Crown, Gift, Shield, X } from 'lucide-react'
 import type { MouseEventHandler } from 'react'
 
-const PERKS = ['Tudo ilimitado', 'IA avançada com coaching', 'Suporte humano prioritário', 'Novos recursos antes de todos']
+const PERKS = ['Tudo do Focuz, ilimitado', 'Uma IA que te cobra todo dia', 'Um plano que se ajusta ao seu ritmo', 'Suporte humano prioritário']
 
 type ExitOfferModalProps = {
   open: boolean
@@ -12,9 +12,10 @@ type ExitOfferModalProps = {
   onClose: () => void
   acceptHref: string
   onAccept: MouseEventHandler<HTMLAnchorElement>
+  blockName: string
 }
 
-export function ExitOfferModal({ open, redirecting, onClose, acceptHref, onAccept }: ExitOfferModalProps) {
+export function ExitOfferModal({ open, redirecting, onClose, acceptHref, onAccept, blockName }: ExitOfferModalProps) {
   return (
     <AnimatePresence>
       {open && (
@@ -54,9 +55,11 @@ export function ExitOfferModal({ open, redirecting, onClose, acceptHref, onAccep
               </motion.div>
             </div>
             <h2 id="exit-offer-title" className="text-2xl font-bold text-center text-white mb-2">
-              Espere! Temos uma oferta especial
+              Espera. Seu pacto ainda vale.
             </h2>
-            <p className="text-zinc-400 text-center text-sm mb-6">Apenas para você que está saindo agora</p>
+            <p className="text-zinc-400 text-center text-sm mb-6 text-balance">
+              Não deixa {blockName} ganhar de novo. Leva o plano mais completo por menos que o Focuz.
+            </p>
 
             <div className="bg-gradient-to-br from-red-500/20 to-red-600/10 border border-red-500/30 rounded-2xl p-5 mb-6">
               <div className="flex items-center justify-between mb-4">
@@ -64,7 +67,7 @@ export function ExitOfferModal({ open, redirecting, onClose, acceptHref, onAccep
                   <Crown className="w-8 h-8 text-red-400" />
                   <div>
                     <p className="text-white font-bold">NEXUS Intensive</p>
-                    <p className="text-xs text-zinc-400">Experiência completa</p>
+                    <p className="text-xs text-zinc-400">O plano mais completo</p>
                   </div>
                 </div>
                 <div className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">-40%</div>
@@ -99,18 +102,18 @@ export function ExitOfferModal({ open, redirecting, onClose, acceptHref, onAccep
                   aria-hidden="true"
                 />
               )}
-              APROVEITAR OFERTA ESPECIAL - COMUNIDADE
+              Quero o Intensive por R$24
             </a>
             <button
               type="button"
               onClick={onClose}
               className="w-full py-3 text-zinc-500 text-sm hover:text-zinc-300 transition-colors"
             >
-              Não, obrigado
+              Não, vou deixar pra depois
             </button>
             <p className="text-center text-xs text-zinc-500 mt-4">
               <Shield className="w-3 h-3 inline mr-1" />
-              Oferta válida apenas nesta sessão
+              7 dias de garantia. Não gostou, devolvemos tudo.
             </p>
           </motion.div>
         </motion.div>
