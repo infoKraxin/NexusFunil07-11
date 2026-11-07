@@ -204,7 +204,6 @@ export const QUESTIONS: QuestionStep[] = [
     number: 9,
     title: 'Se desse pra arrumar UMA área primeiro, qual seria?',
     subtitle: 'É por aqui que o NEXUS vai começar a virar o jogo.',
-    layout: 'grid',
     options: [
       { value: 'corpo', label: 'Corpo e saúde', icon: Heart, desc: 'Voltar a cuidar de mim' },
       { value: 'estudos', label: 'Estudos e carreira', icon: GraduationCap, desc: 'Aprender pra valer' },
