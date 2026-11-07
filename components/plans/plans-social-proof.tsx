@@ -26,7 +26,7 @@ export function PlansTestimonials() {
         className="px-4 pb-6"
       >
         <h2 className="text-sm font-semibold text-white/60 text-center mb-4 tracking-wider">
-          RESULTADOS REAIS DE QUEM JÁ USA
+          QUEM JÁ CUMPRIU O PACTO
         </h2>
         <div className="flex flex-col gap-3">
           {PLAN_TESTIMONIALS.map((testimonial, i) => (
@@ -74,9 +74,9 @@ export function PlansTestimonials() {
       <div className="px-4 pb-4">
         <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-center flex flex-col gap-2">
           <p className="text-sm text-white/80 font-medium">
-            <span className="text-primary font-bold">20.000+ pessoas</span> já tomaram essa decisão
+            <span className="text-primary font-bold">20.000+ pessoas</span> já fizeram esse pacto
           </p>
-          <p className="text-xs text-white/50">94% de satisfação. Você vai ser o próximo?</p>
+          <p className="text-xs text-white/50">Agora é a sua vez de cumprir o seu.</p>
         </div>
       </div>
     </>

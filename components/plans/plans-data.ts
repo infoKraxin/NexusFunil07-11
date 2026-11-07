@@ -28,8 +28,8 @@ export const PLANS: Plan[] = [
     evolutionSpeed: 1,
     resultsSpeed: 1,
     supportLevel: 1,
-    tagline: 'Pra quem quer sair do zero',
-    highlight: 'O primeiro passo',
+    tagline: 'Pra dar o primeiro passo do pacto',
+    highlight: 'O começo do pacto',
     features: [
       '5 hábitos simultâneos',
       'Lembretes que não te deixam esquecer',
@@ -48,8 +48,8 @@ export const PLANS: Plan[] = [
     evolutionSpeed: 2,
     resultsSpeed: 2,
     supportLevel: 2,
-    tagline: 'O plano que transforma de verdade',
-    highlight: 'Escolha de 94% dos usuários',
+    tagline: 'Pra quebrar {block} de vez',
+    highlight: 'O plano do seu protocolo',
     features: [
       'Hábitos ILIMITADOS',
       'IA que monta sua rotina por você',
@@ -68,8 +68,8 @@ export const PLANS: Plan[] = [
     evolutionSpeed: 3,
     resultsSpeed: 3,
     supportLevel: 3,
-    tagline: 'Pra quem quer resultado MÁXIMO',
-    highlight: 'Sem limites',
+    tagline: 'Pra quem não aceita falhar o pacto',
+    highlight: 'Pacto blindado',
     features: [
       'Tudo do Focuz + extras exclusivos',
       'Coach IA 24h que te cobra resultado',

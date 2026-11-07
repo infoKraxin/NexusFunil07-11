@@ -15,9 +15,10 @@ type EvolutionProjectionProps = {
   avgCurrent: number
   avgPotential: number
   improvement: number
+  protocol?: string
 }
 
-export function EvolutionProjection({ avgCurrent, avgPotential, improvement }: EvolutionProjectionProps) {
+export function EvolutionProjection({ avgCurrent, avgPotential, improvement, protocol = 'Seu plano' }: EvolutionProjectionProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -31,8 +32,8 @@ export function EvolutionProjection({ avgCurrent, avgPotential, improvement }: E
             <Sparkles className="w-4 h-4 text-primary" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-white">Seu sistema foi criado</p>
-            <p className="text-[11px] text-white/40">Baseado nas suas respostas</p>
+            <p className="text-sm font-semibold text-white">{protocol} montado</p>
+            <p className="text-[11px] text-white/40">Com base nas suas 12 respostas</p>
           </div>
         </div>
       </div>
@@ -128,12 +129,12 @@ export function EvolutionProjection({ avgCurrent, avgPotential, improvement }: E
           </div>
           <div className="text-right">
             <p className="text-[10px] text-white/30">Baseado no seu perfil</p>
-            <p className="text-xs text-white/50">e comprometimento</p>
+            <p className="text-xs text-white/50">e no seu pacto</p>
           </div>
         </div>
       </div>
       <p className="text-center text-xs text-white/40 mt-4">
-        Ative seu acesso para desbloquear seu sistema personalizado
+        Seu pacto começa no momento em que você ativa o acesso
       </p>
     </motion.div>
   )

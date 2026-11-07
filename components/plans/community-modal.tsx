@@ -7,8 +7,8 @@ import { cn } from '@/lib/utils'
 import { formatPrice, type Plan, PLAN_STYLES } from './plans-data'
 
 const COMMUNITY_PERKS = [
-  { icon: Users, label: 'Comunidade exclusiva com acesso vitalicio' },
-  { icon: Flame, label: 'Desafios e conteudos novos toda semana' },
+  { icon: Users, label: 'Comunidade exclusiva com acesso vitalício' },
+  { icon: Flame, label: 'Desafios e conteúdos novos toda semana' },
   { icon: Crown, label: 'Mentorias coletivas ao vivo' },
 ]
 
@@ -78,20 +78,17 @@ export function CommunityModal({
                     Excelente Escolha!
                   </h3>
                   <p className="text-xs text-white/60">
-                    Voce selecionou o <span className={cn('font-bold', style.text)}>NEXUS {plan.shortName}</span>
+                    Você vai cumprir o pacto com o <span className={cn('font-bold', style.text)}>NEXUS {plan.shortName}</span>
                   </p>
                 </div>
 
                 <div className={cn('relative p-3 rounded-xl bg-gradient-to-br border', style.gradient, style.border)}>
                   <div className="flex items-center gap-2 mb-2">
                     <Sparkles className={cn('w-3.5 h-3.5', style.text)} />
-                    <p className="text-xs font-bold text-white">Turbine Sua Transformacao</p>
+                    <p className="text-xs font-bold text-white">Cumpra o pacto acompanhado</p>
                   </div>
                   <p className="text-white/70 text-[11px] leading-relaxed mb-2">
-                    Pessoas da comunidade alcancam objetivos{' '}
-                    <span className={cn('font-bold', style.text)}>3x mais rapido</span> atraves de suporte mutuo e
-                    desafios.
-                  </p>
+                    Gente no mesmo caminho te puxando de volta nos dias em que dá vontade de largar.</p>
                   <div className="flex flex-col gap-1.5">
                     {COMMUNITY_PERKS.map((perk) => (
                       <div key={perk.label} className="flex items-center justify-between">

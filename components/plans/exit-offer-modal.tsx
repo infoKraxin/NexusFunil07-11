@@ -54,9 +54,9 @@ export function ExitOfferModal({ open, redirecting, onClose, acceptHref, onAccep
               </motion.div>
             </div>
             <h2 id="exit-offer-title" className="text-2xl font-bold text-center text-white mb-2">
-              Espere! Temos uma oferta especial
+              Espera. Seu pacto ainda está de pé.
             </h2>
-            <p className="text-zinc-400 text-center text-sm mb-6">Apenas para você que está saindo agora</p>
+            <p className="text-zinc-400 text-center text-sm mb-6">Não deixa ele virar mais uma promessa. Leva o plano completo por menos.</p>
 
             <div className="bg-gradient-to-br from-red-500/20 to-red-600/10 border border-red-500/30 rounded-2xl p-5 mb-6">
               <div className="flex items-center justify-between mb-4">
@@ -64,7 +64,7 @@ export function ExitOfferModal({ open, redirecting, onClose, acceptHref, onAccep
                   <Crown className="w-8 h-8 text-red-400" />
                   <div>
                     <p className="text-white font-bold">NEXUS Intensive</p>
-                    <p className="text-xs text-zinc-400">Experiência completa</p>
+                    <p className="text-xs text-zinc-400">Pacto blindado</p>
                   </div>
                 </div>
                 <div className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">-40%</div>
@@ -106,7 +106,7 @@ export function ExitOfferModal({ open, redirecting, onClose, acceptHref, onAccep
               onClick={onClose}
               className="w-full py-3 text-zinc-500 text-sm hover:text-zinc-300 transition-colors"
             >
-              Não, obrigado
+              Não, vou quebrar meu pacto
             </button>
             <p className="text-center text-xs text-zinc-500 mt-4">
               <Shield className="w-3 h-3 inline mr-1" />

@@ -9,6 +9,7 @@ type PlanCarouselProps = {
   selected: Plan
   onSelect: (plan: Plan) => void
   onUnlock: (plan: Plan) => void
+  blockWithArticle?: string
 }
 
 function cardPosition(planIndex: number, selectedIndex: number) {
@@ -45,7 +46,7 @@ export function PlanTabs({ selected, onSelect }: Pick<PlanCarouselProps, 'select
   )
 }
 
-export function PlanCarousel({ selected, onSelect, onUnlock }: PlanCarouselProps) {
+export function PlanCarousel({ selected, onSelect, onUnlock, blockWithArticle = 'o seu bloqueio' }: PlanCarouselProps) {
   const selectedIndex = PLANS.findIndex((p) => p.id === selected.id)
 
   const step = (direction: 1 | -1) => {
@@ -82,7 +83,7 @@ export function PlanCarousel({ selected, onSelect, onUnlock }: PlanCarouselProps
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                       <div className="bg-primary text-black text-xs font-bold px-4 py-1 rounded-full flex items-center gap-1 whitespace-nowrap">
                         <Sparkles className="w-3 h-3" />
-                        94% ESCOLHEM ESSE
+                        FEITO PRO SEU BLOQUEIO
                       </div>
                     </div>
                   )}
@@ -95,7 +96,7 @@ export function PlanCarousel({ selected, onSelect, onUnlock }: PlanCarouselProps
                       <p className={cn('text-xs', style.text)}>{plan.highlight}</p>
                     </div>
                   </div>
-                  <p className="text-white/60 text-sm mb-4">{plan.tagline}</p>
+                  <p className="text-white/60 text-sm mb-4">{plan.tagline.replace('{block}', blockWithArticle)}</p>
 
                   <div className="grid grid-cols-3 gap-3 mb-5">
                     {[
@@ -146,7 +147,7 @@ export function PlanCarousel({ selected, onSelect, onUnlock }: PlanCarouselProps
                         style.bg,
                       )}
                     >
-                      Desbloquear meu acesso
+                      Cumprir meu pacto
                     </motion.button>
                   )}
                 </div>

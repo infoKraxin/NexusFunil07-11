@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { useCallback, useMemo, useState } from 'react'
 import { CAKTO_URLS, getCheckoutUrl } from '@/lib/checkout'
 import { averageOf, improvementPercent, projectRadar } from '@/lib/diagnosis'
+import { formatPactDate } from '@/lib/funnel'
 import { useFunnel } from '@/lib/use-funnel'
 import { withUtms } from '@/lib/utm'
 import { useTrackOnce } from '@/components/funnel/fx'
@@ -19,7 +20,8 @@ import { useCheckoutRedirect } from './use-checkout-redirect'
 import { useCountdown, useExitIntent, useLiveViewers, usePurchaseToasts } from './use-plans-urgency'
 
 export function Plans() {
-  const { radar, block, ready } = useFunnel()
+  const { radar, block, ready, pactAt, mirrorLower, code } = useFunnel()
+  const pact = pactAt ? formatPactDate(pactAt) : null
   const [selectedPlan, setSelectedPlan] = useState<Plan>(PLANS[1])
   const [communityOpen, setCommunityOpen] = useState(false)
   const { redirecting, startRedirect } = useCheckoutRedirect()
@@ -82,12 +84,22 @@ export function Plans() {
       </motion.div>
 
       <div className="px-4 pt-5 pb-4 text-center">
+        {ready && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mb-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/25 text-xs text-primary"
+          >
+            <Check className="w-3.5 h-3.5" />
+            {pact ? `Pacto selado em ${pact.date} às ${pact.time}` : 'Seu pacto está esperando você'}
+          </motion.div>
+        )}
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-2xl font-bold mb-2 text-balance"
         >
-          {ready ? `Seu ${block.protocol} está pronto.` : 'Seu plano está pronto.'} Só falta você.
+          {ready ? `Seu ${block.protocol} está pronto.` : 'Seu plano está pronto.'} Agora é cumprir o pacto.
         </motion.h1>
         <motion.p
           initial={{ opacity: 0 }}
@@ -95,7 +107,7 @@ export function Plans() {
           transition={{ delay: 0.1 }}
           className="text-white/60 text-sm"
         >
-          Pague <span className="text-primary font-bold">uma vez</span>. Evolua{' '}
+          Pague <span className="text-primary font-bold">uma vez</span>. Cumpra{' '}
           <span className="text-primary font-bold">todos os dias</span>.
         </motion.p>
         <motion.p
@@ -104,7 +116,9 @@ export function Plans() {
           transition={{ delay: 0.15 }}
           className="text-white/40 text-xs mt-1.5 italic"
         >
-          Você já sabe o que está te travando. Agora falta corrigir isso.
+          {ready
+            ? `Você prometeu chegar ao dia 90 ${mirrorLower}. Escolha como vai cumprir.`
+            : 'Você já sabe o que está te travando. Agora falta cumprir o que prometeu.'}
         </motion.p>
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -136,9 +150,9 @@ export function Plans() {
       </div>
 
       <PlanTabs selected={selectedPlan} onSelect={setSelectedPlan} />
-      <PlanCarousel selected={selectedPlan} onSelect={setSelectedPlan} onUnlock={handleUnlock} />
+      <PlanCarousel selected={selectedPlan} onSelect={setSelectedPlan} onUnlock={handleUnlock} blockWithArticle={ready ? block.withArticle : 'o seu bloqueio'} />
 
-      <EvolutionProjection {...projection} />
+      <EvolutionProjection {...projection} protocol={ready ? block.protocol : 'Seu plano'} />
       <PlansTestimonials />
       <PlansFaq />
       <GuaranteeSeal />
