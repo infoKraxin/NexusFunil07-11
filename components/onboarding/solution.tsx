@@ -146,13 +146,13 @@ function SolutionView({ f }: { f: Derived }) {
             className="absolute left-1/2 top-4 h-44 w-44 -translate-x-[60%] rounded-full bg-primary/25 blur-3xl"
             aria-hidden="true"
           />
-          <div className="relative h-[220px] w-full flex justify-center overflow-hidden [mask-image:linear-gradient(to_bottom,black_70%,transparent)]">
+          <div className="relative h-[290px] w-full flex justify-center overflow-hidden [mask-image:linear-gradient(to_bottom,black_72%,transparent)]">
             <Image
-              src="/images/personagem-forte-busto.webp"
+              src="/images/personagem-forte-torso.webp"
               alt=""
               width={542}
-              height={642}
-              className="h-[260px] w-auto max-w-none -ml-12"
+              height={915}
+              className="h-[330px] w-auto max-w-none -ml-12"
             />
           </div>
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary -mt-2">Você no dia 90</p>
