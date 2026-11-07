@@ -1,7 +1,7 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { Check, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
+import { Check, ChevronLeft, ChevronRight, ScanSearch, Sparkles } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { NexusButton } from '@/components/nexus/nexus-button'
@@ -134,6 +134,17 @@ export function Quiz() {
             transition={{ duration: 0.22 }}
             className="flex-1 flex flex-col max-w-md w-full mx-auto"
           >
+            {step.kind === 'question' && step.number === 1 && (
+              <div className="mt-1 -mb-2 rounded-xl border border-primary/25 bg-primary/[0.06] px-3 py-2 flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
+                  <ScanSearch className="w-4 h-4 text-primary" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[13px] font-semibold leading-tight">Descubra o que te impede de evoluir</p>
+                  <p className="text-[11px] text-muted-foreground leading-tight">12 perguntas · 2 minutos · resultado na hora</p>
+                </div>
+              </div>
+            )}
             {step.kind === 'question' ? (
               <QuestionView
                 q={step}
