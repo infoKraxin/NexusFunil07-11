@@ -9,10 +9,10 @@ import { useEffect, useId, useRef, useState } from 'react'
 
 const W = 340
 const H = 210
-const A = { x: 22, y: 150 }
-const B = { x: 318, y: 40 }
-const WITHOUT = `M${A.x} ${A.y} C 42 128, 58 128, 76 150 S 108 170, 128 146 S 160 118, 182 144 S 214 168, 236 140 S 270 122, 290 150 S 310 160, ${B.x} 146`
-const WITH = `M${A.x} ${A.y} C 110 150, 160 128, 214 96 S 286 46, ${B.x} ${B.y}`
+const A = { x: 22, y: 186 }
+const B = { x: 318, y: 24 }
+const WITHOUT = `M${A.x} ${A.y} C 46 179, 70 176, 96 172 S 132 168, 154 165 S 192 162, 216 157 S 254 154, 276 149 S 304 146, ${B.x} 140`
+const WITH = `M${A.x} ${A.y} C 70 130, 112 84, 164 62 S 262 30, ${B.x} ${B.y}`
 
 export function AToB({
   fromSub,
@@ -34,6 +34,22 @@ export function AToB({
   const withRef = useRef<SVGPathElement>(null)
   const inView = useInView(wrapRef, { once: true, margin: '-40px' })
   const [dot, setDot] = useState<{ x: number; y: number } | null>(null)
+  const [guide, setGuide] = useState<{ x: number; y: number } | null>(null)
+
+  // ponto da linha verde na altura do penúltimo marco do eixo
+  useEffect(() => {
+    const p = withRef.current
+    if (!p) return
+    const n = ticks.length
+    const targetX = A.x + ((B.x - A.x) * (n - 1)) / n
+    const len = p.getTotalLength()
+    let best = p.getPointAtLength(0)
+    for (let l = 0; l <= len; l += 1) {
+      const pt = p.getPointAtLength(l)
+      if (Math.abs(pt.x - targetX) < Math.abs(best.x - targetX)) best = pt
+    }
+    setGuide({ x: best.x, y: best.y })
+  }, [ticks.length])
 
   useEffect(() => {
     if (!inView) return
@@ -71,7 +87,7 @@ export function AToB({
         </span>
       </div>
 
-      <div className="relative">
+      <div className="relative pt-14">
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto overflow-visible" aria-hidden="true">
           <defs>
             <linearGradient id={`with-${id}`} x1="0" y1="0" x2="1" y2="0">
@@ -89,10 +105,10 @@ export function AToB({
           </defs>
 
           {/* grade */}
-          {[50, 95, 140].map((y) => (
+          {[46, 92, 138].map((y) => (
             <line key={y} x1="0" x2={W} y1={y} y2={y} stroke="#fff" strokeOpacity="0.05" strokeDasharray="2 5" />
           ))}
-          <line x1="0" x2={W} y1={H - 22} y2={H - 22} stroke="#fff" strokeOpacity="0.12" />
+          <line x1={A.x} x2={W} y1={A.y} y2={A.y} stroke="#fff" strokeOpacity="0.15" />
           {allTicks.map((t, i) => {
             const x = A.x + ((B.x - A.x) * i) / (allTicks.length - 1)
             const last = i === allTicks.length - 1
@@ -100,7 +116,7 @@ export function AToB({
               <text
                 key={t}
                 x={x}
-                y={H - 6}
+                y={A.y + 16}
                 textAnchor={i === 0 ? 'start' : last ? 'end' : 'middle'}
                 fontSize="10"
                 fontWeight={last ? 700 : 500}
@@ -123,16 +139,21 @@ export function AToB({
             animate={inView ? { pathLength: 1 } : {}}
             transition={{ duration: 1.3, ease: 'easeInOut' }}
           />
-          <motion.g initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 1.25 }}>
-            <circle cx={B.x} cy={146} r="4" fill="#1a1c1f" stroke="#6b7078" strokeWidth="2" />
-            <text x={B.x - 8} y={168} textAnchor="end" fontSize="10" fill="#8a8f96">
-              no mesmo lugar
-            </text>
-          </motion.g>
+          <motion.circle
+            cx={B.x}
+            cy={140}
+            r="3.5"
+            fill="#1a1c1f"
+            stroke="#8a8f96"
+            strokeWidth="1.5"
+            initial={{ opacity: 0 }}
+            animate={inView ? { opacity: 1 } : {}}
+            transition={{ delay: 1.25 }}
+          />
 
           {/* Com o NEXUS */}
           <motion.path
-            d={`${WITH} L ${B.x} ${H - 22} L ${A.x} ${H - 22} Z`}
+            d={`${WITH} L ${B.x} ${A.y} L ${A.x} ${A.y} Z`}
             fill={`url(#area-${id})`}
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}
@@ -150,6 +171,14 @@ export function AToB({
             transition={{ delay: 1.0, duration: 1.3, ease: [0.65, 0, 0.35, 1] }}
             style={{ filter: 'drop-shadow(0 0 6px rgb(54 245 85 / 0.6))' }}
           />
+
+          {guide && (
+            <motion.g initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 2.1 }}>
+              <line x1={guide.x} x2={guide.x} y1={guide.y} y2={A.y} stroke="#36f555" strokeOpacity="0.45" strokeDasharray="3 4" />
+              <line x1={A.x} x2={guide.x} y1={guide.y} y2={guide.y} stroke="#36f555" strokeOpacity="0.3" strokeDasharray="3 4" />
+              <circle cx={guide.x} cy={guide.y} r="4" fill="#36f555" />
+            </motion.g>
+          )}
 
           {dot && (
             <>
@@ -175,25 +204,12 @@ export function AToB({
           </motion.g>
         </svg>
 
-        {/* rótulo A */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.2 }}
-          className="absolute left-0 top-[46%] -translate-y-full pb-2"
-        >
-          <p className="text-[10px] font-mono uppercase tracking-[0.16em] text-foreground/80">
-            Ponto A{fromValue && <span className="ml-1.5 font-bold tracking-normal">{fromValue}</span>}
-          </p>
-          {fromSub && <p className="text-[11px] text-muted-foreground leading-tight">{fromSub}</p>}
-        </motion.div>
-
         {/* rótulo B */}
         <motion.div
           initial={{ opacity: 0, y: 6 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 2.4 }}
-          className="absolute right-6 -top-1 max-w-[62%] rounded-xl rounded-tr-sm bg-primary text-primary-foreground px-3 py-1.5 text-right shadow-[0_8px_24px_-8px_var(--primary)]"
+          className="absolute right-0 top-0 max-w-[64%] rounded-xl rounded-br-sm bg-primary text-primary-foreground px-3 py-1.5 text-right shadow-[0_8px_24px_-8px_var(--primary)]"
         >
           <p className="text-[9px] font-mono uppercase tracking-[0.16em] opacity-70">
             Ponto B{toValue && <span className="ml-1.5 font-bold tracking-normal opacity-100">{toValue}</span>}
@@ -201,6 +217,14 @@ export function AToB({
           {toSub && <p className="text-[12px] font-bold leading-tight">{toSub}</p>}
         </motion.div>
       </div>
+
+      {(fromSub || fromValue) && (
+        <p className="mt-2 text-[11px] text-muted-foreground">
+          <span className="font-mono uppercase tracking-[0.14em] text-foreground/80">Ponto A</span>
+          {fromValue && <span className="ml-1.5 font-bold text-foreground/80">{fromValue}</span>}
+          {fromSub && <span> · {fromSub}</span>}
+        </p>
+      )}
     </div>
   )
 }
