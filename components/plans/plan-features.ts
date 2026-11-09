@@ -28,7 +28,7 @@ const BLOCK: Record<BlockCode, PlanFeature> = {
 }
 
 // Cada plano mostra só o que acrescenta ao anterior, com UMA linha personalizada:
-//  Primary → ferramenta contra o bloqueio · Focuz → módulo da área (P9) · Intensive → motivador (P11)
+//  Primary → módulo da área (P9) · Focuz → ferramenta contra o bloqueio · Intensive → motivador (P11)
 const GENERIC: Record<PlanId, PlanFeature[]> = {
   primary: [
     { key: 'habitos', text: 'Hábitos com a sequência de cada dia' },
@@ -49,8 +49,8 @@ const GENERIC: Record<PlanId, PlanFeature[]> = {
     { key: 'modulos', text: 'Todos os módulos: Treino, Nutrição, Finanças, Aparência e Estudos' },
     { key: 'guildas', text: 'Guildas e Arena: enfrente chefes em grupo' },
     { key: 'suporte', text: 'Suporte humano com prioridade' },
-    { key: 'corrida', text: 'Corrida por GPS que vira pontos de Agilidade' },
-    { key: 'personagem', text: 'Personagem com nível e rank' },
+    { key: 'jornada', text: 'Minha jornada: toda a sua evolução num lugar só' },
+    { key: 'amigos', text: 'Amigos, ranking e torneios mata-mata' },
   ],
 }
 
@@ -60,7 +60,7 @@ export function buildPlanFeatures(
   planId: PlanId,
   ctx: { area: string; motivator: string; block: BlockCode } | null,
 ): PlanFeature[] {
-  const pick = !ctx ? null : planId === 'primary' ? BLOCK[ctx.block] : planId === 'focuz' ? AREA[ctx.area] : MOTIVATOR[ctx.motivator]
+  const pick = !ctx ? null : planId === 'primary' ? AREA[ctx.area] : planId === 'focuz' ? BLOCK[ctx.block] : MOTIVATOR[ctx.motivator]
   const generic = GENERIC[planId]
   const out: PlanFeature[] = []
   // "Tudo do plano anterior" sempre primeiro, depois a linha personalizada
