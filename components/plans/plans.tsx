@@ -72,13 +72,13 @@ export function Plans() {
       >
         <div className="flex items-center gap-1.5">
           <Clock className="w-3.5 h-3.5 text-destructive" />
-          <span className="text-xs font-bold text-destructive tabular-nums">{countdown}</span>
+          <span className="text-xs font-bold text-destructive tabular-nums whitespace-nowrap">{countdown}</span>
         </div>
         <div className="w-px h-3 bg-border/50" aria-hidden="true" />
         <div className="flex items-center gap-1.5">
           <Eye className="w-3.5 h-3.5 text-primary" />
           <span className="text-xs text-white/70">
-            <span className="text-primary font-bold">{viewers}</span> fazendo o pacto agora
+            <span className="text-primary font-bold">{viewers}</span> fazendo o pacto
           </span>
         </div>
       </motion.div>
@@ -128,9 +128,12 @@ export function Plans() {
         >
           <span className="w-1.5 h-1.5 rounded-full bg-destructive animate-pulse" aria-hidden="true" />
           <span className="text-xs font-semibold text-destructive">
-            Seu plano fica reservado por <span className="tabular-nums">{countdown}</span>
+            Preço de lançamento termina em <span className="tabular-nums">{countdown}</span>
           </span>
         </motion.div>
+        <p className="mt-2 text-[11px] text-white/45 max-w-xs mx-auto text-balance">
+          O NEXUS está em lançamento. Até o fim da contagem, você paga menos, e o acesso continua seu pra sempre.
+        </p>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

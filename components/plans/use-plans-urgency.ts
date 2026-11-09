@@ -5,17 +5,48 @@ import { PURCHASE_NAMES, PURCHASE_PLANS, PURCHASE_TIMES } from './plans-data'
 
 const pick = <T,>(items: T[]) => items[Math.floor(Math.random() * items.length)]
 
-export function useCountdown(seconds: number) {
-  const [remaining, setRemaining] = useState(seconds)
+const LAUNCH_KEY = 'nexus_launch_deadline'
+const LAUNCH_WINDOW_MS = 30 * 60 * 60 * 1000 // 1d 6h
+
+function nextDeadline() {
+  let deadline = 0
+  try {
+    deadline = Number(localStorage.getItem(LAUNCH_KEY)) || 0
+  } catch {}
+  if (!deadline || deadline <= Date.now()) {
+    deadline = Date.now() + LAUNCH_WINDOW_MS
+    try {
+      localStorage.setItem(LAUNCH_KEY, String(deadline))
+    } catch {}
+  }
+  return deadline
+}
+
+/** Contagem do preço de lançamento: 30h; não reinicia ao recarregar, só quando chega a zero. */
+export function useCountdown(_seconds?: number) {
+  const [remaining, setRemaining] = useState(LAUNCH_WINDOW_MS)
 
   useEffect(() => {
-    const interval = setInterval(() => setRemaining((s) => (s <= 1 ? 0 : s - 1)), 1000)
+    let deadline = nextDeadline()
+    const tick = () => {
+      let left = deadline - Date.now()
+      if (left <= 0) {
+        deadline = nextDeadline()
+        left = deadline - Date.now()
+      }
+      setRemaining(left)
+    }
+    tick()
+    const interval = setInterval(tick, 1000)
     return () => clearInterval(interval)
   }, [])
 
-  const minutes = String(Math.floor(remaining / 60)).padStart(2, '0')
-  const secs = String(remaining % 60).padStart(2, '0')
-  return `${minutes}:${secs}`
+  const total = Math.max(0, Math.floor(remaining / 1000))
+  const d = Math.floor(total / 86400)
+  const h = String(Math.floor((total % 86400) / 3600)).padStart(2, '0')
+  const m = String(Math.floor((total % 3600) / 60)).padStart(2, '0')
+  const sec = String(total % 60).padStart(2, '0')
+  return d > 0 ? `${d}d ${h}h ${m}m ${sec}s` : `${h}h ${m}m ${sec}s`
 }
 
 export function useLiveViewers() {

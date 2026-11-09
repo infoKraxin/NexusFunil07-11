@@ -128,9 +128,11 @@ export function PlanCarousel({ selected, onSelect, onUnlock, blockWithArticle = 
                   </ul>
 
                   <div className="text-center mb-4">
-                    <div className="text-white/40 text-sm line-through mb-0.5">R${formatPrice(2 * plan.basePrice)}</div>
+                    <div className="text-white/40 text-xs mb-0.5">
+                      Depois do lançamento: <span className="line-through">R${formatPrice(plan.fullPrice)}</span>
+                    </div>
                     <div className={cn('text-4xl font-bold', style.text)}>R${formatPrice(plan.basePrice)}</div>
-                    <div className="text-white/40 text-xs">pagamento único, acesso vitalício</div>
+                    <div className="text-white/40 text-xs">preço de lançamento · pagamento único · acesso vitalício</div>
                   </div>
 
                   {isActive && (

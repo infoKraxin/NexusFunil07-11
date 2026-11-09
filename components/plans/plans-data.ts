@@ -6,6 +6,8 @@ export type Plan = {
   name: string
   shortName: string
   basePrice: number
+  /** preço depois do lançamento (âncora riscada) */
+  fullPrice: number
   communityPrice: number
   icon: LucideIcon
   popular?: boolean
@@ -23,6 +25,7 @@ export const PLANS: Plan[] = [
     name: 'NEXUS Primary',
     shortName: 'Primary',
     basePrice: 19.9,
+    fullPrice: 34.9,
     communityPrice: 9.9,
     icon: Zap,
     evolutionSpeed: 1,
@@ -42,6 +45,7 @@ export const PLANS: Plan[] = [
     name: 'NEXUS Focuz',
     shortName: 'Focuz',
     basePrice: 29.9,
+    fullPrice: 49.9,
     communityPrice: 9.9,
     icon: Flame,
     popular: true,
@@ -63,6 +67,7 @@ export const PLANS: Plan[] = [
     name: 'NEXUS Intensive',
     shortName: 'Intensive',
     basePrice: 39.9,
+    fullPrice: 69.9,
     communityPrice: 9.9,
     icon: Crown,
     evolutionSpeed: 3,
