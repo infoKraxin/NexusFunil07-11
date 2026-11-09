@@ -147,12 +147,10 @@ export function PlanCarousel({ selected, onSelect, onUnlock, blockWithArticle = 
                           <Check className={cn('w-4 h-4 flex-shrink-0', style.text)} />
                         )}
                         <span className={f.personal ? 'text-white font-medium' : 'text-white/75'}>
-                          {f.text}
-                          {f.personal && (
-                            <span className={cn('ml-1.5 align-middle font-mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded border', style.text, 'border-current/40')}>
-                              pro seu objetivo
-                            </span>
+                          {f.personal && f.tag && (
+                            <span className={cn('block text-[11px] font-semibold leading-tight', style.text)}>{f.tag}</span>
                           )}
+                          {f.text}
                         </span>
                       </li>
                     ))}
