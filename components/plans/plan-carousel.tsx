@@ -1,8 +1,11 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
 import { Check, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useFunnel } from '@/lib/use-funnel'
+import { buildPlanFeatures } from './plan-features'
 import { formatPrice, type Plan, PLAN_STYLES, PLANS } from './plans-data'
 
 type PlanCarouselProps = {
@@ -47,6 +50,20 @@ export function PlanTabs({ selected, onSelect }: Pick<PlanCarouselProps, 'select
 }
 
 export function PlanCarousel({ selected, onSelect, onUnlock, blockWithArticle = 'o seu bloqueio' }: PlanCarouselProps) {
+  const f = useFunnel()
+  const featureCtx = f.ready ? { area: f.answers.q9, motivator: f.answers.q11, block: f.code } : null
+  // a área do carrossel acompanha a altura do card ativo: nada sobrepõe e não sobra buraco
+  const cardRefs = useRef<Record<string, HTMLDivElement | null>>({})
+  const [activeH, setActiveH] = useState(600)
+  useEffect(() => {
+    const el = cardRefs.current[selected.id]
+    if (!el) return
+    const update = () => setActiveH(el.offsetHeight)
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [selected.id, featureCtx?.area, featureCtx?.motivator, featureCtx?.block])
   const selectedIndex = PLANS.findIndex((p) => p.id === selected.id)
 
   const step = (direction: 1 | -1) => {
@@ -57,7 +74,7 @@ export function PlanCarousel({ selected, onSelect, onUnlock, blockWithArticle = 
   return (
     <>
       <div className="relative flex-1 flex items-center justify-center px-4 overflow-x-clip">
-        <div className="relative h-[620px] w-full flex items-start justify-center mb-4 mt-8">
+        <div className="relative w-full flex items-start justify-center mb-4 mt-8 transition-[height] duration-300" style={{ height: activeH + 12 }}>
           {PLANS.map((plan, index) => {
             const position = cardPosition(index, selectedIndex)
             const isActive = plan.id === selected.id
@@ -71,6 +88,9 @@ export function PlanCarousel({ selected, onSelect, onUnlock, blockWithArticle = 
                 transition={{ type: 'tween', duration: 0.25, ease: 'easeOut' }}
                 onClick={() => onSelect(plan)}
                 className="absolute w-[300px] cursor-pointer will-change-transform"
+                ref={(el) => {
+                  cardRefs.current[plan.id] = el
+                }}
               >
                 <div
                   className={cn(
@@ -118,14 +138,35 @@ export function PlanCarousel({ selected, onSelect, onUnlock, blockWithArticle = 
                     ))}
                   </div>
 
-                  <ul className="flex flex-col gap-2 mb-5">
-                    {plan.features.map((feature) => (
-                      <li key={feature} className="flex items-center gap-2 text-sm">
-                        <Check className={cn('w-4 h-4 flex-shrink-0', style.text)} />
-                        <span className="text-white/80">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  {(() => {
+                    const items = buildPlanFeatures(plan.id, featureCtx)
+                    const hasPersonal = items.some((i) => i.personal)
+                    return (
+                      <ul className="flex flex-col gap-2 mb-5">
+                        {hasPersonal && (
+                          <li className={cn('font-mono text-[10px] uppercase tracking-[0.16em] -mb-0.5', style.text)}>
+                            Pro seu objetivo
+                          </li>
+                        )}
+                        {items.map((f, i) => (
+                          <li
+                            key={f.key}
+                            className={cn(
+                              'flex items-center gap-2 text-sm',
+                              hasPersonal && !f.personal && i > 0 && items[i - 1].personal && 'mt-1.5 pt-2 border-t border-white/10',
+                            )}
+                          >
+                            {f.personal ? (
+                              <Sparkles className={cn('w-4 h-4 flex-shrink-0', style.text)} />
+                            ) : (
+                              <Check className={cn('w-4 h-4 flex-shrink-0', style.text)} />
+                            )}
+                            <span className={f.personal ? 'text-white font-medium' : 'text-white/75'}>{f.text}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )
+                  })()}
 
                   <div className="text-center mb-4">
                     <div className="text-white/40 text-xs mb-0.5">
