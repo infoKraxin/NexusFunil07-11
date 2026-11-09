@@ -56,8 +56,8 @@ export function PlanCarousel({ selected, onSelect, onUnlock, blockWithArticle = 
 
   return (
     <>
-      <div className="relative flex-1 flex items-center justify-center px-4">
-        <div className="relative h-[420px] flex items-center justify-center mb-6 mr-0 mt-11">
+      <div className="relative flex-1 flex items-center justify-center px-4 overflow-x-clip">
+        <div className="relative h-[470px] w-full flex items-start justify-center mb-4 mt-7">
           {PLANS.map((plan, index) => {
             const position = cardPosition(index, selectedIndex)
             const isActive = plan.id === selected.id
@@ -74,7 +74,7 @@ export function PlanCarousel({ selected, onSelect, onUnlock, blockWithArticle = 
               >
                 <div
                   className={cn(
-                    'relative rounded-3xl p-5 border-2 bg-[#0a0a0a] transition-colors duration-200',
+                    'relative rounded-3xl p-4 border-2 bg-[#0a0a0a] transition-colors duration-200',
                     style.border,
                     isActive && 'shadow-lg',
                   )}
@@ -87,7 +87,7 @@ export function PlanCarousel({ selected, onSelect, onUnlock, blockWithArticle = 
                       </div>
                     </div>
                   )}
-                  <div className="flex items-center gap-3 mb-4 mt-2">
+                  <div className="flex items-center gap-3 mb-3 mt-1">
                     <div className={cn('w-12 h-12 rounded-2xl flex items-center justify-center', style.bg)}>
                       <Icon className="w-6 h-6 text-secondary" />
                     </div>
@@ -96,9 +96,9 @@ export function PlanCarousel({ selected, onSelect, onUnlock, blockWithArticle = 
                       <p className={cn('text-xs', style.text)}>{plan.highlight}</p>
                     </div>
                   </div>
-                  <p className="text-white/60 text-sm mb-4">{plan.tagline.replace('{block}', blockWithArticle)}</p>
+                  <p className="text-white/60 text-sm mb-3">{plan.tagline.replace('{block}', blockWithArticle)}</p>
 
-                  <div className="grid grid-cols-3 gap-3 mb-5">
+                  <div className="grid grid-cols-3 gap-3 mb-4">
                     {[
                       { label: 'Velocidade', value: plan.evolutionSpeed },
                       { label: 'Resultados', value: plan.resultsSpeed },
@@ -118,7 +118,7 @@ export function PlanCarousel({ selected, onSelect, onUnlock, blockWithArticle = 
                     ))}
                   </div>
 
-                  <ul className="flex flex-col gap-2 mb-5">
+                  <ul className="flex flex-col gap-1.5 mb-4">
                     {plan.features.map((feature) => (
                       <li key={feature} className="flex items-center gap-2 text-sm">
                         <Check className={cn('w-4 h-4 flex-shrink-0', style.text)} />
@@ -127,12 +127,12 @@ export function PlanCarousel({ selected, onSelect, onUnlock, blockWithArticle = 
                     ))}
                   </ul>
 
-                  <div className="text-center mb-4">
+                  <div className="text-center mb-3">
                     <div className="text-white/40 text-xs mb-0.5">
                       Depois do lançamento: <span className="line-through">R${formatPrice(plan.fullPrice)}</span>
                     </div>
                     <div className={cn('text-4xl font-bold', style.text)}>R${formatPrice(plan.basePrice)}</div>
-                    <div className="text-white/40 text-xs">preço de lançamento · pagamento único · acesso vitalício</div>
+                    <div className="text-white/40 text-xs">pagamento único · acesso vitalício</div>
                   </div>
 
                   {isActive && (

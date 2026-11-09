@@ -1,7 +1,7 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { Check, Clock } from 'lucide-react'
+import { Check } from 'lucide-react'
 import Image from 'next/image'
 import { useCallback, useMemo, useState } from 'react'
 import { CAKTO_URLS, getCheckoutUrl } from '@/lib/checkout'
@@ -64,18 +64,6 @@ export function Plans() {
         onAccept={startRedirect}
       />
 
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-center gap-4 py-2 px-4 bg-destructive/10 border-b border-destructive/30"
-      >
-        <div className="flex items-center gap-1.5">
-          <Clock className="w-3.5 h-3.5 text-destructive" />
-          <span className="text-xs font-bold text-destructive tabular-nums whitespace-nowrap">
-            Preço de lançamento termina em {countdown}
-          </span>
-        </div>
-      </motion.div>
 
       <div className="px-4 pt-5 pb-4 text-center">
         {ready && (
@@ -93,7 +81,9 @@ export function Plans() {
           animate={{ opacity: 1, y: 0 }}
           className="text-2xl font-bold mb-2 text-balance"
         >
-          {ready ? `Seu ${block.protocol} está pronto.` : 'Seu plano está pronto.'} Agora é cumprir o pacto.
+          {ready ? `Seu ${block.protocol} está pronto.` : 'Seu plano está pronto.'}
+          <br />
+          Agora é cumprir o pacto.
         </motion.h1>
         <motion.p
           initial={{ opacity: 0 }}
@@ -101,8 +91,7 @@ export function Plans() {
           transition={{ delay: 0.1 }}
           className="text-white/60 text-sm"
         >
-          Pague <span className="text-primary font-bold">uma vez</span>. Cumpra{' '}
-          <span className="text-primary font-bold">todos os dias</span>.
+          <span className="text-primary font-bold">Pagamento único.</span> Acesso pra sempre.
         </motion.p>
         <motion.p
           initial={{ opacity: 0 }}
