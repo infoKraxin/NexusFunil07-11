@@ -1,189 +1,192 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import Image from 'next/image'
+import { BarChart3, Check, Sparkles, Target, TrendingUp } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { useTrackOnce } from '@/components/funnel/fx'
-import { useFunnel } from '@/lib/use-funnel'
-import { cn } from '@/lib/utils'
+import { useEffect, useMemo, useState } from 'react'
+import { NexusLogo } from '@/components/nexus/nexus-logo'
+import { challengeLabels, focusLabels } from '@/lib/diagnosis'
+import { useQuizData } from '@/lib/use-quiz-data'
 
-const TOTAL = 7600
-const PHASES = ['Respostas', 'Padrões', 'Bloqueio', 'Plano']
-const PHASE_TEXT = ['Lendo suas respostas…', 'Cruzando os padrões…', 'Identificando seu bloqueio…', 'Montando seu plano…']
-
-// Etiquetas que "pulam" ao redor do personagem enquanto o sistema lê as respostas
-const TAG_POS = [
-  'left-0 top-[18%]',
-  'right-0 top-[34%]',
-  'left-0 top-[52%]',
-  'right-0 top-[66%]',
-  'left-2 top-[80%]',
-  'right-2 top-[10%]',
-]
+const STEP_COUNT = 4
+const TOTAL_DURATION = Math.max(2400 * STEP_COUNT, 9000)
 
 export function Analyzing() {
   const router = useRouter()
-  const f = useFunnel()
-  const [elapsed, setElapsed] = useState(0)
-  useTrackOnce('analyzing_view')
+  const quiz = useQuizData()
+  const [stepIndex, setStepIndex] = useState(0)
+  const [progress, setProgress] = useState(0)
+  const [complete, setComplete] = useState(false)
 
-  const tags = [
-    `${f.hoursLabel}/dia no celular`,
-    f.giveUp,
-    `Deita ${f.feeling}`,
-    `Foco: ${f.areaLower}`,
-    `${f.time} por dia`,
-    f.mechanism.chip,
-  ]
+  const steps = useMemo(() => {
+    const goalCount = quiz?.goals.length || 0
+    const focus = quiz?.focus ? focusLabels[quiz.focus] || quiz.focus : null
+    return [
+      { id: 1, label: 'Lendo Nota da disciplina', note: quiz ? `${quiz.discipline}/5` : null, icon: TrendingUp },
+      { id: 2, label: 'Cruzando suas áreas de foco', note: goalCount ? `${goalCount} áreas` : null, icon: BarChart3 },
+      { id: 3, label: 'Priorizando o que mais importa', note: focus, icon: Target },
+      { id: 4, label: 'Montando seu plano', note: null, icon: Sparkles },
+    ]
+  }, [quiz])
+
+  const challenge = quiz?.challenge ? challengeLabels[quiz.challenge] : null
 
   useEffect(() => {
-    const start = Date.now()
-    const tick = setInterval(() => setElapsed(Date.now() - start), 40)
-    const go = setTimeout(() => router.push('/onboarding/results'), TOTAL + 900)
+    const stepInterval = setInterval(() => {
+      setStepIndex((i) => (i < STEP_COUNT - 1 ? i + 1 : i))
+    }, TOTAL_DURATION / STEP_COUNT)
+    const increment = 100 / (TOTAL_DURATION / 30)
+    const progressInterval = setInterval(() => {
+      setProgress((p) => Math.min(p + increment, 100))
+    }, 30)
+    let navigateTimer: ReturnType<typeof setTimeout> | undefined
+    const doneTimer = setTimeout(() => {
+      setComplete(true)
+      navigateTimer = setTimeout(() => router.push('/onboarding/results'), 800)
+    }, TOTAL_DURATION + 400)
     return () => {
-      clearInterval(tick)
-      clearTimeout(go)
+      clearInterval(stepInterval)
+      clearInterval(progressInterval)
+      clearTimeout(doneTimer)
+      if (navigateTimer) clearTimeout(navigateTimer)
     }
   }, [router])
 
-  const progress = Math.min(100, (elapsed / TOTAL) * 100)
-  const phase = Math.min(PHASES.length - 1, Math.floor((progress / 100) * PHASES.length))
-  const done = progress >= 100
-  const tagStep = TOTAL / (tags.length + 1)
-  const visibleTags = tags.map((_, i) => elapsed > (i + 0.4) * tagStep && elapsed < (i + 3.2) * tagStep && !done)
+  const current = steps[stepIndex]
+  const CurrentIcon = current.icon
+  const rounded = Math.round(progress)
+
+  const counters = [
+    { icon: TrendingUp, label: 'Missoes', sublabel: 'personalizadas', value: Math.min(Math.floor(progress / 8), 12) },
+    { icon: Target, label: 'Habitos', sublabel: 'configurados', value: Math.min(Math.floor(progress / 12), 8) },
+    { icon: Sparkles, label: 'Protocolos', sublabel: 'de evolucao', value: Math.min(Math.floor(progress / 33), 3) },
+  ]
 
   return (
     <main
       id="main-content"
-      className="min-h-[100dvh] bg-background flex flex-col items-center justify-center relative overflow-hidden px-6 py-8"
+      className="min-h-screen bg-background flex flex-col items-center justify-center relative overflow-hidden px-6"
     >
-      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-primary flex items-center gap-2">
-        <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-        Sistema Nexus · Análise
-      </p>
+      <div
+        className="absolute -top-24 -left-24 w-80 h-80 rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, var(--primary) 0%, transparent 70%)', opacity: 0.18 }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute -bottom-24 -right-24 w-80 h-80 rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, var(--primary) 0%, transparent 70%)', opacity: 0.18 }}
+        aria-hidden="true"
+      />
 
-      {/* Scanner */}
-      <div className="relative mt-6 w-full max-w-[340px] h-[300px]">
-        <div className="absolute left-1/2 top-10 h-40 w-40 -translate-x-1/2 rounded-full bg-primary/20 blur-3xl" />
+      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="mb-10 relative">
+        <NexusLogo size="md" />
+      </motion.div>
 
-        <div className="absolute inset-x-12 inset-y-0 overflow-hidden [mask-image:linear-gradient(to_bottom,black_75%,transparent)]">
-          <Image
-            src="/images/personagem-fraco-busto.webp"
-            alt=""
-            width={341}
-            height={594}
-            priority
-            className={cn(
-              'mx-auto h-[330px] w-auto max-w-none transition-[filter] duration-700',
-              done ? 'grayscale-0' : 'grayscale-[60%] brightness-90',
-            )}
-          />
-          {/* linha de varredura */}
-          {!done && (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="text-center mb-10 relative"
+      >
+        <h1 className="text-2xl font-bold mb-2 flex items-center justify-center gap-2">
+          <span className="text-primary">IA</span> Analisando Perfil
+        </h1>
+        <p className="text-muted-foreground text-sm text-pretty px-4">
+          {challenge
+            ? `Entendendo sua ${challenge} e montando o plano sob medida...`
+            : 'Preparando sua jornada personalizada...'}
+        </p>
+      </motion.div>
+
+      <div className="w-full max-w-sm mb-8 relative flex flex-col items-center">
+        <div className="h-44 flex flex-col items-center justify-center text-center" aria-live="polite">
+          <AnimatePresence mode="wait">
             <motion.div
-              className="absolute inset-x-0 h-16 bg-gradient-to-b from-transparent via-primary/25 to-transparent"
-              animate={{ top: ['-10%', '90%', '-10%'] }}
-              transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <div className="absolute inset-x-0 top-1/2 h-px bg-primary shadow-[0_0_12px_2px_rgb(54_245_85_/_0.8)]" />
-            </motion.div>
-          )}
-        </div>
-
-        {/* cantoneiras de mira */}
-        {['left-10 top-0 border-l-2 border-t-2', 'right-10 top-0 border-r-2 border-t-2', 'left-10 bottom-6 border-l-2 border-b-2', 'right-10 bottom-6 border-r-2 border-b-2'].map((c) => (
-          <motion.span
-            key={c}
-            className={cn('absolute w-6 h-6 rounded-[3px]', c, done ? 'border-primary' : 'border-primary/50')}
-            animate={done ? { scale: [1, 1.25, 1] } : {}}
-            transition={{ duration: 0.4 }}
-          />
-        ))}
-
-        {/* respostas lidas */}
-        <AnimatePresence>
-          {tags.map(
-            (t, i) =>
-              visibleTags[i] && (
-                <motion.span
-                  key={t}
-                  initial={{ opacity: 0, scale: 0.8, y: 6 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  className={cn(
-                    'absolute max-w-[46%] px-2.5 py-1 rounded-md border border-primary/40 bg-background/85 backdrop-blur-sm text-[11px] font-medium leading-tight text-foreground shadow-[0_4px_18px_-8px_rgb(54_245_85_/_0.8)]',
-                    TAG_POS[i],
-                  )}
-                >
-                  <span className="text-primary mr-1">✓</span>
-                  {t}
-                </motion.span>
-              ),
-          )}
-        </AnimatePresence>
-
-        {/* resultado encontrado */}
-        <AnimatePresence>
-          {done && (
-            <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
+              key={current.id}
+              initial={{ opacity: 0, y: 16, scale: 0.92 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              className="absolute inset-x-6 bottom-0 rounded-xl border border-primary/50 bg-background/90 backdrop-blur px-4 py-2.5 text-center shadow-[0_10px_40px_-14px_var(--primary)]"
+              exit={{ opacity: 0, y: -16, scale: 0.92 }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+              className="flex flex-col items-center gap-4"
             >
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">Bloqueio identificado</p>
-              <p className="font-bold blur-[5px] select-none" aria-hidden="true">
-                {f.block.name}
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Progresso */}
-      <div className="w-full max-w-[340px] mt-6">
-        <div className="flex items-end justify-between">
-          <div className="h-6 overflow-hidden" aria-live="polite">
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={done ? 'done' : phase}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="text-[15px] font-semibold"
-              >
-                {done ? 'Pronto. Abrindo seu diagnóstico…' : PHASE_TEXT[phase]}
-              </motion.p>
-            </AnimatePresence>
-          </div>
-          <span className="text-2xl font-bold text-primary tabular-nums leading-none">{Math.round(progress)}%</span>
-        </div>
-
-        <div className="mt-3 grid grid-cols-4 gap-1.5">
-          {PHASES.map((p, i) => {
-            const segStart = (i / PHASES.length) * 100
-            const fill = Math.max(0, Math.min(100, ((progress - segStart) / (100 / PHASES.length)) * 100))
-            return (
-              <div key={p}>
-                <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
-                  <div
-                    className="h-full bg-primary rounded-full shadow-[0_0_8px_var(--primary)]"
-                    style={{ width: `${fill}%` }}
-                  />
-                </div>
-                <p
-                  className={cn(
-                    'mt-1.5 text-[10px] font-mono uppercase tracking-wider',
-                    fill >= 100 ? 'text-primary' : fill > 0 ? 'text-foreground' : 'text-muted-foreground/60',
-                  )}
-                >
-                  {p}
-                </p>
+              <div className="w-20 h-20 rounded-2xl flex items-center justify-center bg-primary border-2 border-primary shadow-[0_8px_32px_-8px_var(--primary)]">
+                <CurrentIcon className="w-9 h-9 text-primary-foreground" />
               </div>
-            )
-          })}
+              <div className="flex flex-col items-center gap-1.5">
+                <p className="text-base font-semibold text-foreground text-balance">{current.label}</p>
+                {current.note && (
+                  <p className="text-3xl font-bold text-primary tabular-nums leading-none">{current.note}</p>
+                )}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        <div className="flex items-center justify-center gap-2 mt-4 mb-6" aria-hidden="true">
+          {steps.map((s, i) => (
+            <div
+              key={s.id}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === stepIndex ? 'w-6 bg-primary' : i < stepIndex ? 'w-1.5 bg-primary/60' : 'w-1.5 bg-secondary'
+              }`}
+            />
+          ))}
+        </div>
+
+        <div
+          className="w-full relative h-2.5 bg-secondary/40 rounded-full overflow-hidden"
+          role="progressbar"
+          aria-valuenow={rounded}
+          aria-valuemin={0}
+          aria-valuemax={100}
+        >
+          <motion.div
+            className="absolute inset-y-0 left-0 bg-primary rounded-full"
+            animate={{ width: `${progress}%` }}
+            transition={{ ease: 'linear', duration: 0.03 }}
+          />
+        </div>
+        <div className="w-full flex items-center justify-between mt-3">
+          <span className="text-xs text-muted-foreground uppercase tracking-wide">Processando</span>
+          <span className="text-sm font-bold text-primary tabular-nums">{rounded}%</span>
         </div>
       </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="grid grid-cols-3 gap-3 w-full max-w-sm relative"
+      >
+        {counters.map((counter) => (
+          <div key={counter.label} className="rounded-xl p-4 bg-secondary/20 border border-border/30 text-center">
+            <counter.icon className="w-5 h-5 mx-auto mb-2 text-primary" />
+            <p className="text-xl font-bold tabular-nums">{counter.value}</p>
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider">{counter.label}</p>
+            <p className="text-[9px] text-muted-foreground/70">{counter.sublabel}</p>
+          </div>
+        ))}
+      </motion.div>
+
+      {complete && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="absolute inset-0 flex items-center justify-center bg-background/95"
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+            className="text-center"
+          >
+            <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
+              <Check className="w-10 h-10 text-primary" />
+            </div>
+            <p className="text-xl font-bold text-primary">Completo!</p>
+          </motion.div>
+        </motion.div>
+      )}
     </main>
   )
 }
