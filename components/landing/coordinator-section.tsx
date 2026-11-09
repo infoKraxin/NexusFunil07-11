@@ -1,11 +1,12 @@
+import Image from 'next/image'
 import { BarChart3, Mic, Target, Zap } from 'lucide-react'
 import { CoordinatorTerminal } from './coordinator-terminal'
 
 const CAPABILITIES = [
-  { icon: Target, label: 'Análise de Intenção' },
-  { icon: Zap, label: 'Cálculo de XP' },
-  { icon: Mic, label: 'Comando de Voz' },
-  { icon: BarChart3, label: 'Level Up' },
+  { icon: Target, label: 'Análise de Intenção', img: '/images/icons/intencao.png' },
+  { icon: Zap, label: 'Cálculo de XP', img: '/images/icons/xp.png' },
+  { icon: Mic, label: 'Comando de Voz', img: '/images/icons/voz.png' },
+  { icon: BarChart3, label: 'Level Up', img: '/images/icons/levelup.png' },
 ]
 
 const PATTERN = `
@@ -41,7 +42,7 @@ export function CoordinatorSection() {
           {CAPABILITIES.map((capability) => (
             <div key={capability.label} className="p-4 bg-green-950/10 border border-green-500/20 rounded">
               <div className="flex items-center justify-center mb-2">
-                <capability.icon className="w-6 h-6 text-green-400" />
+                <Image src={capability.img} alt="" width={80} height={80} className="w-9 h-9" />
               </div>
               <div className="text-green-400 font-mono text-xs">{capability.label}</div>
             </div>

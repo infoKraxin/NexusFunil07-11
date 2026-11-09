@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 import { AnimatePresence, motion } from 'framer-motion'
 import { Crown, Shield, Swords, Trophy } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -15,11 +17,12 @@ const PLAYERS = [
 const ARENA_FEATURES = [
   {
     icon: Swords,
+    img: '/images/icons/duelos.png',
     title: 'Duelos em Tempo Real',
     desc: 'Veja o placar atualizar enquanto você e seus amigos completam atividades',
   },
-  { icon: Trophy, title: 'Rankings e Conquistas', desc: 'Desbloqueie badges especiais e suba no ranking global' },
-  { icon: Shield, title: 'Módulos Personalizados', desc: 'Crie suas próprias atividades e defina os pontos' },
+  { icon: Trophy, img: '/images/icons/conquistas.png', title: 'Rankings e Conquistas', desc: 'Desbloqueie badges especiais e suba no ranking global' },
+  { icon: Shield, img: '/images/icons/modulos.png', title: 'Módulos Personalizados', desc: 'Crie suas próprias atividades e defina os pontos' },
 ]
 
 const HIGHLIGHT_ORDER = [2, 1, 0]
@@ -304,7 +307,7 @@ export function ArenaSection() {
             <FeatureCard key={feature.title}>
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                  <feature.icon className="w-6 h-6 text-primary" />
+                  <Image src={feature.img} alt="" width={80} height={80} className="w-8 h-8" />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>

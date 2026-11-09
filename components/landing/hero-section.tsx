@@ -52,7 +52,7 @@ export function HeroSection() {
                 Descobrir o que me trava <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
-            <p className="mt-3 text-xs text-muted-foreground text-center lg:text-left">Grátis · 2 minutos · 12 perguntas</p>
+            <p className="mt-3 text-xs text-muted-foreground text-center lg:text-left">2 minutos · 12 perguntas</p>
             <div className="flex items-center gap-4 mt-8 justify-center lg:justify-start">
               <div className="flex -space-x-3">
                 {AVATARS.map((avatar) => (

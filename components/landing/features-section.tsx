@@ -1,24 +1,29 @@
+import Image from 'next/image'
 import { Activity, Target, Trophy, Users } from 'lucide-react'
 import { FeatureCard } from './feature-card'
 
 const FEATURES = [
   {
     icon: Target,
+    img: '/images/icons/missoes.png',
     title: 'Missões do seu tamanho',
     description: 'Organize suas tarefas por categorias: estudos, fitness, higiene, nutrição e mais.',
   },
   {
     icon: Activity,
+    img: '/images/icons/corrida.png',
     title: 'Track de Corrida',
     description: 'Monitore distância, tempo, pace e calorias. Compartilhe suas conquistas.',
   },
   {
     icon: Users,
+    img: '/images/icons/arena.png',
     title: 'Arena de Duelos',
     description: 'Desafie amigos em competições em tempo real. Quem faz mais pontos vence.',
   },
   {
     icon: Trophy,
+    img: '/images/icons/ranking.png',
     title: 'Ranking Global',
     description: 'Suba no ranking, desbloqueie conquistas e prove que você é o melhor.',
   },
@@ -41,7 +46,7 @@ export function FeaturesSection() {
             <FeatureCard key={feature.title}>
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                  <feature.icon className="w-6 h-6 text-primary" />
+                  <Image src={feature.img} alt="" width={80} height={80} className="w-8 h-8" />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
