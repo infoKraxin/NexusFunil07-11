@@ -138,35 +138,25 @@ export function PlanCarousel({ selected, onSelect, onUnlock, blockWithArticle = 
                     ))}
                   </div>
 
-                  {(() => {
-                    const items = buildPlanFeatures(plan.id, featureCtx)
-                    const hasPersonal = items.some((i) => i.personal)
-                    return (
-                      <ul className="flex flex-col gap-2 mb-5">
-                        {hasPersonal && (
-                          <li className={cn('font-mono text-[10px] uppercase tracking-[0.16em] -mb-0.5', style.text)}>
-                            Pro seu objetivo
-                          </li>
+                  <ul className="flex flex-col gap-2 mb-5">
+                    {buildPlanFeatures(plan.id, featureCtx).map((f) => (
+                      <li key={f.key} className="flex items-center gap-2 text-sm">
+                        {f.personal ? (
+                          <Sparkles className={cn('w-4 h-4 flex-shrink-0', style.text)} />
+                        ) : (
+                          <Check className={cn('w-4 h-4 flex-shrink-0', style.text)} />
                         )}
-                        {items.map((f, i) => (
-                          <li
-                            key={f.key}
-                            className={cn(
-                              'flex items-center gap-2 text-sm',
-                              hasPersonal && !f.personal && i > 0 && items[i - 1].personal && 'mt-1.5 pt-2 border-t border-white/10',
-                            )}
-                          >
-                            {f.personal ? (
-                              <Sparkles className={cn('w-4 h-4 flex-shrink-0', style.text)} />
-                            ) : (
-                              <Check className={cn('w-4 h-4 flex-shrink-0', style.text)} />
-                            )}
-                            <span className={f.personal ? 'text-white font-medium' : 'text-white/75'}>{f.text}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )
-                  })()}
+                        <span className={f.personal ? 'text-white font-medium' : 'text-white/75'}>
+                          {f.text}
+                          {f.personal && (
+                            <span className={cn('ml-1.5 align-middle font-mono text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded border', style.text, 'border-current/40')}>
+                              pro seu objetivo
+                            </span>
+                          )}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
 
                   <div className="text-center mb-4">
                     <div className="text-white/40 text-xs mb-0.5">
