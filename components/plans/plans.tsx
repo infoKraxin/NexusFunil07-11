@@ -78,7 +78,7 @@ export function Plans() {
         <div className="flex items-center gap-1.5">
           <Eye className="w-3.5 h-3.5 text-primary" />
           <span className="text-xs text-white/70">
-            <span className="text-primary font-bold">{viewers}</span> vendo agora
+            <span className="text-primary font-bold">{viewers}</span> fazendo o pacto agora
           </span>
         </div>
       </motion.div>
@@ -128,7 +128,7 @@ export function Plans() {
         >
           <span className="w-1.5 h-1.5 rounded-full bg-destructive animate-pulse" aria-hidden="true" />
           <span className="text-xs font-semibold text-destructive">
-            Preço de lançamento acaba em <span className="tabular-nums">{countdown}</span>
+            Seu plano fica reservado por <span className="tabular-nums">{countdown}</span>
           </span>
         </motion.div>
         <motion.div

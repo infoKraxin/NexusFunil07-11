@@ -45,7 +45,7 @@ export function usePurchaseToasts() {
       let index = Math.floor(Math.random() * PURCHASE_NAMES.length)
       while (index === lastIndex) index = Math.floor(Math.random() * PURCHASE_NAMES.length)
       lastIndex = index
-      setMessage(`${PURCHASE_NAMES[index]} desbloqueou ${pick(PURCHASE_PLANS)} ${pick(PURCHASE_TIMES)}`)
+      setMessage(`${PURCHASE_NAMES[index]} selou o pacto com o ${pick(PURCHASE_PLANS)} ${pick(PURCHASE_TIMES)}`)
       hideTimers.push(setTimeout(() => setMessage(null), 4000))
     }
 

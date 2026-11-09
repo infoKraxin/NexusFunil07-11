@@ -111,8 +111,8 @@ export function InsertionProjection({ f }: { f: Derived }) {
         <AToB fromSub={`Começando por ${f.areaLower}`} toSub={f.mirror} />
       </motion.div>
       <motion.p {...fade(0.6)} className="text-xl font-semibold leading-snug text-center text-balance">
-        Começando por <span className="text-primary font-bold">{f.areaLower}</span>, em 90 dias você pode ser{' '}
-        <span className="font-bold">{f.mirrorLower}</span>.
+        Seu objetivo: <span className="font-bold">{f.mirrorLower}</span>. E o caminho começa por{' '}
+        <span className="text-primary font-bold">{f.areaLower}</span>.
       </motion.p>
       <motion.p {...fade(1.9)} className="text-center text-muted-foreground text-[15px] text-balance">
         Não precisa mudar tudo de uma vez. Só começar pelo <Highlight delay={2.3}>lugar certo</Highlight>.

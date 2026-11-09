@@ -110,7 +110,7 @@ export function ExitOfferModal({ open, redirecting, onClose, acceptHref, onAccep
             </button>
             <p className="text-center text-xs text-zinc-500 mt-4">
               <Shield className="w-3 h-3 inline mr-1" />
-              Oferta válida apenas nesta sessão
+              Seu pacto continua valendo. Não deixa pra amanhã.
             </p>
           </motion.div>
         </motion.div>

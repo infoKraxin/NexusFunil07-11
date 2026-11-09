@@ -5,31 +5,32 @@ import { BarChart3, Check, Sparkles, Target, TrendingUp } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import { NexusLogo } from '@/components/nexus/nexus-logo'
-import { challengeLabels, focusLabels } from '@/lib/diagnosis'
-import { useQuizData } from '@/lib/use-quiz-data'
+import { useFunnel } from '@/lib/use-funnel'
 
 const STEP_COUNT = 4
 const TOTAL_DURATION = Math.max(2400 * STEP_COUNT, 9000)
 
 export function Analyzing() {
   const router = useRouter()
-  const quiz = useQuizData()
+  const f = useFunnel()
   const [stepIndex, setStepIndex] = useState(0)
   const [progress, setProgress] = useState(0)
   const [complete, setComplete] = useState(false)
 
   const steps = useMemo(() => {
-    const goalCount = quiz?.goals.length || 0
-    const focus = quiz?.focus ? focusLabels[quiz.focus] || quiz.focus : null
-    return [
-      { id: 1, label: 'Lendo Nota da disciplina', note: quiz ? `${quiz.discipline}/5` : null, icon: TrendingUp },
-      { id: 2, label: 'Cruzando suas áreas de foco', note: goalCount ? `${goalCount} áreas` : null, icon: BarChart3 },
-      { id: 3, label: 'Priorizando o que mais importa', note: focus, icon: Target },
+    if (!f.ready) return [
+      { id: 1, label: 'Lendo suas respostas', note: null, icon: TrendingUp },
+      { id: 2, label: 'Cruzando os padrões', note: null, icon: BarChart3 },
+      { id: 3, label: 'Identificando seu bloqueio', note: null, icon: Target },
       { id: 4, label: 'Montando seu plano', note: null, icon: Sparkles },
     ]
-  }, [quiz])
-
-  const challenge = quiz?.challenge ? challengeLabels[quiz.challenge] : null
+    return [
+      { id: 1, label: 'Lendo suas respostas', note: `${f.hoursLabel}/dia`, icon: TrendingUp },
+      { id: 2, label: 'Cruzando os padrões', note: f.feeling[0].toUpperCase() + f.feeling.slice(1), icon: BarChart3 },
+      { id: 3, label: 'Identificando seu bloqueio', note: f.area.split(' e ')[0], icon: Target },
+      { id: 4, label: 'Montando seu plano', note: f.time.replace(' minutos', ' min') + '/dia', icon: Sparkles },
+    ]
+  }, [f.ready, f.hoursLabel, f.feeling, f.area, f.time])
 
   useEffect(() => {
     const stepInterval = setInterval(() => {
@@ -57,9 +58,9 @@ export function Analyzing() {
   const rounded = Math.round(progress)
 
   const counters = [
-    { icon: TrendingUp, label: 'Missoes', sublabel: 'personalizadas', value: Math.min(Math.floor(progress / 8), 12) },
-    { icon: Target, label: 'Habitos', sublabel: 'configurados', value: Math.min(Math.floor(progress / 12), 8) },
-    { icon: Sparkles, label: 'Protocolos', sublabel: 'de evolucao', value: Math.min(Math.floor(progress / 33), 3) },
+    { icon: TrendingUp, label: 'Missões', sublabel: 'personalizadas', value: Math.min(Math.floor(progress / 8), 12) },
+    { icon: Target, label: 'Hábitos', sublabel: 'configurados', value: Math.min(Math.floor(progress / 12), 8) },
+    { icon: Sparkles, label: 'Protocolos', sublabel: 'de evolução', value: Math.min(Math.floor(progress / 33), 3) },
   ]
 
   return (
@@ -92,8 +93,8 @@ export function Analyzing() {
           <span className="text-primary">IA</span> Analisando Perfil
         </h1>
         <p className="text-muted-foreground text-sm text-pretty px-4">
-          {challenge
-            ? `Entendendo sua ${challenge} e montando o plano sob medida...`
+          {f.ready
+            ? `Lendo as suas 12 respostas e montando um plano só seu...`
             : 'Preparando sua jornada personalizada...'}
         </p>
       </motion.div>
