@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowDown, Lock } from 'lucide-react'
+import { ArrowDown, Check, Flame, Lock, Target, Timer } from 'lucide-react'
 import { CountUp, Highlight, HandUnderline } from '@/components/funnel/fx'
 import { AToB } from '@/components/funnel/a-to-b'
 import { type Derived, QUESTIONS } from '@/lib/funnel'
@@ -124,51 +124,85 @@ export function InsertionProjection({ f }: { f: Derived }) {
 /* 4 — por que não funcionou e o que vai ser diferente */
 export function InsertionWhyBefore({ f }: { f: Derived }) {
   const tried = f.answers.q10.filter((v) => v !== 'nada')
+  const plan = [
+    { icon: Flame, title: capitalize(f.mechanism.short), sub: 'O que te faz ir até o fim, todo dia' },
+    { icon: Timer, title: `${f.time} por dia`, sub: 'Cabe até no dia mais corrido' },
+    { icon: Target, title: `Começando por ${f.areaLower}`, sub: 'Uma área de cada vez' },
+  ]
   return (
-    <div className="flex-1 flex flex-col justify-center gap-5 text-center">
-      {f.triedNothing ? (
-        <motion.p {...fade(0)} className="text-xl font-semibold leading-snug text-balance">
-          Você ainda não tentou nada, e isso é bom: vai <Highlight delay={0.6}>começar do jeito certo</Highlight>.
-        </motion.p>
-      ) : (
-        <>
-          <div className="flex flex-wrap justify-center gap-2">
-            {tried.map((v, i) => (
-              <motion.span
-                key={v}
-                {...fade(0.1 * i)}
-                className="relative px-3 py-1.5 rounded-full border border-border bg-secondary text-sm text-muted-foreground"
-              >
-                <ChipLabel value={v} />
-                <motion.span
-                  className="absolute left-2 right-2 top-1/2 h-[2px] bg-destructive origin-left"
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ delay: 0.5 + 0.25 * i, duration: 0.3 }}
-                />
-              </motion.span>
-            ))}
-          </div>
-          <motion.p {...fade(0.6)} className="text-xl font-semibold leading-snug text-balance">
-            {f.triedPlural ? 'Não funcionaram' : 'Não funcionou'} porque {f.triedPlural ? 'dependiam' : 'dependia'} só da sua{' '}
-            <HandUnderline delay={1.2}>força de vontade</HandUnderline>.
-          </motion.p>
-        </>
-      )}
+    <div className="flex-1 flex flex-col justify-center gap-4">
+      <motion.h2 {...fade(0)} className="text-2xl font-bold leading-tight text-center text-balance">
+        Por que <span className="text-primary">não funcionou</span> antes?
+      </motion.h2>
 
-      <motion.div {...fade(1.4)} className="flex justify-center">
-        <ArrowDown className="w-6 h-6 text-primary animate-bounce" />
+      {/* Antes */}
+      <motion.div {...fade(0.15)} className="rounded-2xl border border-border/60 bg-secondary/20 p-4">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Antes</p>
+        {f.triedNothing ? (
+          <p className="mt-2 text-[15px] leading-snug">
+            Você ainda não tentou nada. Ótimo: vai <Highlight delay={0.7}>começar do jeito certo</Highlight>.
+          </p>
+        ) : (
+          <>
+            <div className="mt-2.5 flex flex-wrap gap-1.5">
+              {tried.map((v, i) => (
+                <span key={v} className="relative px-2.5 py-1 rounded-full border border-border bg-background/60 text-xs text-muted-foreground">
+                  <ChipLabel value={v} />
+                  <motion.span
+                    className="absolute left-2 right-2 top-1/2 h-[2px] bg-destructive origin-left"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ delay: 0.5 + 0.2 * i, duration: 0.3 }}
+                  />
+                </span>
+              ))}
+            </div>
+            <p className="mt-3 text-[15px] leading-snug">
+              {f.triedPlural ? 'Tudo dependia' : 'Dependia'} só da sua <HandUnderline delay={1}>força de vontade</HandUnderline>. E ela
+              sempre acaba.
+            </p>
+          </>
+        )}
       </motion.div>
 
+      {/* Agora */}
       <motion.div
-        {...fade(1.6)}
-        className="rounded-2xl border border-primary/40 bg-gradient-to-br from-primary/15 to-primary/5 p-5 shadow-[0_10px_40px_-18px_var(--primary)]"
+        {...fade(0.9)}
+        className="rounded-2xl border border-primary/40 bg-gradient-to-br from-primary/15 to-primary/5 p-4 shadow-[0_10px_40px_-18px_var(--primary)]"
       >
-        <p className="text-[10px] uppercase tracking-[0.16em] text-primary font-bold mb-2">O seu plano vai ser diferente</p>
-        <p className="text-lg font-bold leading-snug text-balance">
-          {capitalize(f.mechanism.short)}, em <span className="text-primary">{f.time} por dia</span>.
-        </p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary">Agora: o seu plano</p>
+        <ul className="mt-3 flex flex-col gap-3">
+          {plan.map((r, i) => (
+            <motion.li
+              key={r.title}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 1.2 + i * 0.3 }}
+              className="flex items-center gap-3"
+            >
+              <span className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shrink-0">
+                <r.icon className="w-4.5 h-4.5 text-primary-foreground" strokeWidth={2.4} />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-[15px] font-bold leading-tight">{r.title}</span>
+                <span className="block text-xs text-muted-foreground leading-tight mt-0.5">{r.sub}</span>
+              </span>
+              <motion.span
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 1.45 + i * 0.3, type: 'spring', stiffness: 400 }}
+                className="ml-auto w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center shrink-0"
+              >
+                <Check className="w-3 h-3 text-primary" strokeWidth={3} />
+              </motion.span>
+            </motion.li>
+          ))}
+        </ul>
       </motion.div>
+
+      <motion.p {...fade(2.3)} className="text-center text-sm text-muted-foreground text-balance">
+        Não depende de motivação. Depende de um <span className="text-foreground font-semibold">sistema</span>.
+      </motion.p>
     </div>
   )
 }

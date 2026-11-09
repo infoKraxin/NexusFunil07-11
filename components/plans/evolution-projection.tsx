@@ -60,16 +60,12 @@ export function EvolutionProjection({ avgCurrent, avgPotential, improvement, pro
           <p className="text-[11px] text-white/40">Do ponto A ao ponto B em 30 dias</p>
         </div>
         <AToB
-          fromTitle="Hoje"
           fromValue={avgCurrent.toFixed(1)}
           fromSub="Score atual"
-          toTitle="Dia 30"
           toValue={avgPotential.toFixed(1)}
           toSub="Score projetado"
-          milestones={[
-            { at: 0.38, label: 'Semana 1' },
-            { at: 0.68, label: 'Semana 2' },
-          ]}
+          endLabel="Dia 30"
+          ticks={['Hoje', 'Semana 1', 'Semana 2']}
         />
 
         <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/[0.04]">
