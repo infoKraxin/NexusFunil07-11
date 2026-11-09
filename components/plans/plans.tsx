@@ -33,7 +33,7 @@ export function Plans() {
   const toast = usePurchaseToasts()
 
   const projection = useMemo(() => {
-    const projected = projectRadar(radar, 30)
+    const projected = projectRadar(radar, 90)
     return {
       avgCurrent: averageOf(radar),
       avgPotential: averageOf(projected),

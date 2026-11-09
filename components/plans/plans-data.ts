@@ -34,10 +34,10 @@ export const PLANS: Plan[] = [
     tagline: 'Pra dar o primeiro passo do pacto',
     highlight: 'O começo do pacto',
     features: [
-      '5 hábitos por vez',
-      'Lembretes diários',
-      'Seu progresso na tela',
-      'Histórico de 30 dias',
+      '5 hábitos pra começar sem se sobrecarregar',
+      'Lembretes na hora certa, pra não esquecer',
+      'Painel com seu XP, nível e sequência',
+      'Histórico dos seus últimos 30 dias',
     ],
   },
   {
@@ -55,10 +55,11 @@ export const PLANS: Plan[] = [
     tagline: 'Pra quebrar {block} de vez',
     highlight: 'O plano do seu protocolo',
     features: [
-      'Hábitos ilimitados',
-      'IA que monta sua rotina',
-      'Relatórios semanais',
-      'Desafios pra evoluir',
+      'Hábitos ilimitados, pra todas as áreas',
+      'IA que monta sua rotina a partir do seu bloqueio',
+      'Relatório semanal do seu progresso em PDF',
+      'Histórico completo, desde o dia 1',
+      'Desafios e duelos que te puxam pra frente',
     ],
   },
   {
@@ -75,10 +76,12 @@ export const PLANS: Plan[] = [
     tagline: 'Pra quem não aceita falhar o pacto',
     highlight: 'Pacto blindado',
     features: [
-      'Tudo do Focuz',
-      'Coach IA 24h que te cobra',
-      'Metas que se ajustam a você',
-      'Suporte humano prioritário',
+      'Tudo do Focuz, sem nenhum limite',
+      'Coach IA 24h que te cobra todo dia',
+      'Análise de quando e onde você trava',
+      'Metas que se ajustam ao seu ritmo',
+      'Suporte humano com prioridade',
+      'Novidades do app antes de todo mundo',
     ],
   },
 ]

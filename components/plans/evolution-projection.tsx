@@ -57,15 +57,15 @@ export function EvolutionProjection({ avgCurrent, avgPotential, improvement, pro
       <div className="p-5 rounded-2xl bg-gradient-to-b from-white/[0.04] to-transparent border border-white/[0.06]">
         <div className="mb-4">
           <p className="text-sm font-semibold text-white">Sua Evolução</p>
-          <p className="text-[11px] text-white/40">Do ponto A ao ponto B em 30 dias</p>
+          <p className="text-[11px] text-white/40">Do ponto A ao ponto B em 90 dias</p>
         </div>
         <AToB
           fromValue={avgCurrent.toFixed(1)}
           fromSub="Score atual"
           toValue={avgPotential.toFixed(1)}
           toSub="Score projetado"
-          endLabel="Dia 30"
-          ticks={['Hoje', 'Semana 1', 'Semana 2']}
+          endLabel="Dia 90"
+          ticks={["Hoje", "Semana 1", "Mês 1"]}
         />
 
         <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/[0.04]">
