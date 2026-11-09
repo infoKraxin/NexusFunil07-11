@@ -39,7 +39,7 @@ export function LandingNav() {
               'bg-primary text-primary-foreground hover:bg-primary/90',
             )}
           >
-            Começar Agora
+            Fazer o diagnóstico
           </Link>
         </div>
       </div>

@@ -4,7 +4,7 @@ import { FeatureCard } from './feature-card'
 const FEATURES = [
   {
     icon: Target,
-    title: 'Tasks Inteligentes',
+    title: 'Missões do seu tamanho',
     description: 'Organize suas tarefas por categorias: estudos, fitness, higiene, nutrição e mais.',
   },
   {
@@ -30,10 +30,10 @@ export function FeaturesSection() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Tudo que você precisa para <span className="text-primary">evoluir</span>
+            Quando largar fica <span className="text-primary">mais chato que continuar</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Recursos pensados para transformar sua rotina em uma jornada de superação constante.
+            Missões, XP, ranking e duelos com amigos: o jogo te puxa nos dias em que a força de vontade não aparece.
           </p>
         </div>
         <div className="grid md:grid-cols-2 gap-6">

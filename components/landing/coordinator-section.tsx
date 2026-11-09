@@ -31,7 +31,7 @@ export function CoordinatorSection() {
             </span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Seu mentor IA que transforma intenções em missões estruturadas
+            Fala o que você quer mudar. Ele transforma em missões do tamanho do seu dia.
           </p>
         </div>
 

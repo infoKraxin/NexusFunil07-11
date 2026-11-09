@@ -9,9 +9,9 @@ const PILLARS = [
     icon: Brain,
     title: 'Neuroplasticidade Temporal',
     stat: '66 dias',
-    statLabel: 'para automatização neural',
+    statLabel: 'em média pra um hábito virar automático',
     description:
-      'Estudo da University College London com 96 participantes comprovou: o cérebro leva em média 66 dias para transformar uma ação consciente em comportamento automático. O Nexus acelera esse processo com gamificação estruturada.',
+      'Estudo da University College London com 96 participantes comprovou: o cérebro leva em média 66 dias para transformar uma ação consciente em comportamento automático. O Nexus acompanha você nesse caminho, um dia de cada vez.',
     features: ['Repetição Espaçada', 'Feedback Instantâneo', 'Automatização'],
     studyLink: 'https://onlinelibrary.wiley.com/doi/10.1002/ejsp.674',
     studyLabel: 'Estudo UCL - Phillippa Lally (2009)',
@@ -22,10 +22,10 @@ const PILLARS = [
   {
     icon: Cpu,
     title: 'Loop de Dopamina Controlada',
-    stat: '3x',
-    statLabel: 'mais chance de sucesso',
+    stat: '+XP',
+    statLabel: 'recompensa a cada passo dado',
     description:
-      'Pesquisa da Wharton School demonstra que elementos de gamificação ativam o sistema de recompensas do cérebro, liberando dopamina de forma controlada. Isso aumenta motivação, engajamento e satisfaz necessidades psicológicas de autonomia e competência.',
+      'Pesquisas da Wharton School sobre gamificação mostram que pontos, níveis e desafios aumentam o engajamento em tarefas do dia a dia. É por isso que, no Nexus, cada hábito cumprido vira XP.',
     features: ['Recompensas Calibradas', 'Motivação Intrínseca', 'Engajamento'],
     studyLink: 'https://neuro.wharton.upenn.edu/community/gamification-at-work/',
     studyLabel: 'Wharton Neuroscience Initiative',
@@ -36,10 +36,10 @@ const PILLARS = [
   {
     icon: Network,
     title: 'Intenções de Implementação',
-    stat: '64%',
-    statLabel: 'maior adoção de hábitos',
+    stat: '94',
+    statLabel: 'estudos confirmam o plano se-então',
     description:
-      "Meta-análise de Peter Gollwitzer (NYU) com 94 estudos independentes comprovou: criar plans 'se-então' (If-Then) aumenta drasticamente a taxa de conclusão de metas. O Nexus automatiza esse processo com gatilhos inteligentes.",
+      "Meta-análise de Peter Gollwitzer (NYU) com 94 estudos independentes comprovou: decidir antes o 'quando acontecer X, eu faço Y' aumenta bastante a chance de cumprir uma meta. O Nexus monta esses gatilhos pra você.",
     features: ['Habit Stacking', 'Gatilhos If-Then', 'Automação Neural'],
     studyLink: 'https://psycnet.apa.org/record/2007-19538-002',
     studyLabel: 'Meta-análise Gollwitzer & Sheeran (2006)',
@@ -50,8 +50,8 @@ const PILLARS = [
 ]
 
 const TRUST_BADGES = [
-  { icon: Activity, label: 'Resultados em 7 dias' },
-  { icon: Shield, label: 'Metodologia Validada' },
+  { icon: Activity, label: 'Primeiras missões no dia 1' },
+  { icon: Shield, label: 'Baseado em pesquisas publicadas' },
   { icon: TrendingUp, label: '94% de Satisfação' },
 ]
 
@@ -117,10 +117,10 @@ export function ScientificPillarsSection() {
             <span className="text-sm text-primary font-medium">Baseado em Neurociência</span>
           </motion.div>
           <h2 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
-            O Protocolo Nexus é construído sobre
+            Nada de mágica. São
             <br />
             <span className="relative inline-block mt-2">
-              <span className="text-primary">3 Pilares Científicos</span>
+              <span className="text-primary">3 pesquisas por trás do Nexus</span>
               <motion.span
                 className="absolute -bottom-2 left-0 h-[3px] bg-gradient-to-r from-primary via-primary to-transparent rounded-full"
                 initial={{ width: 0 }}
@@ -131,7 +131,7 @@ export function ScientificPillarsSection() {
             </span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Tecnologia de reprogramação neural que transforma sua mente em uma máquina de alta performance
+            O que a ciência já mostrou sobre como um hábito nasce, e como o Nexus usa isso a seu favor.
           </p>
         </motion.div>
 
@@ -212,8 +212,8 @@ export function ScientificPillarsSection() {
           transition={{ delay: 0.3, duration: 0.4 }}
         >
           <p className="text-muted-foreground mb-6">
-            Mais de <span className="text-primary font-semibold">20.000 usuários</span> já reprogramaram seus cérebros
-            com o Nexus
+            Mais de <span className="text-primary font-semibold">20.000 usuários</span> já usam o Nexus
+            pra cumprir o que prometem
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             {TRUST_BADGES.map((badge) => (

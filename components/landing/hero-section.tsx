@@ -1,4 +1,4 @@
-import { Activity, ArrowRight, Brain, Flame, Sparkles, Star, Timer, TrendingUp, Trophy, Users } from 'lucide-react'
+import { Activity, ArrowRight, Brain, Check, Flame, Home, Sparkles, Star, Swords, Timer, TrendingUp, Trophy, Users } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { nexusButtonVariants } from '@/components/nexus/nexus-button'
@@ -12,10 +12,10 @@ const AVATARS = [
   { name: 'Rafael', src: '/images/avatars/rafael.jpeg' },
 ]
 
-const TASKS = [
-  { icon: Brain, label: 'Estudar 2h', done: true },
-  { icon: Activity, label: 'Treino manhã', done: true },
-  { icon: Timer, label: 'Meditação', done: false },
+const MISSIONS = [
+  { icon: Activity, label: 'Treino de 20 min', xp: 60, done: true },
+  { icon: Brain, label: 'Estudar 1 bloco', xp: 50, done: true },
+  { icon: Timer, label: 'Meditar 5 min', xp: 30, done: false },
 ]
 
 export function HeroSection() {
@@ -32,14 +32,14 @@ export function HeroSection() {
           <div className="flex-1 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
               <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-sm text-primary font-medium">Versão 2.0 disponível</span>
+              <span className="text-sm text-primary font-medium">Inspirado em Solo Leveling</span>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 text-balance">
-              nexus <span className="text-primary">evolution system</span>
+              Você não tem falta de disciplina. <span className="text-primary">Tem um bloqueio.</span>
             </h1>
             <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0 text-pretty">
-              O app que gamifica seus hábitos com base no anime Solo Leveling. Crie seu sistema personalizado com base
-              nas suas prioridades e se torne a melhor versão de si em 30 dias.
+              Descubra em 2 minutos o que te faz largar tudo no meio. Depois, suba de nível todo dia com um sistema
+              montado pra você, no estilo Solo Leveling.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link
@@ -52,7 +52,8 @@ export function HeroSection() {
                 Descobrir o que me trava <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
-            <div className="flex items-center gap-4 mt-10 justify-center lg:justify-start">
+            <p className="mt-3 text-xs text-muted-foreground text-center lg:text-left">Grátis · 2 minutos · 12 perguntas</p>
+            <div className="flex items-center gap-4 mt-8 justify-center lg:justify-start">
               <div className="flex -space-x-3">
                 {AVATARS.map((avatar) => (
                   <div key={avatar.name} className="w-10 h-10 rounded-full overflow-hidden border-2 border-background">
@@ -72,120 +73,146 @@ export function HeroSection() {
                     <Star key={i} className="w-4 h-4 fill-primary text-primary" aria-hidden="true" />
                   ))}
                 </div>
-                <p className="text-sm text-muted-foreground">+20.000 usuarios ativos</p>
+                <p className="text-sm text-muted-foreground">+20.000 usuários ativos</p>
               </div>
             </div>
           </div>
 
-          <div className="flex-1 relative">
-            <div className="relative mx-auto w-72 md:w-80">
-              <div className="relative rounded-[3rem] bg-gradient-to-b from-secondary to-card p-3 shadow-2xl">
-                <div className="rounded-[2.5rem] bg-background overflow-hidden">
-                  <div className="h-12 bg-card flex items-center justify-center">
-                    <div className="w-24 h-6 rounded-full bg-background" />
-                  </div>
-                  <div className="p-4 flex flex-col gap-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-xs text-muted-foreground">Bem-vindo de volta</p>
-                        <p className="font-semibold">Player_One</p>
-                      </div>
-                      <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
-                        <Flame className="w-4 h-4 text-primary" />
-                        <span className="text-sm font-bold text-primary">127</span>
-                      </div>
-                    </div>
-
-                    <div className="glass-card rounded-xl p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm text-muted-foreground">Progresso Diário</span>
-                        <span className="text-sm font-bold text-primary">78%</span>
-                      </div>
-                      <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                        <div className="h-full w-[78%] bg-gradient-to-r from-primary to-accent rounded-full" />
-                      </div>
-                      <div className="flex items-center justify-between mt-3 text-xs text-muted-foreground">
-                        <span>7/9 tasks</span>
-                        <span>+450 pts</span>
-                      </div>
-                    </div>
-
-                    <div className="glass-card rounded-xl p-4 border border-primary/30">
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
-                          <Users className="w-4 h-4 text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium">Arena Ativa</p>
-                          <p className="text-xs text-muted-foreground">vs Lucas M.</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="text-center">
-                          <p className="text-lg font-bold">450</p>
-                          <p className="text-xs text-muted-foreground">Você</p>
-                        </div>
-                        <div className="text-xs text-primary font-medium">VENCENDO</div>
-                        <div className="text-center">
-                          <p className="text-lg font-bold text-muted-foreground">380</p>
-                          <p className="text-xs text-muted-foreground">Lucas</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                      {TASKS.map((task) => (
-                        <div key={task.label} className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50">
-                          <div
-                            className={cn(
-                              'w-5 h-5 rounded-full border-2 flex items-center justify-center',
-                              task.done ? 'bg-primary border-primary' : 'border-muted-foreground',
-                            )}
-                          >
-                            {task.done && <span className="text-xs text-primary-foreground">✓</span>}
-                          </div>
-                          <task.icon className="w-4 h-4 text-muted-foreground" />
-                          <span className={cn('text-sm', task.done && 'line-through text-muted-foreground')}>
-                            {task.label}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                className="absolute -left-16 top-20 glass-card rounded-xl p-3 shadow-lg mb-60 mt-[-40px] ml-11 animate-float-cards"
-                style={{ animationDelay: '0s' }}
-              >
-                <div className="flex items-center gap-2">
-                  <Trophy className="w-5 h-5 text-primary" />
-                  <span className="text-sm font-medium">#3 no Ranking</span>
-                </div>
-              </div>
-              <div
-                className="absolute -right-12 top-1/2 glass-card rounded-xl p-3 shadow-lg my-1 mb-0 mt-[-24px] mr-4 animate-float-cards"
-                style={{ animationDelay: '1.3s' }}
-              >
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-green-400" />
-                  <span className="text-sm font-medium">+15% esta semana</span>
-                </div>
-              </div>
-              <div
-                className="absolute -left-8 bottom-32 glass-card rounded-xl p-3 shadow-lg mb-6 animate-float-cards"
-                style={{ animationDelay: '0.7s' }}
-              >
-                <div className="flex items-center gap-2">
-                  <Flame className="w-5 h-5 text-orange-400" />
-                  <span className="text-sm font-medium">127 dias streak!</span>
-                </div>
-              </div>
-            </div>
+          <div className="flex-1 relative w-full">
+            <PhoneMockup />
           </div>
         </div>
       </div>
     </section>
+  )
+}
+
+function PhoneMockup() {
+  return (
+    <div className="relative mx-auto w-[270px] md:w-[300px]">
+      <div className="absolute inset-x-6 top-16 bottom-10 rounded-full bg-primary/25 blur-[60px]" aria-hidden="true" />
+
+      {/* aparelho */}
+      <div className="relative rounded-[46px] p-[10px] bg-gradient-to-b from-zinc-600 via-zinc-800 to-zinc-900 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9),inset_0_0_0_1px_rgba(255,255,255,0.08)]">
+        <div className="relative rounded-[37px] overflow-hidden bg-[#050607] ring-1 ring-black">
+          {/* status bar + dynamic island */}
+          <div className="relative h-11 flex items-center justify-between px-6 text-[11px] font-semibold">
+            <span>9:41</span>
+            <div className="absolute left-1/2 top-2 -translate-x-1/2 w-[88px] h-[26px] rounded-full bg-black" />
+            <span className="flex items-center gap-1">
+              <span className="flex items-end gap-[2px]">
+                {[4, 6, 8, 10].map((h) => (
+                  <span key={h} className="w-[3px] rounded-sm bg-foreground" style={{ height: h }} />
+                ))}
+              </span>
+              <span className="ml-1 w-[22px] h-[11px] rounded-[3px] border border-foreground/70 p-[1.5px]">
+                <span className="block h-full w-[80%] rounded-[1px] bg-foreground" />
+              </span>
+            </span>
+          </div>
+
+          <div className="px-4 pb-3 flex flex-col gap-3">
+            {/* perfil */}
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl overflow-hidden bg-zinc-900 ring-2 ring-primary/60">
+                <Image src="/images/personagem-forte-busto.webp" alt="" width={80} height={80} className="w-full h-full object-cover object-top scale-125 origin-top" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] text-muted-foreground leading-none">Nível 12 · Caçador</p>
+                <p className="text-sm font-bold leading-tight mt-0.5">Player_One</p>
+              </div>
+              <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-orange-500/10 border border-orange-500/25">
+                <Flame className="w-3.5 h-3.5 text-orange-400 fill-orange-400" />
+                <span className="text-xs font-bold text-orange-300">127</span>
+              </div>
+            </div>
+
+            {/* XP */}
+            <div className="rounded-2xl p-3 bg-gradient-to-br from-primary/15 to-primary/[0.03] border border-primary/25">
+              <div className="flex items-baseline justify-between">
+                <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-primary">Experiência</span>
+                <span className="text-[11px] font-semibold tabular-nums">
+                  2.340 <span className="text-muted-foreground font-normal">/ 3.000 XP</span>
+                </span>
+              </div>
+              <div className="mt-2 h-2 rounded-full bg-black/50 overflow-hidden">
+                <div className="h-full w-[78%] rounded-full bg-gradient-to-r from-primary/70 to-primary shadow-[0_0_10px_var(--primary)]" />
+              </div>
+              <p className="mt-1.5 text-[10px] text-muted-foreground">Faltam 660 XP para o nível 13</p>
+            </div>
+
+            {/* missões */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-xs font-semibold">Missões de hoje</span>
+                <span className="text-[10px] text-primary font-semibold">2/3</span>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                {MISSIONS.map((m) => (
+                  <div key={m.label} className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl bg-white/[0.04] border border-white/[0.06]">
+                    <span
+                      className={cn(
+                        'w-[18px] h-[18px] rounded-md flex items-center justify-center shrink-0',
+                        m.done ? 'bg-primary' : 'border border-muted-foreground/50',
+                      )}
+                    >
+                      {m.done && <Check className="w-3 h-3 text-primary-foreground" strokeWidth={3} />}
+                    </span>
+                    <m.icon className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                    <span className={cn('flex-1 text-[12px]', m.done && 'text-muted-foreground line-through')}>{m.label}</span>
+                    <span className={cn('text-[10px] font-bold tabular-nums', m.done ? 'text-primary' : 'text-muted-foreground')}>
+                      +{m.xp} XP
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* arena */}
+            <div className="rounded-2xl p-3 bg-white/[0.04] border border-white/[0.06]">
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5 text-xs font-semibold">
+                  <Swords className="w-3.5 h-3.5 text-primary" /> Duelo da semana
+                </span>
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-primary/15 text-primary">VENCENDO</span>
+              </div>
+              <div className="mt-2 flex items-center gap-2 text-[11px]">
+                <span className="font-bold tabular-nums">450</span>
+                <div className="flex-1 h-1.5 rounded-full bg-zinc-700 overflow-hidden">
+                  <div className="h-full w-[54%] bg-primary rounded-full" />
+                </div>
+                <span className="font-bold tabular-nums text-muted-foreground">380</span>
+              </div>
+              <div className="mt-1 flex justify-between text-[9px] text-muted-foreground">
+                <span>Você</span>
+                <span>Lucas M.</span>
+              </div>
+            </div>
+          </div>
+
+          {/* tab bar */}
+          <div className="mt-1 border-t border-white/[0.06] px-6 pt-2.5 pb-3 flex items-center justify-between">
+            {[Home, Swords, Trophy, Users].map((I, i) => (
+              <I key={i} className={cn('w-[18px] h-[18px]', i === 0 ? 'text-primary' : 'text-muted-foreground/60')} />
+            ))}
+          </div>
+          <div className="mx-auto mb-2 h-1 w-24 rounded-full bg-foreground/60" />
+        </div>
+      </div>
+
+      {/* selos flutuantes — fora da tela do app */}
+      <div className="absolute -left-3 -top-4 glass-card rounded-xl px-3 py-2 shadow-lg animate-float-cards" style={{ animationDelay: '0s' }}>
+        <div className="flex items-center gap-2">
+          <Trophy className="w-4 h-4 text-primary" />
+          <span className="text-xs font-semibold">#3 no ranking</span>
+        </div>
+      </div>
+      <div className="absolute -right-3 -bottom-4 glass-card rounded-xl px-3 py-2 shadow-lg animate-float-cards" style={{ animationDelay: '1.3s' }}>
+        <div className="flex items-center gap-2">
+          <TrendingUp className="w-4 h-4 text-primary" />
+          <span className="text-xs font-semibold">+120 XP hoje</span>
+        </div>
+      </div>
+    </div>
   )
 }

@@ -35,7 +35,7 @@ export function EvolutionSection() {
             Sua Evolução em <span className="text-primary">66 Dias</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Baseado no estudo da UCL, veja como seus indicadores de performance evoluem com o Nexus
+            Um estudo da University College London mostrou que um hábito leva, em média, 66 dias pra virar automático. É essa virada que o Nexus acompanha.
           </p>
         </motion.div>
 

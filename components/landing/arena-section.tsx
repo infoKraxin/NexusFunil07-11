@@ -96,8 +96,8 @@ export function ArenaSection() {
             Entre na <span className="text-primary">Arena</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Desafie seus amigos, complete atividades e veja quem consegue mais pontos. A Arena transforma sua rotina em
-            uma competição épica.
+            Desafie um amigo, cumpram as missões e vejam quem faz mais pontos. É difícil largar quando tem alguém do outro
+            lado do placar.
           </p>
         </div>
 

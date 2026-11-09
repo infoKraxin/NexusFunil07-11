@@ -14,9 +14,9 @@ export function FinalCtaSection() {
             <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center mx-auto mb-6">
               <Zap className="w-8 h-8 text-primary" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Pronto para evoluir?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Seu bloqueio tem nome. Descubra o seu.</h2>
             <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-              Junte-se a milhares de pessoas que já transformaram sua rotina em uma jornada de evolução constante.
+              2 minutos e 12 perguntas. No final, você recebe o seu diagnóstico e um plano montado pra você.
             </p>
             <Link
               href="/onboarding/quiz"
@@ -25,7 +25,7 @@ export function FinalCtaSection() {
                 'bg-primary text-primary-foreground hover:bg-primary/90 gap-2 text-base px-10',
               )}
             >
-              Começar Minha Evolução
+              Descobrir o que me trava
               <ArrowRight className="w-5 h-5" />
             </Link>
           </div>

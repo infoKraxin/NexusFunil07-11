@@ -1,5 +1,5 @@
 const STATS = [
-  { value: '100K+', label: 'Usuários Ativos' },
+  { value: '20.000+', label: 'Usuários Ativos' },
   { value: '5M+', label: 'Tasks Completadas' },
   { value: '1M+', label: 'Duelos Realizados' },
   { value: '4.9', label: 'Avaliação Média' },
