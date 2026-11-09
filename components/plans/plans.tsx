@@ -1,7 +1,7 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { Check, Clock, Eye } from 'lucide-react'
+import { Check, Clock } from 'lucide-react'
 import Image from 'next/image'
 import { useCallback, useMemo, useState } from 'react'
 import { CAKTO_URLS, getCheckoutUrl } from '@/lib/checkout'
@@ -17,7 +17,7 @@ import { PlanCarousel, PlanTabs } from './plan-carousel'
 import { type Plan, PLAN_TESTIMONIALS, PLANS } from './plans-data'
 import { FiveStars, GuaranteeSeal, PlansFaq, PlansTestimonials } from './plans-social-proof'
 import { useCheckoutRedirect } from './use-checkout-redirect'
-import { useCountdown, useExitIntent, useLiveViewers, usePurchaseToasts } from './use-plans-urgency'
+import { useCountdown, useExitIntent, usePurchaseToasts } from './use-plans-urgency'
 
 export function Plans() {
   const { radar, block, ready, pactAt, mirrorLower, code } = useFunnel()
@@ -30,7 +30,6 @@ export function Plans() {
 
   useTrackOnce('plans_view')
   const countdown = useCountdown(900)
-  const viewers = useLiveViewers()
   const toast = usePurchaseToasts()
 
   const projection = useMemo(() => {
@@ -72,13 +71,8 @@ export function Plans() {
       >
         <div className="flex items-center gap-1.5">
           <Clock className="w-3.5 h-3.5 text-destructive" />
-          <span className="text-xs font-bold text-destructive tabular-nums whitespace-nowrap">{countdown}</span>
-        </div>
-        <div className="w-px h-3 bg-border/50" aria-hidden="true" />
-        <div className="flex items-center gap-1.5">
-          <Eye className="w-3.5 h-3.5 text-primary" />
-          <span className="text-xs text-white/70">
-            <span className="text-primary font-bold">{viewers}</span> fazendo o pacto
+          <span className="text-xs font-bold text-destructive tabular-nums whitespace-nowrap">
+            Preço de lançamento termina em {countdown}
           </span>
         </div>
       </motion.div>
