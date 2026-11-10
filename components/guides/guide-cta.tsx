@@ -2,7 +2,8 @@ import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-export const quizHref = (slug: string) => `/onboarding/quiz?utm_source=seo&utm_medium=organic&utm_campaign=${slug}`
+// Guias levam pra página principal (boot, apresentação), com UTM pra saber qual guia trouxe a venda.
+export const quizHref = (slug: string) => `/?utm_source=seo&utm_medium=organic&utm_campaign=${slug}`
 
 export function GuideCtaInline({ slug, text }: { slug: string; text: string }) {
   return (
@@ -22,16 +23,16 @@ export function GuideCtaFinal({ slug }: { slug: string }) {
   return (
     <section className="relative mt-14 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] px-6 pt-8 text-center">
       <div className="pointer-events-none absolute left-1/2 top-24 h-64 w-64 -translate-x-1/2 rounded-full bg-primary/20 blur-3xl" aria-hidden="true" />
-      <p className="relative font-mono text-[11px] uppercase tracking-[0.18em] text-primary">Diagnóstico grátis</p>
-      <h2 className="relative mt-3 text-2xl font-bold text-balance">Descubra o que te impede de evoluir</h2>
+      <p className="relative font-mono text-[11px] uppercase tracking-[0.18em] text-primary">NEXUS</p>
+      <h2 className="relative mt-3 text-2xl font-bold text-balance">Sua rotina vira um jogo</h2>
       <p className="relative mx-auto mt-3 max-w-sm text-sm text-white/60 text-balance">
-        12 perguntas, 2 minutos. Você recebe seu bloqueio principal e um plano de 90 dias montado pra ele.
+        Missões diárias, XP, níveis e ranking, no estilo Solo Leveling. Tudo começa com um diagnóstico de 2 minutos.
       </p>
       <Link
         href={quizHref(slug)}
         className="relative mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-bold text-primary-foreground transition hover:bg-primary/90"
       >
-        Descobrir o que me trava <ArrowRight className="h-4 w-4" />
+        Conhecer o NEXUS <ArrowRight className="h-4 w-4" />
       </Link>
       <div className="relative mx-auto mt-6 h-[220px] w-[220px]">
         <Image
