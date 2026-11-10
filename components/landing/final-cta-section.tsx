@@ -1,5 +1,6 @@
 import { ArrowRight, Zap } from 'lucide-react'
 import Link from 'next/link'
+import { GUIDES } from '@/lib/guides'
 import { nexusButtonVariants } from '@/components/nexus/nexus-button'
 import { NexusLogo } from '@/components/nexus/nexus-logo'
 import { cn } from '@/lib/utils'
@@ -43,6 +44,12 @@ export function LandingFooter() {
           <Link href="/" aria-label="NEXUS - Início">
             <NexusLogo size="sm" />
           </Link>
+          <nav aria-label="Guias" className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
+            <Link href="/guias" className="hover:text-foreground">Guias</Link>
+            {GUIDES.map((g) => (
+              <Link key={g.slug} href={`/guias/${g.slug}`} className="hover:text-foreground">{g.short}</Link>
+            ))}
+          </nav>
           <p className="text-sm text-muted-foreground">© 2026 NEXUS. Todos os direitos reservados.</p>
         </div>
       </div>

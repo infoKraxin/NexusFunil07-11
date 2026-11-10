@@ -4,10 +4,10 @@ import { NexusLogo } from '@/components/nexus/nexus-logo'
 import { cn } from '@/lib/utils'
 
 const NAV_LINKS = [
-  { href: '#features', label: 'Recursos' },
-  { href: '#arena', label: 'Arena' },
-  { href: '#scientific-pillars', label: 'Pilares Científicos' },
-  { href: '#testimonials', label: 'Depoimentos' },
+  { href: '/#features', label: 'Recursos' },
+  { href: '/#arena', label: 'Arena' },
+  { href: '/#scientific-pillars', label: 'Pilares Científicos' },
+  { href: '/#testimonials', label: 'Depoimentos' },
 ]
 
 export function LandingNav() {

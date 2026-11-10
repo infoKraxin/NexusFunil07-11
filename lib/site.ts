@@ -8,12 +8,9 @@ export const SEO_DESCRIPTION =
   'Transforme sua rotina num jogo: missões diárias, XP, níveis e ranking, no estilo Solo Leveling. Descubra em 2 minutos o que te trava e receba seu plano.'
 
 /**
- * Só o projeto que serve o domínio oficial entra no Google.
- * Na Vercel, VERCEL_PROJECT_PRODUCTION_URL é o domínio de produção do projeto:
- * aqui (teste) é nexusfunil07-11.vercel.app → fora do Google; no projeto do zxnexus → indexa.
+ * Entra no Google por padrão. Projetos de teste (como o nexusfunil07-11 na Vercel)
+ * têm SEO_INDEXABLE=false configurado e ficam fora (robots Disallow + noindex).
  */
 export function isIndexable() {
-  if (process.env.SEO_INDEXABLE === 'true') return true
-  if (process.env.SEO_INDEXABLE === 'false') return false
-  return (process.env.VERCEL_PROJECT_PRODUCTION_URL ?? '').endsWith('zxnexus.com.br') && process.env.VERCEL_ENV === 'production'
+  return process.env.SEO_INDEXABLE !== 'false'
 }
