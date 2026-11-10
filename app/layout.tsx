@@ -5,28 +5,46 @@ import { BackgroundMusicProvider } from '@/components/nexus/background-music-pro
 import { GlobalClickSound } from '@/components/nexus/global-click-sound'
 import { UtmCapture } from '@/components/nexus/utm-capture'
 import { UtmifyLeadScript, UtmifyPixel, UtmifyScripts } from '@/components/nexus/utmify-scripts'
+import { isIndexable, SEO_DESCRIPTION, SEO_TITLE, SITE_NAME, SITE_URL } from '@/lib/site'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-jetbrains-mono' })
 const caveat = Caveat({ subsets: ['latin'], variable: '--font-caveat', weight: ['500', '700'] })
 
-const description =
-  'The futuristic habit tracking app that transforms your daily routine into a competitive journey of self-improvement.'
+const indexable = isIndexable()
 
 export const metadata: Metadata = {
-  title: 'NEXUS | Evolve Your Routine',
-  description,
+  metadataBase: new URL(SITE_URL),
+  title: { default: SEO_TITLE, template: `%s | ${SITE_NAME}` },
+  description: SEO_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: [
+    'app de hábitos',
+    'app de hábitos gamificado',
+    'solo leveling na vida real',
+    'sistema solo leveling',
+    'como ter disciplina',
+    'como parar de procrastinar',
+    'rotina gamificada',
+    'app de produtividade',
+  ],
+  alternates: { canonical: '/' },
+  robots: indexable ? { index: true, follow: true } : { index: false, follow: false },
   openGraph: {
-    title: 'NEXUS | Evolve Your Routine',
-    description,
-    siteName: 'NEXUS',
+    title: SEO_TITLE,
+    description: SEO_DESCRIPTION,
+    url: '/',
+    siteName: SITE_NAME,
+    locale: 'pt_BR',
     type: 'website',
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'NEXUS: sua rotina vira um jogo' }],
   },
   twitter: {
-    card: 'summary',
-    title: 'NEXUS | Evolve Your Routine',
-    description,
+    card: 'summary_large_image',
+    title: SEO_TITLE,
+    description: SEO_DESCRIPTION,
+    images: ['/og.png'],
   },
   icons: {
     icon: '/images/nexus-logo.png',
