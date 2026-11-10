@@ -35,11 +35,11 @@ export function HeroSection() {
               <span className="text-sm text-primary font-medium">Inspirado em Solo Leveling</span>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 text-balance">
-              Você não tem falta de disciplina. <span className="text-primary">Tem um bloqueio.</span>
+              nexus <span className="text-primary">evolution system</span>
             </h1>
             <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0 text-pretty">
-              Descubra em 2 minutos o que te faz largar tudo no meio. Depois, suba de nível todo dia com um sistema
-              montado pra você, no estilo Solo Leveling.
+              O app que gamifica seus hábitos com base no anime Solo Leveling. Crie seu sistema personalizado com base
+              nas suas prioridades e se torne a melhor versão de si em 30 dias.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link
