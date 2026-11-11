@@ -40,6 +40,8 @@ export const metadata: Metadata = {
     type: 'website',
     images: [{ url: '/og.png', width: 1200, height: 630, alt: 'NEXUS: sua rotina vira um jogo' }],
   },
+  // Verificação de propriedade: Bing Webmaster Tools
+  verification: { other: { 'msvalidate.01': 'F13792BD7796630113DEE31537EA47B8' } },
   twitter: {
     card: 'summary_large_image',
     title: SEO_TITLE,
