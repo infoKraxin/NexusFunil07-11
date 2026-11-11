@@ -1,12 +1,13 @@
 'use client'
 
 import { motion, type Variants } from 'framer-motion'
-import { Activity, Brain, Cpu, Dna, ExternalLink, Network, Shield, TrendingUp } from 'lucide-react'
+import { Activity, Dna, ExternalLink, Shield, TrendingUp } from 'lucide-react'
+import Image from 'next/image'
 import { cn } from '@/lib/utils'
 
 const PILLARS = [
   {
-    icon: Brain,
+    img: '/images/icons/cerebro.png',
     title: 'Neuroplasticidade Temporal',
     stat: '66 dias',
     statLabel: 'em média pra um hábito virar automático',
@@ -20,7 +21,7 @@ const PILLARS = [
     iconBg: 'bg-emerald-500/20',
   },
   {
-    icon: Cpu,
+    img: '/images/icons/recompensa.png',
     title: 'Loop de Dopamina Controlada',
     stat: '+XP',
     statLabel: 'recompensa a cada passo dado',
@@ -34,7 +35,7 @@ const PILLARS = [
     iconBg: 'bg-cyan-500/20',
   },
   {
-    icon: Network,
+    img: '/images/icons/gatilho.png',
     title: 'Intenções de Implementação',
     stat: '94',
     statLabel: 'estudos confirmam o plano se-então',
@@ -154,18 +155,18 @@ export function ScientificPillarsSection() {
               />
               <div
                 className={cn(
-                  'relative h-full rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50 p-6 lg:p-8 transition-all duration-500',
+                  'relative h-full rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50 p-6 lg:p-8 text-center transition-all duration-500',
                   pillar.borderColor,
                 )}
               >
                 <div className="absolute top-0 left-0 w-8 h-8 border-l-2 border-t-2 border-primary/30 rounded-tl-2xl" />
                 <div className="absolute bottom-0 right-0 w-8 h-8 border-r-2 border-b-2 border-primary/30 rounded-br-2xl" />
                 <motion.div
-                  className={cn('w-14 h-14 rounded-xl flex items-center justify-center mb-6', pillar.iconBg)}
+                  className={cn('w-16 h-16 rounded-xl flex items-center justify-center mb-6 mx-auto', pillar.iconBg)}
                   whileHover={{ scale: 1.1, rotate: 5 }}
                   transition={{ type: 'spring', stiffness: 400 }}
                 >
-                  <pillar.icon className="w-7 h-7 text-primary" />
+                  <Image src={pillar.img} alt="" width={80} height={80} className="w-10 h-10" />
                 </motion.div>
                 <div className="mb-4">
                   <span className="text-4xl font-bold text-primary">{pillar.stat}</span>
@@ -177,7 +178,7 @@ export function ScientificPillarsSection() {
                   href={pillar.studyLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-xs text-primary/80 hover:text-primary transition-colors mb-6 group/link"
+                  className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-primary/80 hover:text-primary transition-colors mb-6 group/link"
                 >
                   <ExternalLink className="w-3 h-3" />
                   <span className="underline underline-offset-2 decoration-primary/30 group-hover/link:decoration-primary">
@@ -185,7 +186,7 @@ export function ScientificPillarsSection() {
                   </span>
                   <span className="text-muted-foreground">— Confira você mesmo</span>
                 </a>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap justify-center gap-2">
                   {pillar.features.map((feature, i) => (
                     <motion.span
                       key={feature}
