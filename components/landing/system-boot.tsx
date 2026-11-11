@@ -248,12 +248,12 @@ export function SystemBoot({ onComplete }: SystemBootProps) {
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              <h1
+              <p
                 className="text-2xl font-mono text-green-400 tracking-[0.3em]"
                 style={{ textShadow: `0 0 20px ${GREEN_GLOW}, 0.8)` }}
               >
                 INICIAR SISTEMA
-              </h1>
+              </p>
               <p className="text-xs text-green-400/70 tracking-wide">(Toque Para Conectar)</p>
             </div>
             <button
@@ -330,7 +330,7 @@ export function SystemBoot({ onComplete }: SystemBootProps) {
               </div>
             </div>
             <div className="border-2 border-red-500 px-8 py-3" style={{ boxShadow: '0 0 20px rgba(239, 68, 68, 0.4)' }}>
-              <h1 className="text-xl font-mono text-red-500 tracking-[0.2em]">[ ALERTA DO SISTEMA ]</h1>
+              <p className="text-xl font-mono text-red-500 tracking-[0.2em]">[ ALERTA DO SISTEMA ]</p>
             </div>
           </div>
         )}
@@ -369,18 +369,18 @@ export function SystemBoot({ onComplete }: SystemBootProps) {
 
         {phase === 'welcome' && (
           <div className="text-center animate-fade-in px-4">
-            <h1
+            <p
               className="text-2xl sm:text-3xl md:text-5xl font-mono font-bold text-green-400"
               style={{ textShadow: `0 0 30px ${GREEN_GLOW}, 0.8), 0 0 60px ${GREEN_GLOW}, 0.5)` }}
             >
               Bem-vindo, Jogador.
-            </h1>
+            </p>
           </div>
         )}
 
         {phase === 'secondChance' && (
           <div className="text-center animate-fade-in px-4">
-            <h1
+            <p
               className="glitch-text text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-mono font-semibold text-white tracking-wide"
               data-text="SEGUNDA CHANCE CONCEDIDA."
               style={{
@@ -389,7 +389,7 @@ export function SystemBoot({ onComplete }: SystemBootProps) {
               }}
             >
               SEGUNDA CHANCE CONCEDIDA.
-            </h1>
+            </p>
           </div>
         )}
 
@@ -399,12 +399,12 @@ export function SystemBoot({ onComplete }: SystemBootProps) {
               className="h-px w-full max-w-2xl mx-auto bg-gradient-to-r from-transparent via-green-400 to-transparent"
               style={{ boxShadow: `0 0 10px ${GREEN_GLOW}, 0.6)` }}
             />
-            <h1
+            <p
               className="text-3xl md:text-5xl font-mono font-bold tracking-[0.3em] text-green-400"
               style={{ textShadow: `0 0 25px ${GREEN_GLOW}, 0.8), 0 0 50px ${GREEN_GLOW}, 0.5)` }}
             >
               O DESPERTAR FOI LIBERADO
-            </h1>
+            </p>
             <div
               className="h-px w-full max-w-2xl mx-auto bg-gradient-to-r from-transparent via-green-400 to-transparent"
               style={{ boxShadow: `0 0 10px ${GREEN_GLOW}, 0.6)` }}
