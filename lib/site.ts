@@ -8,9 +8,9 @@ export const SEO_DESCRIPTION =
   'Transforme sua rotina num jogo: missões diárias, XP, níveis e ranking, no estilo Solo Leveling. Descubra em 2 minutos o que te trava e receba seu plano.'
 
 /**
- * Entra no Google por padrão. Projetos de teste (como o nexusfunil07-11 na Vercel)
- * têm SEO_INDEXABLE=false configurado e ficam fora (robots Disallow + noindex).
+ * O site entra no Google. Os endereços *.vercel.app do mesmo projeto ficam de fora
+ * pelo cabeçalho X-Robots-Tag em next.config.mjs (evita conteúdo duplicado).
  */
 export function isIndexable() {
-  return process.env.SEO_INDEXABLE !== 'false'
+  return true
 }
