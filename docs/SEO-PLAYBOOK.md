@@ -40,6 +40,11 @@ blogs de produtividade e de anime, diretórios de apps. Para cada um: URL, por q
 Guardar o histórico em `docs/seo/prospeccao.md` (não repetir sites já listados). Não enviar mensagem,
 não preencher formulário, não criar conta, não comentar em lugar nenhum.
 
+## 4b. Teste de GEO (só na primeira execução de cada mês)
+Com busca na web, pesquisar "melhor app de hábitos gamificado", "app solo leveling vida real" e "o que é o app NEXUS zxnexus"
+e registrar no relatório se o NEXUS (zxnexus.com.br) aparece nos resultados e em quais sites é citado.
+Os fatos oficiais do app ficam em `lib/about.ts` (página /sobre e /llms.txt). Só altere se um fato mudar de verdade.
+
 ## 5. Entrega
 Mensagem final curta em português: guias publicados (título + URL), resultado do IndexNow,
 números da semana e a lista de prospecção. Registrar o resumo em `docs/seo/relatorio-AAAA-MM-DD.md`.

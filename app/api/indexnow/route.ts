@@ -11,7 +11,7 @@ export async function GET(request: Request) {
   if (new URL(request.url).searchParams.get('k') !== KEY) {
     return NextResponse.json({ ok: false }, { status: 401 })
   }
-  const urlList = [`${SITE_URL}/`, `${SITE_URL}/guias`, ...GUIDES.map((g) => `${SITE_URL}/guias/${g.slug}`)]
+  const urlList = [`${SITE_URL}/`, `${SITE_URL}/sobre`, `${SITE_URL}/guias`, ...GUIDES.map((g) => `${SITE_URL}/guias/${g.slug}`)]
   const res = await fetch('https://api.indexnow.org/indexnow', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json; charset=utf-8' },
