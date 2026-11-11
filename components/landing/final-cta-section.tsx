@@ -46,7 +46,7 @@ export function LandingFooter() {
           </Link>
           <nav aria-label="Guias" className="flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
             <Link href="/guias" className="hover:text-foreground">Guias</Link>
-            {GUIDES.map((g) => (
+            {GUIDES.slice(0, 5).map((g) => (
               <Link key={g.slug} href={`/guias/${g.slug}`} className="hover:text-foreground">{g.short}</Link>
             ))}
           </nav>
