@@ -340,6 +340,240 @@ export const GUIDES: Guide[] = [
     ],
     related: ['solo-leveling-na-vida-real', 'como-criar-habitos'],
   },
+  {
+    slug: 'como-manter-o-foco-nos-estudos',
+    short: 'Como manter o foco nos estudos',
+    seoTitle: 'Como manter o foco nos estudos com o celular por perto',
+    description:
+      'O celular na mesa atrapalha mesmo desligado? Veja o que os estudos mostram sobre foco, interrupções e como montar um bloco de estudo que você cumpre.',
+    h1: 'Como manter o foco nos estudos (mesmo com o celular por perto)',
+    lead:
+      'Você senta pra estudar, lê o mesmo parágrafo três vezes e, quando percebe, está com o celular na mão. Foco tem menos a ver com força de vontade e mais com o que está em cima da mesa. Aqui está o que a pesquisa mostra e o que dá pra fazer hoje.',
+    midCta: 'Falta de foco é um dos bloqueios que o diagnóstico identifica. Veja se é o seu em 2 minutos.',
+    sections: [
+      {
+        h2: 'O celular na mesa atrapalha mesmo sem você tocar nele?',
+        p: [
+          'Em 2017, pesquisadores da Universidade do Texas (Ward e colegas) fizeram dois experimentos com quase 800 pessoas. Todo mundo deixou o celular no silencioso e foi sorteado pra um de três lugares: celular na mesa, no bolso ou na mochila, ou em outra sala. Depois, todos fizeram testes de memória de trabalho e raciocínio.',
+          'Quem deixou o celular em outra sala foi melhor do que quem deixou na mesa. Bolso e mochila ficaram no meio do caminho. No segundo experimento, estar ligado ou desligado não mudou o resultado. A explicação dos autores: parte da sua atenção fica ocupada em não pegar o aparelho.',
+        ],
+      },
+      {
+        h2: 'O tamanho real desse efeito',
+        p: [
+          'Vale a honestidade: o efeito é pequeno. Uma meta-análise de 2024 (Parry), com dados de mais de 7 mil participantes, encontrou efeito negativo da simples presença do celular só na memória de trabalho, e menor do que o estudo original sugeria. Nas outras funções testadas, o resultado combinado foi nulo.',
+          'Na prática, tirar o celular da mesa não vai transformar ninguém. Mas custa zero, e tira do caminho a distração mais fácil de alcançar. É um bom primeiro passo, não a solução inteira.',
+        ],
+      },
+      {
+        h2: 'Interrupção cobra em estresse, não só em tempo',
+        p: [
+          'Num experimento de Gloria Mark e colegas (2008), 48 pessoas fizeram uma tarefa de escritório com e sem interrupções. Quem foi interrompido terminou em menos tempo e com a mesma qualidade. O preço apareceu em outro lugar: mais estresse, mais frustração, mais pressão de tempo e mais esforço.',
+          'É por isso que estudar com notificação pulando parece funcionar e, ao mesmo tempo, te deixa esgotado. Você compensa acelerando, e essa conta chega no fim do dia.',
+        ],
+      },
+      {
+        h2: 'Como montar um bloco de foco',
+        p: ['Um bloco de foco é um período curto, com começo, fim e uma única tarefa. Monte assim:'],
+        list: [
+          'Celular em outro cômodo, no silencioso. Não na mesa, não virado pra baixo.',
+          'Uma tarefa só, escrita num papel: "resolver a lista 3 de física", não "estudar física".',
+          'Tempo definido antes de começar. Se 50 minutos parece muito, comece com 25.',
+          'Abas e aplicativos que não são da tarefa, fechados.',
+          'Pausa de verdade no fim: levantar, beber água, olhar pra longe. O celular fica pra depois da pausa.',
+        ],
+      },
+      {
+        h2: 'Como transformar foco em hábito',
+        p: [
+          'Um bloco de foco num dia bom é fácil. O difícil é repetir amanhã. O que ajuda é ter o bloco já decidido (horário, lugar e tarefa) e ver o progresso se acumulando.',
+          'No NEXUS, foco e estudo são módulos do app: o bloco vira missão diária, cada missão cumprida dá XP e a sequência de dias fica à vista. Você não precisa decidir todo dia se vai estudar, só cumprir a missão de hoje.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: 'Colocar o celular virado pra baixo resolve?',
+        a: 'Pelo estudo de Ward e colegas, provavelmente não. O efeito apareceu com o celular virado pra baixo e também virado pra cima, ligado ou desligado. O que fez diferença foi a distância: outra sala foi melhor que a mesa.',
+      },
+      {
+        q: 'Quanto tempo deve durar um bloco de foco?',
+        a: 'Não existe um número certo pra todo mundo. Comece com um tempo que você cumpre até num dia ruim, como 25 minutos, e aumente quando ficar fácil.',
+      },
+      {
+        q: 'Estudar com música atrapalha o foco?',
+        a: 'Os estudos citados aqui não testaram música, então este guia não afirma nada sobre isso. Teste nos seus próprios blocos e compare o quanto você rendeu.',
+      },
+    ],
+    sources: [
+      { label: 'Ward, Duke, Gneezy & Bos (2017), Brain Drain: The Mere Presence of One’s Own Smartphone Reduces Available Cognitive Capacity', url: 'https://doi.org/10.1086/691462' },
+      { label: 'Parry (2024), Does the Mere Presence of a Smartphone Impact Cognitive Performance? A Meta-Analysis of the “Brain Drain Effect”', url: 'https://doi.org/10.1080/15213269.2023.2286647' },
+      { label: 'Mark, Gudith & Klocke (2008), The cost of interrupted work: more speed and stress', url: 'https://doi.org/10.1145/1357054.1357072' },
+    ],
+    related: ['como-parar-de-procrastinar', 'como-ter-disciplina'],
+  },
+  {
+    slug: 'tecnicas-de-estudo-que-funcionam',
+    short: 'Técnicas de estudo que funcionam',
+    seoTitle: 'Técnicas de estudo que funcionam, segundo a ciência',
+    description:
+      'Reler e grifar rendem pouco. Veja as duas técnicas de estudo mais bem avaliadas pela pesquisa, como aplicar e como montar uma rotina de revisão simples.',
+    h1: 'Técnicas de estudo que funcionam (e as que só parecem funcionar)',
+    lead:
+      'Reler o capítulo e passar marca-texto dão a sensação de estar aprendendo. A pesquisa sobre aprendizagem mostra que essa sensação engana. Duas técnicas simples rendem mais, e quase ninguém usa do jeito certo.',
+    midCta: 'Saber a técnica é fácil. Difícil é estudar todo dia. Descubra o que te trava em 2 minutos.',
+    sections: [
+      {
+        h2: 'O que rende pouco: reler, grifar e resumir',
+        p: [
+          'Em 2013, Dunlosky e colegas revisaram a pesquisa sobre 10 técnicas de estudo e deram uma nota de utilidade pra cada uma. Ficaram com utilidade baixa: reler, grifar ou sublinhar, resumir, usar palavras-chave mnemônicas e criar imagens mentais do texto.',
+          'Isso não quer dizer que são inúteis. Quer dizer que, pelo tempo que tomam, entregam menos do que outras opções.',
+        ],
+      },
+      {
+        h2: 'As duas técnicas mais bem avaliadas',
+        p: ['Só duas das 10 receberam utilidade alta na mesma revisão:'],
+        list: [
+          'Prática de teste: tentar lembrar a matéria sem olhar. Questões, flashcards ou escrever numa folha em branco tudo o que você lembra.',
+          'Prática distribuída: espalhar o estudo da mesma matéria em vários dias, em vez de concentrar tudo de uma vez.',
+        ],
+      },
+      {
+        h2: 'Por que se testar funciona melhor do que reler',
+        p: [
+          'Num estudo de Roediger e Karpicke (2006), estudantes leram textos e depois ou releram o material, ou fizeram um teste de memória sobre ele. Cinco minutos depois, quem releu lembrava mais. Dois dias e uma semana depois, o resultado inverteu: quem tinha se testado lembrava bem mais.',
+          'Um detalhe do mesmo estudo explica por que tanta gente continua relendo: reler aumentou a confiança dos estudantes, mesmo sem melhorar a memória de longo prazo. Reler parece funcionar. Testar-se funciona.',
+        ],
+      },
+      {
+        h2: 'Por que espaçar funciona melhor do que virar a noite',
+        p: [
+          'Cepeda e colegas (2006) juntaram 317 experimentos de 184 artigos sobre prática distribuída. Na comparação geral, quem estudou de forma espaçada acertou em média 47% no teste final, contra 37% de quem estudou tudo de uma vez.',
+          'A revisão também mostrou que o intervalo ideal entre as sessões cresce conforme o tempo que você quer lembrar. Pra uma prova daqui a um mês, revisar com alguns dias de intervalo faz mais sentido do que revisar tudo na véspera.',
+        ],
+      },
+      {
+        h2: 'Como juntar as duas numa rotina',
+        p: [],
+        list: [
+          'Estude o conteúdo novo uma vez, com atenção.',
+          'Feche o material e escreva ou responda de memória o que lembra. Só depois confira.',
+          'Volte ao mesmo conteúdo outro dia, de novo começando pelo teste, não pela releitura.',
+          'Aumente o intervalo entre as revisões conforme for acertando.',
+          'Prefira blocos curtos todo dia a uma maratona no fim de semana.',
+        ],
+      },
+      {
+        h2: 'A parte difícil é a constância',
+        p: [
+          'Prática distribuída só existe se você aparece vários dias seguidos. É aí que a maioria trava: a técnica é simples, a rotina não.',
+          'O NEXUS tem um módulo de estudo que transforma isso em missão diária, com XP por missão cumprida, níveis e sequência de dias. A técnica continua sendo sua, o app cuida de te fazer voltar amanhã.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: 'Grifar o texto não serve pra nada?',
+        a: 'Serve pouco. Na revisão de Dunlosky e colegas (2013), grifar ficou com utilidade baixa. Pode ajudar a localizar trechos, mas não substitui se testar.',
+      },
+      {
+        q: 'Flashcard funciona?',
+        a: 'Flashcard é uma forma de prática de teste, que recebeu utilidade alta na revisão de 2013. Funciona melhor quando você tenta responder de verdade antes de virar o cartão e revisa em dias diferentes.',
+      },
+      {
+        q: 'Fazer resumo vale a pena?',
+        a: 'Resumir recebeu utilidade baixa na mesma revisão. Se você gosta de resumir, faça o resumo de memória, com o material fechado, e confira depois. Assim ele vira prática de teste.',
+      },
+    ],
+    sources: [
+      { label: 'Dunlosky et al. (2013), Improving Students’ Learning With Effective Learning Techniques', url: 'https://doi.org/10.1177/1529100612453266' },
+      { label: 'Roediger & Karpicke (2006), Test-enhanced learning: taking memory tests improves long-term retention', url: 'https://doi.org/10.1111/j.1467-9280.2006.01693.x' },
+      { label: 'Cepeda et al. (2006), Distributed practice in verbal recall tasks: a review and quantitative synthesis', url: 'https://doi.org/10.1037/0033-2909.132.3.354' },
+    ],
+    related: ['como-criar-habitos', 'como-parar-de-procrastinar'],
+  },
+  {
+    slug: 'como-nao-desistir-da-academia',
+    short: 'Como não desistir da academia',
+    seoTitle: 'Como não desistir da academia nas primeiras semanas',
+    description:
+      'Um estudo com novos alunos de academia mostra o que separa quem cria o hábito de treinar de quem larga. Veja o que pesa mais e como aplicar na sua rotina.',
+    h1: 'Como não desistir da academia nas primeiras semanas',
+    lead:
+      'Matrícula feita, primeira semana empolgada, terceira semana em casa. Se isso já aconteceu com você, o problema provavelmente não é preguiça: é que o treino ainda não virou hábito. Um estudo com novos alunos de academia mostra o que faz essa virada acontecer.',
+    midCta: 'Você começa e larga? O diagnóstico mostra o que te faz parar. 2 minutos, grátis.',
+    sections: [
+      {
+        h2: 'As primeiras 6 semanas são as que contam',
+        p: [
+          'Kaushal e Rhodes (2015) acompanharam 111 pessoas recém-matriculadas em academias durante 12 semanas. O resultado principal: treinar pelo menos quatro vezes por semana, por seis semanas, foi o mínimo pra o treino se estabelecer como hábito.',
+          'Isso é o que o estudo observou sobre formação de hábito, não uma prescrição de treino. A lição que serve pra todo mundo é outra: no começo, frequência pesa mais do que intensidade. Treino curto e frequente constrói o hábito. Treino longo de vez em quando, não.',
+        ],
+      },
+      {
+        h2: 'O que mais pesou pra criar o hábito',
+        p: ['No mesmo estudo, quatro fatores previram quem criou o hábito de treinar:'],
+        list: [
+          'Consistência: treinar nos mesmos dias e no mesmo horário.',
+          'Baixa complexidade: um treino simples, que você sabe fazer sem pensar muito.',
+          'Ambiente: um lugar que facilita, perto de casa ou do trabalho e sem atrito pra chegar.',
+          'Gostar do treino: a sensação que você associa a treinar.',
+        ],
+      },
+      {
+        h2: 'Escolha um treino que você não odeie',
+        p: [
+          'Uma revisão de 24 estudos (Rhodes e Kates, 2015) encontrou que se sentir bem durante o exercício de intensidade moderada estava ligado a continuar ativo no futuro. Já a sensação depois do treino não mostrou essa relação.',
+          'Ou seja, aquele alívio de "ainda bem que acabou" não segura ninguém na academia. O que segura é o treino em si ser tolerável ou até agradável. Se você odeia esteira, trocar de atividade é estratégia, não fraqueza.',
+        ],
+      },
+      {
+        h2: 'Junte o treino com algo que você quer',
+        p: [
+          'Milkman, Minson e Volpp (2014) testaram uma ideia simples: liberar audiolivros viciantes só dentro da academia. No início, quem só podia ouvir lá foi à academia 51% mais vezes que o grupo de controle. Quem apenas foi incentivado a seguir a regra foi 29% mais.',
+          'O efeito diminuiu com o tempo, principalmente depois de um feriado. Então use o truque (um podcast, uma série ou uma playlist que só existe no treino) como empurrão das primeiras semanas, e tenha um plano pra voltar depois de qualquer pausa.',
+        ],
+      },
+      {
+        h2: 'Um plano simples pras primeiras 6 semanas',
+        p: [],
+        list: [
+          'Defina os dias e o horário e trate como compromisso, não como "se der".',
+          'Monte um treino curto e simples, de preferência com um profissional de educação física.',
+          'Deixe a roupa e a mochila prontas na noite anterior.',
+          'Guarde algo que você gosta só pro treino.',
+          'Marque cada treino feito num lugar visível.',
+          'Faltou um dia? Volte no próximo dia marcado, sem tentar compensar.',
+        ],
+      },
+      {
+        h2: 'Como o NEXUS entra nisso',
+        p: [
+          'O NEXUS tem um módulo de treino que transforma seus treinos em missões diárias. Cada missão cumprida dá XP, o XP vira nível, e a sequência de dias fica à vista. Com ranking e duelos, você também tem outras pessoas evoluindo do seu lado, o que ajuda a aparecer nos dias em que a vontade não vem.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: 'Preciso treinar quatro vezes por semana pra ter resultado?',
+        a: 'O estudo de Kaushal e Rhodes mediu formação de hábito, não resultado físico. Quatro vezes por semana durante seis semanas foi o mínimo observado pra o treino virar hábito naquele grupo. Frequência e intensidade ideais pra você são assunto pra um profissional de educação física.',
+      },
+      {
+        q: 'Quanto tempo até a academia virar hábito?',
+        a: 'No estudo com novos alunos de academia, o mínimo observado foi de seis semanas treinando pelo menos quatro vezes por semana. Isso varia de pessoa pra pessoa.',
+      },
+      {
+        q: 'Faltei uma semana inteira. E agora?',
+        a: 'Volte no próximo dia marcado com um treino mais leve e mais curto. Pausas derrubam a rotina de muita gente: no estudo de Milkman e colegas, a frequência caiu justamente depois de um feriado. Ter o dia da volta já decidido ajuda a recomeçar.',
+      },
+    ],
+    sources: [
+      { label: 'Kaushal & Rhodes (2015), Exercise habit formation in new gym members: a longitudinal study', url: 'https://doi.org/10.1007/s10865-015-9640-7' },
+      { label: 'Rhodes & Kates (2015), Can the Affective Response to Exercise Predict Future Motives and Physical Activity Behavior?', url: 'https://doi.org/10.1007/s12160-015-9704-5' },
+      { label: 'Milkman, Minson & Volpp (2014), Holding the Hunger Games Hostage at the Gym: An Evaluation of Temptation Bundling', url: 'https://doi.org/10.1287/mnsc.2013.1784' },
+    ],
+    related: ['como-criar-habitos', 'como-ter-disciplina'],
+  },
 ]
 
 export const getGuide = (slug: string) => GUIDES.find((g) => g.slug === slug)
